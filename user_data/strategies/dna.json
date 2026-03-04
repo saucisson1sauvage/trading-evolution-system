@@ -4,7 +4,7 @@
   ],
   "parameters": {
     "rsi_period": 15,
-    "buy_rsi": 35,
+    "buy_rsi": 30,
     "sell_rsi": 75
   }
 }
