@@ -1,0 +1,32 @@
+[
+  {
+    "hypothesis": "If we pair quick_scalp with aggressive ema_rejection, we might capture the ETH volatility better.",
+    "suggested_l": "mean_reversion",
+    "suggested_s": "exhaustion_short",
+    "timestamp": "2026-03-04 01:12:57.333834"
+  },
+  {
+    "hypothesis": "If we pair vol_breakout with aggressive ema_rejection, we might capture the ETH volatility better.",
+    "suggested_l": "mean_reversion",
+    "suggested_s": "ema_rejection",
+    "timestamp": "2026-03-04 01:13:42.334537"
+  },
+  {
+    "hypothesis": "If we pair quick_scalp with aggressive exhaustion_short, we might capture the ETH volatility better.",
+    "suggested_l": "vol_breakout",
+    "suggested_s": "none",
+    "timestamp": "2026-03-04 01:14:27.334896"
+  },
+  {
+    "hypothesis": "If we pair vol_breakout with aggressive vortex_short, we might capture the ETH volatility better.",
+    "suggested_l": "quick_scalp",
+    "suggested_s": "exhaustion_short",
+    "timestamp": "2026-03-04 01:15:12.335391"
+  },
+  {
+    "hypothesis": "If we pair quick_scalp with aggressive vortex_short, we might capture the ETH volatility better.",
+    "suggested_l": "vol_breakout",
+    "suggested_s": "vortex_short",
+    "timestamp": "2026-03-04 01:15:57.335844"
+  }
+]

@@ -1,0 +1,16 @@
+[Unit]
+Description=Freqtrade Daemon
+After=network.target
+
+[Service]
+# Set WorkingDirectory and ExecStart to your file paths accordingly
+# NOTE: %h will be resolved to /home/<username>
+WorkingDirectory=%h/freqtrade
+ExecStart=/usr/bin/freqtrade trade
+Restart=on-failure
+Environment=OMP_NUM_THREADS=6
+Environment=MKL_NUM_THREADS=6
+Environment=JOBLIB_NUM_THREADS=6
+
+[Install]
+WantedBy=default.target
