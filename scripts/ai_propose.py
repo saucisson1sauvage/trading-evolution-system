@@ -6,6 +6,7 @@ import os
 import json
 import ast
 import requests
+import random
 from pathlib import Path
 import sys
 from typing import Dict, List, Optional, Tuple
@@ -17,14 +18,23 @@ from scripts.paths import PathResolver
 
 class AIArchitect:
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
+        self.api_key = api_key or os.environ.get("OPENROUTER_API_KEY")
         if not self.api_key:
-            raise ValueError("DEEPSEEK_API_KEY environment variable is not set")
+            raise ValueError("OPENROUTER_API_KEY environment variable is not set")
         
-        self.api_url = "https://api.deepseek.com/v1/chat/completions"
-        self.headers = {
+        self.api_url = "https://openrouter.ai/api/v1/chat/completions"
+        # List of free models to rotate through
+        self.free_models = [
+            "qwen/qwen-2.5-coder-32b-instruct:free",
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "google/gemini-2.0-flash-exp:free"
+        ]
+        # Headers required by OpenRouter
+        self.base_headers = {
             "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://github.com/freqtrade/freqtrade",  # Required by OpenRouter
+            "X-Title": "Freqtrade Genetic Strategy"  # Required by OpenRouter
         }
         
         self.project_root = PathResolver.get_project_root()
@@ -73,26 +83,37 @@ class AIArchitect:
         except SyntaxError:
             return False
     
-    def _call_deepseek_api(self, messages: List[Dict[str, str]]) -> Optional[str]:
-        """Call DeepSeek API and return the response content."""
-        payload = {
-            "model": "deepseek-chat",
-            "messages": messages,
-            "temperature": 0.7,
-            "max_tokens": 2000
-        }
+    def _call_openrouter_api(self, messages: List[Dict[str, str]]) -> Optional[str]:
+        """Call OpenRouter API with model rotation and return the response content."""
+        # Shuffle the models to pick a random one each time
+        models = self.free_models.copy()
+        random.shuffle(models)
         
-        try:
-            response = requests.post(self.api_url, headers=self.headers, json=payload, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-            return data["choices"][0]["message"]["content"]
-        except requests.exceptions.RequestException as e:
-            print(f"API request failed: {e}")
-            return None
-        except (KeyError, json.JSONDecodeError) as e:
-            print(f"Failed to parse API response: {e}")
-            return None
+        for model in models:
+            print(f"Trying model: {model}")
+            payload = {
+                "model": model,
+                "messages": messages,
+                "temperature": 0.7,
+                "max_tokens": 2000
+            }
+            
+            try:
+                response = requests.post(self.api_url, headers=self.base_headers, json=payload, timeout=30)
+                response.raise_for_status()
+                data = response.json()
+                return data["choices"][0]["message"]["content"]
+            except requests.exceptions.RequestException as e:
+                print(f"API request failed with model {model}: {e}")
+                # Try next model
+                continue
+            except (KeyError, json.JSONDecodeError) as e:
+                print(f"Failed to parse API response from model {model}: {e}")
+                # Try next model
+                continue
+        
+        print("All models failed")
+        return None
     
     def generate_new_block(self, block_name: str, concept: str) -> Optional[str]:
         """Generate a completely new block with unique logic."""
@@ -121,7 +142,7 @@ Return only the Python code, no explanations or markdown formatting.
             {"role": "user", "content": f"Here are example blocks:\n\n{examples_text}\n\n{user_prompt}"}
         ]
         
-        code = self._call_deepseek_api(messages)
+        code = self._call_openrouter_api(messages)
         if code and self._validate_python_code(code):
             return code
         return None
@@ -156,7 +177,7 @@ Return only the improved Python code, no explanations or markdown formatting.
             {"role": "user", "content": user_prompt}
         ]
         
-        code = self._call_deepseek_api(messages)
+        code = self._call_openrouter_api(messages)
         if code and self._validate_python_code(code):
             return code
         return None
