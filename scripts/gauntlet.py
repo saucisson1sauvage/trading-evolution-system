@@ -13,9 +13,15 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
     project_root = PathResolver.get_project_root()
     config_path = project_root / "config.json"
     
-    # Using python3 -m freqtrade as requested
+    # Check if config file exists
+    if not config_path.exists():
+        logger.error(f"Config file not found: {config_path}")
+        print(f"Error: Config file not found at {config_path}")
+        return None
+    
+    # Use python3 -m freqtrade to avoid path issues
     cmd = [
-        "/home/saus/freqtrade/.venv/bin/freqtrade", "backtesting",
+        "python3", "-m", "freqtrade", "backtesting",
         "--strategy", strategy_name,
         "--timerange", timerange,
         "--config", str(config_path),
