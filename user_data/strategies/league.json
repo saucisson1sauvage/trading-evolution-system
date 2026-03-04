@@ -1,0 +1,7 @@
+{
+  "champion": {"score": 0, "total_profit": 0, "sharpe": 0, "drawdown": 0, "stagnation_count": 0, "block": "rsi_simple"},
+  "promising_1": {"score": 0, "total_profit": 0, "sharpe": 0, "drawdown": 0, "stagnation_count": 0, "block": "macd_simple"},
+  "promising_2": {"score": 0, "total_profit": 0, "sharpe": 0, "drawdown": 0, "stagnation_count": 0, "block": "rsi_simple"},
+  "outsider_1": {"score": 0, "total_profit": 0, "sharpe": 0, "drawdown": 0, "stagnation_count": 0, "block": "macd_simple"},
+  "outsider_2": {"score": 0, "total_profit": 0, "sharpe": 0, "drawdown": 0, "stagnation_count": 0, "block": "rsi_simple"}
+}

@@ -39,3 +39,167 @@
 
 # 2026-03-04 23:04:59.337486
 +/run cat user_data/strategies/dna.json
+
+# 2026-03-04 23:47:45.083487
++## WHY
++We need a "League of 5" strategies to compete on ETH/USDT. We need to rank them based on their performance across 12 different market months.
++
++## WHAT
++
++Create user_data/strategies/league.json: This is the Scoreboard. It tracks: score, win_rate, and stagnation_count for 5 slots.
++
++Create scripts/league_manager.py: This script moves players up and down.
++
++If a Newbie beats a Prince, the Newbie becomes a Prince.
++
++If a Prince doesn't get better for 3 turns, kick him out and get a new AI Newbie.
++
++Create scripts/gauntlet.py: This script forces a bot to take 12 "Exams" (12 different months of ETH data).
++
++The Score formula: (Profit×SharpeRatio)/Drawdown.
++
++## HOW
++
++Use subprocess to run freqtrade backtesting.
++
++Use scripts/paths.py for all file paths.
+
+# 2026-03-04 23:51:40.589302
++## WHY
++We are setting up a High-Performance Trading League for ETH/USDT. We need a scoreboard to manage 5 strategies through an evolutionary tournament.
++
++## WHAT
++
++Create user_data/strategies/league.json:
++Initialize 5 slots: champion, promising_1, promising_2, outsider_1, outsider_2.
++Each must track: score, total_profit, sharpe, drawdown, and stagnation_count.
++
++Create scripts/league_manager.py:
++
++Promotion Logic: If an outsider out-scores a promising, they swap. If a promising out-scores the champion, it becomes the new champion.
++
++Culling Logic: Each generation, if a bot doesn't improve its score, increment stagnation_count. At 3, reset the slot to empty for a new AI mutation.
++
++Create scripts/gauntlet.py:
++
++This script must run 12 backtests (one for each month of 2025) for a specific strategy using ETH/USDT 1m data.
++
++It must use python3 -m freqtrade backtesting.
++
++Calculation: Score=(Profit×Sharpe)/Drawdown.
++
++## HOW
++
++Use scripts/paths.py for all file resolution.
++
++Ensure gauntlet.py handles cases where a bot makes 0 trades (Score should be 0).
++
++Use subprocess with env={"PYTHONPATH": "."}.
+
+# 2026-03-04 23:54:12.092934
++## WHY
++We are setting up a High-Performance Trading League for ETH/USDT. We need a scoreboard to manage 5 strategies through an evolutionary tournament.
++
++## WHAT
++
++Create user_data/strategies/league.json:
++Initialize 5 slots: champion, promising_1, promising_2, outsider_1, outsider_2.
++Each must track: score, total_profit, sharpe, drawdown, and stagnation_count.
++
++Create scripts/league_manager.py:
++
++Promotion Logic: If an outsider out-scores a promising, they swap. If a promising out-scores the champion, it becomes the new champion.
++
++Culling Logic: Each generation, if a bot doesn't improve its score, increment stagnation_count. At 3, reset the slot to empty for a new AI mutation.
++
++Create scripts/gauntlet.py:
++
++This script must run 12 backtests (one for each month of 2025) for a specific strategy using ETH/USDT 1m data.
++
++Use python3 -m freqtrade backtesting for the commands.
++
++Calculation: Score=(Profit×Sharpe)/Drawdown.
++
++## HOW
++
++Use scripts/paths.py for all file resolution.
++
++Use subprocess with env={"PYTHONPATH": "."}.
++
++If a bot makes 0 trades, the Score must be 0.
+
+# 2026-03-04 23:59:28.885456
++/run python3 scripts/gauntlet.py GeneticAssembler
+
+# 2026-03-04 23:59:28.885534
++/run python3 scripts/gauntlet.py GeneticAssembler
+
+# 2026-03-05 00:00:03.879524
++/run python3 scripts/league_manager.py
+
+# 2026-03-05 00:00:03.879712
++/run python3 scripts/league_manager.py
+
+# 2026-03-05 00:03:50.489929
++## WHY
++We have the Scoreboard and the Referee. Now we need the AI Architect to actually write the new trading strategies.
++
++## WHAT
++
++Create scripts/ai_propose.py:
++
++This script must connect to the DeepSeek API (use the DEEPSEEK_API_KEY from the environment).
++
++It reads the code in user_data/strategies/blocks/rsi_simple.py and macd_simple.py as examples.
++
++Task: For the outsider slots in league.json, ask the AI to invent a completely new Python file in user_data/strategies/blocks/ with unique logic (e.g., using Volume or Bollinger Bands).
++
++Task: For the promising slots, ask the AI to tweak the existing champion code to make it safer.
++
++Safety: Use ast.parse to make sure the AI didn't write "broken" Python code. If it's broken, don't save it.
++
++## HOW
++
++Use the requests library to talk to https://api.deepseek.com/v1/chat/completions.
++
++Use scripts/paths.py for all file saving.
++
++Ensure the new blocks are added to the active_blocks list in a temporary dna.json for testing.
++
++
+
+# 2026-03-05 00:08:12.042568
++/run export DEEPSEEK_API_KEY=your_api_key_here
+
+# 2026-03-05 00:08:12.042737
++/run export DEEPSEEK_API_KEY=your_api_key_here
+
+# 2026-03-05 00:08:22.237151
++/run python scripts/ai_propose.py
+
+# 2026-03-05 00:08:22.237343
++/run python scripts/ai_propose.py
+
+# 2026-03-05 00:18:49.567189
++## TASK
++Update scripts/ai_propose.py to use OpenRouter's free models.
++
++## CHANGES
++
++URL: Change the API endpoint to https://openrouter.ai/api/v1/chat/completions.
++
++Model Rotation: Create a list of free models: ["qwen/qwen-2.5-coder-32b-instruct:free", "meta-llama/llama-3.3-70b-instruct:free", "google/gemini-2.0-flash-exp:free"].
++
++Logic: Every time the script runs, pick one at random. If it fails, try the next one.
++
++Headers: Use HTTP-Referer and X-Title as required by OpenRouter.
++
++Environment: It should now look for os.getenv("OPENROUTER_API_KEY").
++
++
+
+# 2026-03-05 00:21:12.624322
++/run export OPENROUTER_API_KEY="your-api-key-here" && python scripts/ai_propose.py
+
+# 2026-03-05 00:21:12.624377
++/run export OPENROUTER_API_KEY="your-api-key-here" && python scripts/ai_propose.py
