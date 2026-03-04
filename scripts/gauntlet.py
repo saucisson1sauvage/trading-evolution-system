@@ -83,9 +83,17 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
         print(f"Error: Config file not found at {config_path}")
         return None
     
-    # Use python3 -m freqtrade to avoid path issues
+    # Use the freqtrade binary from the known location
+    freqtrade_bin = "/home/saus/freqtrade/.venv/bin/freqtrade"
+    # Check if the binary exists
+    if not Path(freqtrade_bin).exists():
+        logger.error(f"Freqtrade binary not found at {freqtrade_bin}")
+        print(f"Error: Freqtrade binary not found at {freqtrade_bin}")
+        print("Please ensure freqtrade is installed and the path is correct.")
+        return None
+    
     cmd = [
-        "/home/saus/freqtrade/.venv/bin/freqtrade", "backtesting",
+        freqtrade_bin, "backtesting",
         "--strategy", strategy_name,
         "--timerange", timerange,
         "--config", str(config_path),
@@ -161,9 +169,7 @@ def main():
     # Positional argument for strategy name
     parser.add_argument("strategy", nargs="?", default="GeneticAssembler",
                        help="Strategy name (default: GeneticAssembler)")
-    # Optional flag for strategy name (for backward compatibility)
-    parser.add_argument("--strategy", dest="strategy_flag", 
-                       help="Strategy name (alternative to positional argument)")
+    # Optional flag for timerange
     parser.add_argument("--timerange", default="20240101-20250101",
                        help="Timerange for backtest (default: 20240101-20250101)")
     parser.add_argument("--verbose", action="store_true",
@@ -171,11 +177,8 @@ def main():
     
     args = parser.parse_args()
     
-    # Determine which strategy name to use
-    strategy_name = args.strategy_flag if args.strategy_flag is not None else args.strategy
-    
     score = run_backtest(
-        strategy_name=strategy_name,
+        strategy_name=args.strategy,
         timerange=args.timerange,
         verbose=args.verbose
     )
