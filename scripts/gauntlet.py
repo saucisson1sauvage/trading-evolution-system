@@ -15,7 +15,7 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
     
     # Using python3 -m freqtrade as requested
     cmd = [
-        "python3", "-m", "freqtrade", "backtesting",
+        "/home/saus/freqtrade/.venv/bin/freqtrade", "backtesting",
         "--strategy", strategy_name,
         "--timerange", timerange,
         "--config", str(config_path),
