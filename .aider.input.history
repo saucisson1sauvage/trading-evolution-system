@@ -203,3 +203,31 @@
 
 # 2026-03-05 00:21:12.624377
 +/run export OPENROUTER_API_KEY="your-api-key-here" && python scripts/ai_propose.py
+
+# 2026-03-05 00:36:11.635004
++/test python3 scripts/gauntlet.py GeneticAssembler
+
+# 2026-03-05 00:37:03.697382
++Extend scripts/gauntlet.py with better error handling and debugging:
++1. Add a --verbose flag that prints the full shell command being executed.
++2. Wrap the backtesting subprocess in a try-except block. 
++3. If the backtest fails, print the last 20 lines of the Freqtrade log.
++4. Add a check at the start to verify if 'user_data/data/binance' contains the required .feather files for the timerange.
+
+# 2026-03-05 00:39:43.406483
++/run python scripts/gauntlet.py --verbose
+
+# 2026-03-05 00:39:43.406706
++/run python scripts/gauntlet.py --verbose
+
+# 2026-03-05 00:39:47.989685
++/run python scripts/gauntlet.py --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 00:39:47.989867
++/run python scripts/gauntlet.py --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 00:39:51.252420
++/run python scripts/gauntlet.py --timerange invalid --verbose
+
+# 2026-03-05 00:39:51.252590
++/run python scripts/gauntlet.py --timerange invalid --verbose

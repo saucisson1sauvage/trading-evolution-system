@@ -623,3 +623,7 @@ Please make sure to review the documentation at https://www.freqtrade.io/en/stab
 2026-03-04 23:08:17 - gatekeeper - INFO - Smoke test SUCCESSFUL.
 2026-03-05 00:33:30 - gauntlet - ERROR - Backtest failed: /usr/bin/python3: No module named freqtrade
 
+2026-03-05 00:39:43 - gauntlet - ERROR - Backtest failed with exit code 1
+2026-03-05 00:39:48 - gauntlet - ERROR - Backtest failed with exit code 1
+2026-03-05 00:39:51 - gauntlet - ERROR - Invalid timerange format: invalid
+2026-03-05 00:40:55 - gauntlet - ERROR - Backtest failed with exit code 1
