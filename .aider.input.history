@@ -231,3 +231,30 @@
 
 # 2026-03-05 00:39:51.252590
 +/run python scripts/gauntlet.py --timerange invalid --verbose
+
+# 2026-03-05 00:43:17.657530
++/test python3 scripts/gauntlet.py GeneticAssembler   
+
+# 2026-03-05 00:44:59.916377
++/run python3 scripts/gauntlet.py GeneticAssembler --verbose
+
+# 2026-03-05 00:44:59.916638
++/run python3 scripts/gauntlet.py GeneticAssembler --verbose
+
+# 2026-03-05 00:45:11.828210
++/run python3 scripts/gauntlet.py --strategy GeneticAssembler --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 00:45:11.828394
++/run python3 scripts/gauntlet.py --strategy GeneticAssembler --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 00:45:13.326698
++/run python3 scripts/gauntlet.py --help
+
+# 2026-03-05 00:45:13.326867
++/run python3 scripts/gauntlet.py --help
+
+# 2026-03-05 00:45:14.723533
++/run python3 scripts/gauntlet.py --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 00:45:14.723741
++/run python3 scripts/gauntlet.py --timerange 20240101-20240131 --verbose

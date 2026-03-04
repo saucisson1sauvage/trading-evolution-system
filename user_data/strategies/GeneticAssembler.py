@@ -8,6 +8,7 @@ import importlib
 import logging
 from typing import Dict, List
 from pandas import DataFrame
+import numpy as np
 from freqtrade.strategy import IStrategy
 from scripts.paths import PathResolver
 
@@ -55,10 +56,26 @@ class GeneticAssembler(IStrategy):
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         params = self.dna.get("parameters", {})
-        dataframe.loc[:, 'enter_long'] = 0
+        # Voting system: Count how many blocks signal entry
+        dataframe.loc[:, 'enter_long_votes'] = 0
+        
         for block in self.blocks:
             if hasattr(block, "populate_entry_trend"):
+                # Reset enter_long before each block to capture its individual output
+                dataframe.loc[:, 'enter_long'] = 0
                 dataframe = block.populate_entry_trend(dataframe, metadata, params)
+                # Increment votes based on this block's output
+                dataframe['enter_long_votes'] += dataframe['enter_long'].fillna(0)
+        
+        # Reset enter_long one final time
+        dataframe.loc[:, 'enter_long'] = 0
+        
+        # Require at least 2 votes (or all available if less than 2)
+        # This increases trade frequency as requested
+        num_blocks = len(self.blocks)
+        required_votes = min(2, num_blocks) if num_blocks > 0 else 1
+        dataframe.loc[dataframe['enter_long_votes'] >= required_votes, 'enter_long'] = 1
+        
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
