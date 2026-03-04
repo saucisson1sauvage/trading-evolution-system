@@ -1,0 +1,41 @@
+
+# 2026-03-04 23:00:40.368075
++The Problem: RSI works in ranging markets but fails in trending ones.
++
++The Solution: By adding a MACD block, the bot can evolve to require both RSI (momentum) and MACD (trend) to agree before entering a trade. This is "High Skill" because it requires Dynamic Boolean Logic—the bot doesn't know how many blocks it has until it reads the dna.json at runtime.
+
+# 2026-03-04 23:02:24.015620
++> **## WHY**
++> We are transitioning from a single-gene organism (RSI only) to a **Polygenic Modular Engine**. The goal is to allow the bot to "discover" that combining multiple indicators (e.g., RSI for momentum + MACD for trend) creates a more stable trading species than a single indicator. 
++>
++> **## WHAT**
++> 1. **New Genetic Block:** Create `user_data/strategies/blocks/macd_simple.py`. 
++>    - Export `populate_indicators` (Standard 12/26/9 MACD).
++>    - Export `populate_entry_trend` (True if MACD line crosses above Signal line).
++>    - Export `populate_exit_trend` (True if MACD line crosses below Signal line).
++> 2. **Logic Assembly:** Upgrade `user_data/strategies/GeneticAssembler.py`.
++>    - It must loop through the `active_blocks` list in `dna.json`.
++>    - **Entry Rule:** Logical AND (All active blocks must signal 1 to enter).
++>    - **Exit Rule:** Logical OR (If any active block signals 1, exit).
++> 3. **Genome Mutation:** Upgrade `scripts/mutate.py`.
++>    - **Structural Mutation (20% chance):** Randomly add or remove a block name from the `active_blocks` list in `dna.json`.
++>    - **Data Integrity:** When a block is added, ensure its default parameters (e.g., `macd_fast: 12`, `macd_slow: 26`) are injected into the `parameters` section of `dna.json` to prevent `KeyError`.
++>    - **Survival Constraint:** Ensure `active_blocks` never becomes empty.
++>
++> **## HOW**
++> - Use `scripts/paths.py` for all file resolutions to maintain environment stability.
++> - Use `importlib` within the Assembler's `__init__` or `populate_indicators` to dynamically load modules.
++> - Use a "Signal Column" strategy: store each block's output in a temporary column (e.g., `&_rsi_buy`) and combine them using `functools.reduce` or a simple bitwise loop.
++> - **Self-Correction:** If a mutation occurs, the script must print the specific structural change (e.g., "Mutation: Added macd_simple to Genome").
+
+# 2026-03-04 23:04:32.202605
++/run python scripts/mutate.py
+
+# 2026-03-04 23:04:32.202766
++/run python scripts/mutate.py
+
+# 2026-03-04 23:04:59.337362
++/run cat user_data/strategies/dna.json
+
+# 2026-03-04 23:04:59.337486
++/run cat user_data/strategies/dna.json
