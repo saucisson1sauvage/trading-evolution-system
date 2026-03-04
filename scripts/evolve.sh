@@ -1,6 +1,5 @@
 #!/bin/bash
-# Master evolution loop
-
+export PYTHONPATH=.
 for i in {1..5}
 do
   echo "--- Generation $i ---"
