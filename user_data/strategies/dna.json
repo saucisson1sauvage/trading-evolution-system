@@ -3,7 +3,7 @@
     "rsi_simple"
   ],
   "parameters": {
-    "rsi_period": 14,
+    "rsi_period": 16,
     "buy_rsi": 35,
     "sell_rsi": 75
   }

@@ -532,3 +532,17 @@ Please make sure to review the documentation at https://www.freqtrade.io/en/stab
 2026-03-04 22:56:14 - gatekeeper - INFO - Freqtrade check successful.
 2026-03-04 22:56:14 - gatekeeper - INFO - Starting ETH/USDT smoke test...
 2026-03-04 22:56:20 - gatekeeper - INFO - Smoke test SUCCESSFUL.
+2026-03-04 22:56:20 - gatekeeper - INFO - Starting syntax check...
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: scripts/logger_utils.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: scripts/paths.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: scripts/mutate.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: scripts/gatekeeper.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: user_data/__init__.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: user_data/strategies/GeneticAssembler.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: user_data/strategies/__init__.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/rsi_simple.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/__init__.py
+2026-03-04 22:56:20 - gatekeeper - INFO - Checking freqtrade installation...
+2026-03-04 22:56:22 - gatekeeper - INFO - Freqtrade check successful.
+2026-03-04 22:56:22 - gatekeeper - INFO - Starting ETH/USDT smoke test...
+2026-03-04 22:56:27 - gatekeeper - INFO - Smoke test SUCCESSFUL.
