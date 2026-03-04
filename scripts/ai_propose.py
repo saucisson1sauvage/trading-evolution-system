@@ -33,7 +33,7 @@ class AIArchitect:
         self.base_headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com/freqtrade/freqtrade",  # Required by OpenRouter
+            "Referer": "https://github.com/freqtrade/freqtrade",  # Required by OpenRouter
             "X-Title": "Freqtrade Genetic Strategy"  # Required by OpenRouter
         }
         
@@ -102,6 +102,10 @@ class AIArchitect:
                 response = requests.post(self.api_url, headers=self.base_headers, json=payload, timeout=30)
                 response.raise_for_status()
                 data = response.json()
+                # Check for errors in the response
+                if "error" in data:
+                    print(f"API returned error for model {model}: {data['error']}")
+                    continue
                 return data["choices"][0]["message"]["content"]
             except requests.exceptions.RequestException as e:
                 print(f"API request failed with model {model}: {e}")
