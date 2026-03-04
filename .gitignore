@@ -1,0 +1,3 @@
+*.sqlite
+__pycache__
+user_data/backtest_results/*
