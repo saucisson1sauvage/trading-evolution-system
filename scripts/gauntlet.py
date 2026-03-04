@@ -158,8 +158,12 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Run a gauntlet backtest for a strategy")
-    parser.add_argument("--strategy", default="GeneticAssembler",
+    # Positional argument for strategy name
+    parser.add_argument("strategy", nargs="?", default="GeneticAssembler",
                        help="Strategy name (default: GeneticAssembler)")
+    # Optional flag for strategy name (for backward compatibility)
+    parser.add_argument("--strategy", dest="strategy_flag", 
+                       help="Strategy name (alternative to positional argument)")
     parser.add_argument("--timerange", default="20240101-20250101",
                        help="Timerange for backtest (default: 20240101-20250101)")
     parser.add_argument("--verbose", action="store_true",
@@ -167,8 +171,11 @@ def main():
     
     args = parser.parse_args()
     
+    # Determine which strategy name to use
+    strategy_name = args.strategy_flag if args.strategy_flag is not None else args.strategy
+    
     score = run_backtest(
-        strategy_name=args.strategy,
+        strategy_name=strategy_name,
         timerange=args.timerange,
         verbose=args.verbose
     )
