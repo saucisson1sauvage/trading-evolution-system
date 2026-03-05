@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 class GeneticAssembler(IStrategy):
     INTERFACE_VERSION = 3
     timeframe = '5m'
+    process_only_new_candles = False
     minimal_roi = {"0": 0.01}
     stoploss = -0.25
 
