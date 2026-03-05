@@ -1,14 +1,14 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
+    "primitive": "CROSS_UP",
     "left": {
-      "primitive": "RSI",
+      "primitive": "EMA",
       "parameters": {
-        "window": 26
+        "window": 10
       }
     },
     "right": {
-      "constant": 51.16
+      "constant": 61.77
     }
   },
   "exit_tree": {

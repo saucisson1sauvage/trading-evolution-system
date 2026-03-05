@@ -1,51 +1,27 @@
 {
   "entry_tree": {
-    "operator": "AND",
-    "children": [
-      {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 33,
-            "std": 3.0
-          }
-        },
-        "right": {
-          "constant": 23.95
-        }
-      },
-      {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "BB_MIDDLE",
-            "parameters": {
-              "window": 17,
-              "std": 2.7
-            }
-          },
-          {
-            "constant": 32.86
-          }
-        ]
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 28,
+        "std": 1.7
       }
-    ]
+    },
+    "right": {
+      "constant": 58.51
+    }
   },
   "exit_tree": {
     "primitive": "GREATER_THAN",
     "left": {
-      "primitive": "EMA",
+      "primitive": "RSI",
       "parameters": {
-        "window": 12
+        "window": 14
       }
     },
     "right": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 22,
-        "std": 2.2
-      }
+      "constant": 70.0
     }
   },
   "fitness": 0.0
