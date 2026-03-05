@@ -474,3 +474,8 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-05 21:46:01,442 | INFO | Gen 0 | Ind 4/5 | Fitness: 0.0000
 2026-03-05 21:46:07,269 | INFO | Gen 0 | Ind 5/5 | Fitness: 0.0000
 2026-03-05 21:46:07,269 | INFO | TOP FITNESS GEN 0: 0.0000
+2026-03-05 21:46:08,309 | INFO | --- Generation 1 ---
+2026-03-05 21:46:14,720 | INFO | Gen 1 | Ind 3/5 | Fitness: 0.0000
+2026-03-05 21:46:21,260 | INFO | Gen 1 | Ind 4/5 | Fitness: 0.0000
+2026-03-05 21:46:27,710 | INFO | Gen 1 | Ind 5/5 | Fitness: 0.0000
+2026-03-05 21:46:27,710 | INFO | TOP FITNESS GEN 1: 0.0000

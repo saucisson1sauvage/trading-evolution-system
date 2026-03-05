@@ -1,27 +1,26 @@
 {
   "entry_tree": {
-    "primitive": "LESS_THAN",
+    "primitive": "GREATER_THAN",
     "left": {
-      "primitive": "BB_LOWER",
+      "primitive": "EMA",
       "parameters": {
-        "window": 32,
-        "std": 1.8
+        "window": 20
       }
     },
     "right": {
-      "constant": 38.77
+      "constant": 29.19
     }
   },
   "exit_tree": {
-    "primitive": "LESS_THAN",
+    "primitive": "CROSS_DOWN",
     "left": {
-      "constant": 65.53
-    },
-    "right": {
       "primitive": "SMA",
       "parameters": {
-        "window": 8
+        "window": 15
       }
+    },
+    "right": {
+      "constant": 47.49
     }
   },
   "fitness": -999.0
