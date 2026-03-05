@@ -16,11 +16,12 @@
 
 ### TEST 2: RSI Indicator Audit
 **Objective**: Restore modular logic and audit RSI indicators for NaN values.
-**Plan**: 
-1. After TEST 1 confirms pipeline is open, restore original entry logic.
-2. Add NaN detection in populate_indicators to log any missing values.
-3. Run backtest with RSI blocks only to verify signal generation.
-**Status**: Pending TEST 1 completion.
+**Implementation**: 
+1. Restored original entry logic in GeneticAssembler.py with voting system
+2. Added NaN detection in populate_indicators
+3. Ensured RSI block uses .fillna(50) (already present in rsi_simple.py)
+4. Adjusted RSI parameters in dna.json to be more permissive (buy_rsi=70, sell_rsi=30) to ensure signal generation
+**Status**: Backtest pending with adjusted parameters.
 
 ## [CANDIDATES FOR GAUNTLET]
 - Automated check for `startup_candle_count`.
