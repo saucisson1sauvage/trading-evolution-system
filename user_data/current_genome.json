@@ -1,23 +1,23 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_UP",
-    "left": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 11
-      }
-    },
-    "right": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 29,
-        "std": 2.4
-      }
-    }
-  },
-  "exit_tree": {
     "operator": "OR",
     "children": [
+      {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 28,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 25
+          }
+        }
+      },
       {
         "operator": "OR",
         "children": [
@@ -25,23 +25,39 @@
             "operator": "NOT",
             "children": [
               {
-                "constant": 84.71
+                "constant": 61.32
               }
             ]
           },
           {
-            "primitive": "CROSS_UP",
+            "primitive": "LESS_THAN",
             "left": {
               "primitive": "SMA",
               "parameters": {
-                "window": 43
+                "window": 46
               }
             },
             "right": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 16
-              }
+              "constant": 68.28
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "constant": 54.85
+          },
+          {
+            "primitive": "SMA",
+            "parameters": {
+              "window": 35
             }
           }
         ]
@@ -50,35 +66,16 @@
         "operator": "OR",
         "children": [
           {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 32
-              }
-            },
-            "right": {
-              "primitive": "BB_LOWER",
-              "parameters": {
-                "window": 29,
-                "std": 1.7
-              }
+            "primitive": "BB_LOWER",
+            "parameters": {
+              "window": 10,
+              "std": 1.6
             }
           },
           {
-            "primitive": "CROSS_DOWN",
-            "left": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 27,
-                "std": 1.8
-              }
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 37
-              }
+            "primitive": "EMA",
+            "parameters": {
+              "window": 15
             }
           }
         ]
