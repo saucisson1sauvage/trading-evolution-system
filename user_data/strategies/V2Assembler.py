@@ -1,26 +1,35 @@
 import importlib
 import sys
-import os
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 import pandas as pd
 from pandas import DataFrame
 
 from decimal import Decimal
-from freqtrade.strategy import IStrategy, TemporalParameter, IntParameter, \
-    CategoricalParameter, stoploss_from_open, RealParameter
+from freqtrade.strategy import IStrategy
 
 # Import PathResolver from our scripts
 try:
-    from scripts.paths import PathResolver
+    # Add the scripts directory to sys.path
+    import sys
+    from pathlib import Path
+    scripts_path = Path(__file__).parent.parent / "scripts"
+    if str(scripts_path) not in sys.path:
+        sys.path.append(str(scripts_path))
+    from paths import PathResolver
 except ImportError:
     # Fallback if PathResolver is not available
     class PathResolver:
         @staticmethod
         def get_strategies_path() -> Path:
             return Path(__file__).parent
+        
+        @staticmethod
+        def get_project_root() -> Path:
+            # Go up two levels from the strategies directory
+            return Path(__file__).parent.parent.parent
 
 class V2Assembler(IStrategy):
     INTERFACE_VERSION = 3
@@ -52,7 +61,8 @@ class V2Assembler(IStrategy):
     ignore_roi_if_entry_signal = False
 
     # Number of candles the strategy requires before producing valid signals
-    startup_candle_count: int = 0
+    # Set to at least the maximum indicator period used in blocks
+    startup_candle_count: int = 100
 
     # Optional order type mapping
     order_types = {
@@ -131,32 +141,42 @@ class V2Assembler(IStrategy):
         strategies_path = PathResolver.get_strategies_path()
         blocks_path = strategies_path / "blocks"
         
+        # Ensure the blocks directory exists
+        if not blocks_path.exists():
+            self.logger.error(f"Blocks directory does not exist: {blocks_path}")
+            return
+        
         # Add the blocks directory to sys.path to ensure imports work
-        # We need to add the parent directory to import blocks as a package
-        blocks_parent = blocks_path.parent
-        if str(blocks_parent) not in sys.path:
-            sys.path.insert(0, str(blocks_parent))
+        # Use append instead of insert to avoid shadowing standard libraries
+        if str(blocks_path) not in sys.path:
+            sys.path.append(str(blocks_path))
         
         for block_name in active_blocks:
             try:
-                # Import the module using the correct path
-                # Since blocks are in user_data.strategies.blocks, we need to import them accordingly
-                # First, try to import from the blocks directory
-                module_path = f"user_data.strategies.blocks.{block_name}"
-                module = importlib.import_module(module_path)
+                # Import the module directly from the blocks directory
+                module = importlib.import_module(block_name)
                 self.blocks[block_name] = module
                 self.logger.info(f"Successfully loaded block: {block_name}")
             except ModuleNotFoundError as e:
                 self.logger.error(f"Failed to load block {block_name}: {e}")
-                # Try alternative approach: import directly from the blocks directory
+                # Try alternative approach: import using the full module path
                 try:
-                    # Add the blocks directory itself to sys.path
-                    if str(blocks_path) not in sys.path:
-                        sys.path.insert(0, str(blocks_path))
-                    # Now try to import without the full path
-                    module = importlib.import_module(block_name)
+                    # Remove .py extension if present
+                    if block_name.endswith('.py'):
+                        block_name = block_name[:-3]
+                    # Try to import as a module relative to the project
+                    # First, get the project root
+                    project_root = PathResolver.get_project_root()
+                    # Calculate the relative path from project root to blocks
+                    # This assumes the structure: project_root/user_data/strategies/blocks/
+                    # We need to add the project root to sys.path
+                    if str(project_root) not in sys.path:
+                        sys.path.append(str(project_root))
+                    # Import using the full path
+                    module_path = f"user_data.strategies.blocks.{block_name}"
+                    module = importlib.import_module(module_path)
                     self.blocks[block_name] = module
-                    self.logger.info(f"Successfully loaded block {block_name} via direct path")
+                    self.logger.info(f"Successfully loaded block {block_name} via full path")
                 except Exception as e2:
                     self.logger.error(f"All attempts to load block {block_name} failed: {e2}")
             except Exception as e:
