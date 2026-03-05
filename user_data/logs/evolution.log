@@ -519,3 +519,10 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-05 21:55:34,249 | INFO | Gen 1 | Ind 4 | Fitness: 0.0000
 2026-03-05 21:55:40,230 | INFO | Gen 1 | Ind 5 | Fitness: 0.0000
 2026-03-05 21:55:40,230 | INFO | BEST OF GEN 1: 0.0000
+2026-03-05 22:05:03,147 | INFO | STARTING GP LOOP: 5 gens, 4 individuals
+2026-03-05 22:05:03,147 | INFO | Gen 0
+2026-03-05 22:05:09,357 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:05:15,066 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:05:22,037 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:05:28,339 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:05:28,339 | INFO | BEST FITNESS: 0.0000

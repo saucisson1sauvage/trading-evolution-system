@@ -4,11 +4,11 @@
     "left": {
       "primitive": "RSI",
       "parameters": {
-        "window": 18
+        "window": 20
       }
     },
     "right": {
-      "constant": 76.61654003986895
+      "constant": 51.09912345830149
     }
   },
   "exit_tree": {
@@ -23,5 +23,5 @@
       "constant": 30.0
     }
   },
-  "fitness": -1.0
+  "fitness": 0.0
 }
