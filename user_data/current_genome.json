@@ -1,41 +1,15 @@
 {
   "entry_tree": {
-    "operator": "OR",
-    "children": [
-      {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 25,
-            "std": 2.3
-          }
-        },
-        "right": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 19,
-            "std": 1.8
-          }
-        }
-      },
-      {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 8
-          }
-        },
-        "right": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 14,
-            "std": 2.1
-          }
-        }
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 26
       }
-    ]
+    },
+    "right": {
+      "constant": 51.16
+    }
   },
   "exit_tree": {
     "primitive": "GREATER_THAN",
