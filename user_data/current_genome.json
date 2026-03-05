@@ -4,24 +4,23 @@
     "left": {
       "primitive": "RSI",
       "parameters": {
-        "window": 49
+        "window": 45
       }
     },
     "right": {
-      "constant": 35.39
+      "constant": 88.38
     }
   },
   "exit_tree": {
-    "primitive": "CROSS_UP",
+    "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 38,
-        "std": 2.8
-      }
+      "constant": 64.81
     },
     "right": {
-      "constant": 62.15
+      "primitive": "EMA",
+      "parameters": {
+        "window": 43
+      }
     }
   },
   "fitness": -999.0
