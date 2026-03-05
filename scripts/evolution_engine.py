@@ -10,7 +10,7 @@ import logging
 import glob
 import subprocess
 import time
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple, Union
 from pathlib import Path
 
 # Constants
@@ -75,6 +75,67 @@ def _generate_indicator_node() -> Dict[str, Any]:
     
     return {"primitive": indicator, "parameters": parameters}
 
+def get_all_nodes(tree: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    Collect all nodes in the tree (including the root) in a flat list.
+    
+    Args:
+        tree: The root node of the tree
+        
+    Returns:
+        List of all node dictionaries in depth-first order
+    """
+    nodes = [tree]
+    if "primitive" in tree:
+        # Check if it's a comparator node (has left/right)
+        if "left" in tree:
+            nodes.extend(get_all_nodes(tree["left"]))
+            nodes.extend(get_all_nodes(tree["right"]))
+    elif "operator" in tree:
+        for child in tree.get("children", []):
+            nodes.extend(get_all_nodes(child))
+    return nodes
+
+def get_parent_info(tree: Dict[str, Any], target_node: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], Union[str, int, None]]:
+    """
+    Find the parent of target_node within tree and the key/index that leads to it.
+    
+    Args:
+        tree: The root of the tree to search
+        target_node: The node whose parent we want to find
+        
+    Returns:
+        (parent_dict, key_or_index) if found, (None, None) otherwise
+        key_or_index can be "left", "right", or an integer index in "children"
+    """
+    # Helper to compare node identity (since we're dealing with dicts)
+    def nodes_equal(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
+        # Simple identity check: compare memory addresses
+        return id(a) == id(b)
+    
+    def search(node: Dict[str, Any], parent: Optional[Dict[str, Any]] = None, 
+               key: Union[str, int, None] = None) -> Tuple[Optional[Dict[str, Any]], Union[str, int, None]]:
+        if nodes_equal(node, target_node):
+            return parent, key
+        
+        if "primitive" in node and "left" in node:
+            # Comparator node
+            left_result = search(node["left"], node, "left")
+            if left_result[0] is not None:
+                return left_result
+            right_result = search(node["right"], node, "right")
+            if right_result[0] is not None:
+                return right_result
+        elif "operator" in node:
+            children = node.get("children", [])
+            for i, child in enumerate(children):
+                child_result = search(child, node, i)
+                if child_result[0] is not None:
+                    return child_result
+        return None, None
+    
+    return search(tree)
+
 def _estimate_subtree_depth(node: Dict[str, Any]) -> int:
     """
     Estimate the depth of a subtree.
@@ -100,6 +161,126 @@ def _estimate_subtree_depth(node: Dict[str, Any]) -> int:
             return 1 + max(_estimate_subtree_depth(node["children"][0]),
                           _estimate_subtree_depth(node["children"][1]))
     return 1
+
+def get_node_type(node: Dict[str, Any]) -> str:
+    """
+    Determine if a node returns boolean or numeric values.
+    
+    Args:
+        node: The tree node
+        
+    Returns:
+        "boolean" for operators and comparators, "numeric" for indicators
+    """
+    if "operator" in node:
+        return "boolean"
+    elif "primitive" in node:
+        if node["primitive"] in COMPARATORS:
+            return "boolean"
+        else:
+            return "numeric"
+    # Should not reach here for valid nodes
+    raise ValueError(f"Cannot determine node type: {node}")
+
+def crossover_trees(tree1: Dict[str, Any], tree2: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """
+    Perform subtree crossover between two trees.
+    
+    Args:
+        tree1: First parent tree
+        tree2: Second parent tree
+        
+    Returns:
+        Two new trees (offspring1, offspring2) after crossover
+    """
+    # Create deep copies to avoid modifying originals
+    offspring1 = copy.deepcopy(tree1)
+    offspring2 = copy.deepcopy(tree2)
+    
+    # Get all nodes from both trees
+    nodes1 = get_all_nodes(offspring1)
+    nodes2 = get_all_nodes(offspring2)
+    
+    # Remove root nodes from selection (to avoid swapping entire trees)
+    # But actually, swapping roots is valid
+    # We'll allow it
+    
+    max_attempts = 10
+    for attempt in range(max_attempts):
+        # Randomly select nodes
+        node1 = random.choice(nodes1)
+        node2 = random.choice(nodes2)
+        
+        # Check if nodes have compatible types
+        try:
+            type1 = get_node_type(node1)
+            type2 = get_node_type(node2)
+        except ValueError:
+            continue  # Skip invalid nodes
+        
+        if type1 != type2:
+            continue  # Types don't match
+        
+        # Find parents and connection info
+        parent1, key1 = get_parent_info(offspring1, node1)
+        parent2, key2 = get_parent_info(offspring2, node2)
+        
+        # Perform swap
+        if parent1 is None:
+            # node1 is the root of offspring1
+            offspring1 = copy.deepcopy(node2)
+            # We need to update nodes1 for the second swap
+            # But since we're swapping, we need to handle this carefully
+            # Actually, if node1 is root, we replace the entire tree
+            # So offspring1 becomes a copy of node2
+            # And we need to put node1 into offspring2 at node2's position
+            if parent2 is None:
+                offspring2 = copy.deepcopy(node1)
+            else:
+                if isinstance(key2, int):
+                    parent2["children"][key2] = copy.deepcopy(node1)
+                elif key2 == "left":
+                    parent2["left"] = copy.deepcopy(node1)
+                elif key2 == "right":
+                    parent2["right"] = copy.deepcopy(node1)
+            break
+        elif parent2 is None:
+            # node2 is the root of offspring2
+            offspring2 = copy.deepcopy(node1)
+            if isinstance(key1, int):
+                parent1["children"][key1] = copy.deepcopy(node2)
+            elif key1 == "left":
+                parent1["left"] = copy.deepcopy(node2)
+            elif key1 == "right":
+                parent1["right"] = copy.deepcopy(node2)
+            break
+        else:
+            # Both have parents, swap normally
+            # Store copies
+            temp1 = copy.deepcopy(node1)
+            temp2 = copy.deepcopy(node2)
+            
+            # Replace node1 with temp2
+            if isinstance(key1, int):
+                parent1["children"][key1] = temp2
+            elif key1 == "left":
+                parent1["left"] = temp2
+            elif key1 == "right":
+                parent1["right"] = temp2
+            
+            # Replace node2 with temp1
+            if isinstance(key2, int):
+                parent2["children"][key2] = temp1
+            elif key2 == "left":
+                parent2["left"] = temp1
+            elif key2 == "right":
+                parent2["right"] = temp1
+            break
+    else:
+        # If we exhausted attempts, return the original copies without crossover
+        pass
+    
+    return offspring1, offspring2
 
 def mutate_tree(tree: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, Any]:
     """
@@ -160,6 +341,13 @@ def mutate_tree(tree: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, A
                     # Subtree replacement
                     depth = _estimate_subtree_depth(node)
                     return _replace_node(node, _generate_indicator_node())
+                elif mutation_type < 0.9:
+                    # Comparator swap mutation (only for comparator nodes)
+                    if node["primitive"] in COMPARATORS:
+                        # Choose a different comparator
+                        other_comps = [c for c in COMPARATORS if c != node["primitive"]]
+                        if other_comps:
+                            node["primitive"] = random.choice(other_comps)
             else:
                 # Comparator node
                 if mutation_type < 0.4:
@@ -292,6 +480,32 @@ def run_backtest(timerange: str = "20241101-20241115") -> bool:
         logging.error(f"Exception while running backtest: {e}")
         return False
 
+def generate_offspring(parents: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Generate a new individual from a population of parents.
+    
+    Args:
+        parents: List of parent trees
+        
+    Returns:
+        A new tree generated through crossover or mutation
+    """
+    if not parents:
+        # No parents available, generate random tree
+        return generate_random_tree(max_depth=5)
+    
+    # Decide operation
+    if random.random() < 0.7 and len(parents) >= 2:
+        # Crossover
+        parent1, parent2 = random.sample(parents, 2)
+        offspring1, offspring2 = crossover_trees(parent1, parent2)
+        # Return one of the offspring at random
+        return random.choice([offspring1, offspring2])
+    else:
+        # Mutation
+        parent = random.choice(parents)
+        return mutate_tree(parent, mutation_rate=0.1)
+
 def calculate_fitness() -> float:
     """
     Calculate fitness score from the most recent backtest result.
@@ -368,9 +582,29 @@ if __name__ == "__main__":
         ]
     )
     
-    # Generate entry and exit trees
-    entry_tree = generate_random_tree(max_depth=5)
-    exit_tree = generate_random_tree(max_depth=5)
+    # Test the new crossover and mutation functionality
+    logging.info("Testing genetic operators...")
+    
+    # Generate two parent trees
+    parent1 = generate_random_tree(max_depth=5)
+    parent2 = generate_random_tree(max_depth=5)
+    
+    # Perform crossover
+    offspring1, offspring2 = crossover_trees(parent1, parent2)
+    logging.info("Crossover completed successfully")
+    
+    # Test mutation
+    mutated = mutate_tree(parent1, mutation_rate=0.2)
+    logging.info("Mutation completed successfully")
+    
+    # Test generate_offspring
+    parents = [parent1, parent2]
+    new_individual = generate_offspring(parents)
+    logging.info("Offspring generation completed successfully")
+    
+    # Generate entry and exit trees using the new functionality
+    entry_tree = generate_offspring(parents)
+    exit_tree = generate_offspring(parents)
     
     # Create a proper genome structure
     genome = {
@@ -380,7 +614,7 @@ if __name__ == "__main__":
     
     # Save as current genome
     save_current_genome(genome)
-    logging.info("Saved new random genome with entry and exit trees. Starting backtest...")
+    logging.info("Saved new genome generated with genetic operators. Starting backtest...")
     
     # Verify the file was saved correctly
     # Check if the file exists and has the right structure
