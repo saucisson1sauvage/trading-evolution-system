@@ -6,18 +6,22 @@ def populate_indicators(dataframe: DataFrame, metadata: dict, params: dict) -> D
     return dataframe
 
 def populate_entry_trend(dataframe: DataFrame, metadata: dict, params: dict) -> DataFrame:
+    # Use DNA params: buy_rsi
+    buy_threshold = params.get('buy_rsi', 30)
     dataframe.loc[
         (
-            (dataframe['rsi'] < params.get('buy_rsi', 30)) &
+            (dataframe['rsi'] < buy_threshold) &
             (dataframe['volume'] > 0)
         ),
         'enter_long'] = 1
     return dataframe
 
 def populate_exit_trend(dataframe: DataFrame, metadata: dict, params: dict) -> DataFrame:
+    # Use DNA params: sell_rsi
+    sell_threshold = params.get('sell_rsi', 70)
     dataframe.loc[
         (
-            (dataframe['rsi'] > params.get('sell_rsi', 70)) &
+            (dataframe['rsi'] > sell_threshold) &
             (dataframe['volume'] > 0)
         ),
         'exit_long'] = 1

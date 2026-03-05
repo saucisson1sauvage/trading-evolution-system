@@ -70,11 +70,9 @@ class GeneticAssembler(IStrategy):
         # Reset enter_long one final time
         dataframe.loc[:, 'enter_long'] = 0
         
-        # Require at least 2 votes (or all available if less than 2)
-        # This increases trade frequency as requested
-        num_blocks = len(self.blocks)
-        required_votes = min(2, num_blocks) if num_blocks > 0 else 1
-        dataframe.loc[dataframe['enter_long_votes'] >= required_votes, 'enter_long'] = 1
+        # Require only 1 vote to trigger entry, ensuring trades are made
+        # (A vote count >= 1 means at least one block signaled entry)
+        dataframe.loc[dataframe['enter_long_votes'] >= 1, 'enter_long'] = 1
         
         return dataframe
 

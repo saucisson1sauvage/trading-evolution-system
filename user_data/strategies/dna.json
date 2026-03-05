@@ -2,7 +2,7 @@
   "active_blocks": ["rsi_simple"],
   "parameters": {
     "rsi_period": 14,
-    "buy_rsi": 40,
-    "sell_rsi": 60
+    "buy_rsi": 45,
+    "sell_rsi": 55
   }
 }
