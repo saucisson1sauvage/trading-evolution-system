@@ -1,34 +1,27 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
+    "primitive": "LESS_THAN",
     "left": {
-      "primitive": "BB_UPPER",
+      "primitive": "RSI",
       "parameters": {
-        "window": 42,
-        "std": 1.6
+        "window": 49
       }
     },
     "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 7
-      }
+      "constant": 35.39
     }
   },
   "exit_tree": {
-    "primitive": "GREATER_THAN",
+    "primitive": "CROSS_UP",
     "left": {
-      "primitive": "EMA",
+      "primitive": "BB_MIDDLE",
       "parameters": {
-        "window": 12
+        "window": 38,
+        "std": 2.8
       }
     },
     "right": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 22,
-        "std": 2.2
-      }
+      "constant": 62.15
     }
   },
   "fitness": -999.0
