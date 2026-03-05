@@ -258,3 +258,74 @@
 
 # 2026-03-05 00:45:14.723741
 +/run python3 scripts/gauntlet.py --timerange 20240101-20240131 --verbose
+
+# 2026-03-05 02:24:45.809120
++  [WHY]
++  The ETH/USDT tournament is returning 0.0% scores
++  because no trades are being executed. We have
++  confirmed data availability from 2024-10-01. You
++  must now perform a "Serial Isolation Audit" to prove
++  the pipeline is open.
++
++
++  [HOW]
++  Execute the Always Buy stress test and Indicator
++  Audit within the 20241101-20241115 window.
++
++
++  [WHAT]
++   1. TEST 1: Force enter_long = 1 in
++      GeneticAssembler.py and run backtest for
++      20241101-20241115. PROVE TRADES > 0.
++   2. TEST 2: Restore modular logic and audit RSI
++      indicators for NaN values.
++   3. LOG: Update user_data/logs/audit_log.md with
++      results.
+
+# 2026-03-05 02:25:36.686796
++/run freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+
+# 2026-03-05 02:25:36.686846
++/run freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+
+# 2026-03-05 02:27:34.986553
++What's wrong? Fix
+
+# 2026-03-05 02:28:12.940971
++/run pip install -U freqtrade
+
+# 2026-03-05 02:28:12.941036
++/run pip install -U freqtrade
+
+# 2026-03-05 02:28:16.241835
++/run python -m freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+
+# 2026-03-05 02:28:16.241894
++/run python -m freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+
+# 2026-03-05 02:28:46.544237
++/run freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+
+# 2026-03-05 02:44:11.905050
++  [WHY]
++  The ETH/USDT tournament is returning 0.0% scores
++  because no trades are being executed. We have
++  confirmed data availability from 2024-10-01. You
++  must now perform a "Serial Isolation Audit" to prove
++  the pipeline is open.
++
++
++  [HOW]
++  Execute the Always Buy stress test and Indicator
++  Audit within the 20241101-20241115 window.
++
++
++  [WHAT]
++   1. TEST 1: Force enter_long = 1 in
++      GeneticAssembler.py and run backtest for
++      20241101-20241115. PROVE TRADES > 0.
++   2. TEST 2: Restore modular logic and audit RSI
++      indicators for NaN values.
++   3. LOG: Update user_data/logs/audit_log.md with
++      result 
++freqtrade command should be fixed tho
