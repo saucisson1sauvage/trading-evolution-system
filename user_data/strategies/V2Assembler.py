@@ -85,21 +85,40 @@ class V2Assembler(IStrategy):
         import json
         from pathlib import Path
         
-        # Try to find config_v2.json in the project root
+        # Try multiple possible locations for config_v2.json
+        possible_paths = []
+        
+        # 1. Try PathResolver.get_project_root()
         try:
             project_root = PathResolver.get_project_root()
-            config_path = project_root / "config_v2.json"
-        except:
-            # Fallback to current directory
-            config_path = Path("config_v2.json")
+            possible_paths.append(project_root / "config_v2.json")
+        except Exception as e:
+            self.logger.debug(f"Could not get project root: {e}")
         
-        if not config_path.exists():
-            self.logger.error("config_v2.json not found!")
+        # 2. Try current strategy directory
+        current_dir = Path(__file__).parent
+        possible_paths.append(current_dir / "config_v2.json")
+        
+        # 3. Try parent directory
+        possible_paths.append(current_dir.parent / "config_v2.json")
+        
+        # 4. Try current working directory
+        possible_paths.append(Path.cwd() / "config_v2.json")
+        
+        config_path = None
+        for path in possible_paths:
+            if path.exists():
+                config_path = path
+                break
+        
+        if config_path is None:
+            self.logger.error("config_v2.json not found in any of the searched locations!")
             return {
                 "active_blocks": [],
                 "parameters": {}
             }
         
+        self.logger.info(f"Loading config from: {config_path}")
         with open(config_path, 'r') as f:
             return json.load(f)
 
@@ -112,19 +131,33 @@ class V2Assembler(IStrategy):
         blocks_path = strategies_path / "blocks"
         
         # Add the blocks directory to sys.path to ensure imports work
-        if str(blocks_path) not in sys.path:
-            sys.path.insert(0, str(blocks_path))
+        # We need to add the parent directory to import blocks as a package
+        blocks_parent = blocks_path.parent
+        if str(blocks_parent) not in sys.path:
+            sys.path.insert(0, str(blocks_parent))
         
         for block_name in active_blocks:
             try:
-                # Import the module
-                module = importlib.import_module(block_name)
+                # Import the module using the correct path
+                # Since blocks are in user_data.strategies.blocks, we need to import them accordingly
+                # First, try to import from the blocks directory
+                module_path = f"user_data.strategies.blocks.{block_name}"
+                module = importlib.import_module(module_path)
                 self.blocks[block_name] = module
                 self.logger.info(f"Successfully loaded block: {block_name}")
             except ModuleNotFoundError as e:
                 self.logger.error(f"Failed to load block {block_name}: {e}")
-                # Try to log the current sys.path for debugging
-                self.logger.debug(f"Current sys.path: {sys.path}")
+                # Try alternative approach: import directly from the blocks directory
+                try:
+                    # Add the blocks directory itself to sys.path
+                    if str(blocks_path) not in sys.path:
+                        sys.path.insert(0, str(blocks_path))
+                    # Now try to import without the full path
+                    module = importlib.import_module(block_name)
+                    self.blocks[block_name] = module
+                    self.logger.info(f"Successfully loaded block {block_name} via direct path")
+                except Exception as e2:
+                    self.logger.error(f"All attempts to load block {block_name} failed: {e2}")
             except Exception as e:
                 self.logger.error(f"Unexpected error loading block {block_name}: {e}")
 
@@ -133,8 +166,12 @@ class V2Assembler(IStrategy):
         Add indicators to the dataframe by calling each block's populate_indicators function.
         """
         params = self.config_v2.get('parameters', {})
+        active_blocks = self.config_v2.get('active_blocks', [])
         
-        for block_name, module in self.blocks.items():
+        for block_name in active_blocks:
+            module = self.blocks.get(block_name)
+            if module is None:
+                continue
             try:
                 if hasattr(module, 'populate_indicators'):
                     dataframe = module.populate_indicators(dataframe, metadata, params)
@@ -149,6 +186,7 @@ class V2Assembler(IStrategy):
         Set entry signals by calling each block's populate_entry_trend function.
         """
         params = self.config_v2.get('parameters', {})
+        active_blocks = self.config_v2.get('active_blocks', [])
         
         # Initialize entry columns if they don't exist
         if 'enter_long' not in dataframe.columns:
@@ -156,7 +194,10 @@ class V2Assembler(IStrategy):
         if 'enter_short' not in dataframe.columns:
             dataframe['enter_short'] = 0
         
-        for block_name, module in self.blocks.items():
+        for block_name in active_blocks:
+            module = self.blocks.get(block_name)
+            if module is None:
+                continue
             try:
                 if hasattr(module, 'populate_entry_trend'):
                     dataframe = module.populate_entry_trend(dataframe, metadata, params)
@@ -171,6 +212,7 @@ class V2Assembler(IStrategy):
         Set exit signals by calling each block's populate_exit_trend function.
         """
         params = self.config_v2.get('parameters', {})
+        active_blocks = self.config_v2.get('active_blocks', [])
         
         # Initialize exit columns if they don't exist
         if 'exit_long' not in dataframe.columns:
@@ -178,7 +220,10 @@ class V2Assembler(IStrategy):
         if 'exit_short' not in dataframe.columns:
             dataframe['exit_short'] = 0
         
-        for block_name, module in self.blocks.items():
+        for block_name in active_blocks:
+            module = self.blocks.get(block_name)
+            if module is None:
+                continue
             try:
                 if hasattr(module, 'populate_exit_trend'):
                     dataframe = module.populate_exit_trend(dataframe, metadata, params)
