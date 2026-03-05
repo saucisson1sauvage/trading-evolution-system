@@ -553,3 +553,7 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-05 22:11:31,402 | WARNING |   > No trades or parsing failed.
 2026-03-05 22:11:37,030 | WARNING |   > No trades or parsing failed.
 2026-03-05 22:11:37,030 | INFO | BEST FITNESS: 0.0000
+2026-03-05 22:11:37,918 | INFO | Gen 2
+2026-03-05 22:11:43,368 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:11:49,057 | WARNING |   > No trades or parsing failed.
+2026-03-05 22:11:49,057 | INFO | BEST FITNESS: 0.0000
