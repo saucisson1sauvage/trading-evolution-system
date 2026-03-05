@@ -1,8 +1,15 @@
 {
-    "active_blocks": ["rsi_simple", "exit_basic"],
-    "parameters": {
-        "rsi_period": 14,
-        "buy_rsi": 30,
-        "sell_rsi": 70
-    }
+  "active_blocks": ["rsi_simple", "macd_simple", "bollinger_basic", "ema_cross", "exit_basic"],
+  "parameters": {
+    "rsi_period": 14,
+    "buy_rsi": 30,
+    "sell_rsi": 70,
+    "macd_fast": 12,
+    "macd_slow": 26,
+    "macd_signal": 9,
+    "bb_length": 20,
+    "bb_std": 2.0,
+    "ema_fast": 9,
+    "ema_slow": 20
+  }
 }

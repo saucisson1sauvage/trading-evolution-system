@@ -2,3 +2,4 @@
 __pycache__
 user_data/backtest_results/*
 .aider*
+.env

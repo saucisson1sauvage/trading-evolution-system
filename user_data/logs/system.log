@@ -759,3 +759,33 @@ FileNotFoundError: [Errno 2] No such file or directory: '$FREQTRADE_BIN'
 2026-03-05 00:56:28,621 - freqtrade.data.history.datahandlers.idatahandler - WARNING - No history for ETH/USDT, spot, 5m found. Use `freqtrade download-data` to download the data
 2026-03-05 00:56:28,621 - freqtrade - ERROR - No data found. Terminating.
 
+2026-03-05 12:03:10 - gatekeeper - INFO - Starting syntax check...
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/ai_propose.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/league_manager.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/logger_utils.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/paths.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/mutate.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/gauntlet.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: scripts/gatekeeper.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/__init__.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/GeneticAssembler.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/__init__.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/V2Assembler.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/macd_simple.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/rsi_simple.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/exit_basic.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Syntax OK: user_data/strategies/blocks/__init__.py
+2026-03-05 12:03:10 - gatekeeper - INFO - Checking freqtrade installation...
+2026-03-05 12:03:12 - gatekeeper - INFO - Freqtrade check successful.
+2026-03-05 12:03:12 - gatekeeper - INFO - Starting ETH/USDT smoke test...
+2026-03-05 12:03:12 - gatekeeper - INFO - Testing strategy: GeneticAssembler
+2026-03-05 12:03:16 - gatekeeper - INFO - Strategy GeneticAssembler smoke test SUCCESSFUL.
+2026-03-05 12:03:16 - gatekeeper - INFO - Testing strategy: V2Assembler
+2026-03-05 12:03:20 - gatekeeper - ERROR - Strategy V2Assembler smoke test FAILED: 2026-03-05 12:03:16,689 - freqtrade - INFO - freqtrade 2026.3-dev-ac8f408
+2026-03-05 12:03:16,886 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2026-03-05 12:03:17,929 - freqtrade.configuration.load_config - INFO - Using config: config.json ...
+2026-03-05 12:03:17,932 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-03-05 12:03:17,932 - freqtrade.loggers - INFO - Logfile configured
+2026-03-05 12:03:17,933 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-03-05 12:03:17
+2026-03-05 12:03:20 - gatekeeper - WARNING - Some smoke tests had issues.

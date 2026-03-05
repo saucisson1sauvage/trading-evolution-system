@@ -537,3 +537,250 @@
 
 # 2026-03-05 11:29:56.267022
 +/run git add .
+
+# 2026-03-05 11:29:56.462389
++/run git commit -m "Audit Success: Proved modular RSI execution for ETH/USDT with 16 trades"
+
+# 2026-03-05 11:29:56.462443
++/run git commit -m "Audit Success: Proved modular RSI execution for ETH/USDT with 16 trades"
+
+# 2026-03-05 11:29:58.600836
++/run git status
+
+# 2026-03-05 11:29:58.600889
++/run git status
+
+# 2026-03-05 11:30:00.343201
++/run git remote remove origin
+
+# 2026-03-05 11:30:00.343254
++/run git remote remove origin
+
+# 2026-03-05 11:30:00.509788
++/run git remote add origin https://github.com/saucisson1sauvage/trading-evolution-system.git
+
+# 2026-03-05 11:30:00.509879
++/run git remote add origin https://github.com/saucisson1sauvage/trading-evolution-system.git
+
+# 2026-03-05 11:30:00.671058
++/run git push -u origin main
+
+# 2026-03-05 11:30:00.671109
++/run git push -u origin main
+
+# 2026-03-05 11:30:20.701384
++/run git push https://<TOKEN>@github.com/saucisson1sauvage/trading-evolution-system.git main
+
+# 2026-03-05 11:30:20.701437
++/run git push https://<TOKEN>@github.com/saucisson1sauvage/trading-evolution-system.git main
+
+# 2026-03-05 11:30:28.839706
++/run git log --oneline -1
+
+# 2026-03-05 11:30:28.839854
++/run git log --oneline -1
+
+# 2026-03-05 11:53:58.940047
++/drop
+
+# 2026-03-05 11:54:00.671621
++/clear
+
+# 2026-03-05 11:56:50.757637
++[WHY]
++We are implementing a modular "Lego Block" architecture. The V2Assembler.py must be a dynamic skeleton that assembles strategy logic at runtime based on config_v2.json.
++
++[HOW]
++Use importlib.import_module to load blocks. We must ensure the strategy can find the blocks/ directory regardless of where Freqtrade is launched from.
++
++[WHAT]
++Create config_v2.json in project root:
++
++active_blocks: ["rsi_simple", "exit_basic"]
++
++parameters: { "rsi_period": 14, "buy_rsi": 30, "sell_rsi": 70 }
++
++Create V2Assembler.py:
++
++Use from scripts.paths import PathResolver to locate files.
++
++Dynamic Import Logic: In __init__, add the user_data/strategies path to sys.path.
++
++Loop Logic: In populate_indicators, populate_entry_trend, and populate_exit_trend, iterate through the active_blocks list. For each block, call the corresponding function (e.g., module.populate_indicators(dataframe, self.config_v2['parameters'])).
++
++Safety: Wrap imports in try/except ModuleNotFoundError and log failures to user_data/logs/system.log.
++
++
+
+# 2026-03-05 12:03:09.576647
++/run python -m py_compile user_data/strategies/V2Assembler.py
+
+# 2026-03-05 12:03:09.576709
++/run python -m py_compile user_data/strategies/V2Assembler.py
+
+# 2026-03-05 12:03:10.442003
++/run python scripts/gatekeeper.py
+
+# 2026-03-05 12:03:10.442054
++/run python scripts/gatekeeper.py
+
+# 2026-03-05 12:04:00.779757
++/run freqtrade backtesting --strategy V2Assembler --timerange 20260201-20260202
+
+# 2026-03-05 12:04:00.779809
++/run freqtrade backtesting --strategy V2Assembler --timerange 20260201-20260202
+
+# 2026-03-05 12:04:08.765067
++/run freqtrade backtesting --strategy V2Assembler --timerange 20260227-20260228
+
+# 2026-03-05 12:04:08.765219
++/run freqtrade backtesting --strategy V2Assembler --timerange 20260227-20260228
+
+# 2026-03-05 12:04:18.258082
++/run freqtrade download-data --timerange 20260227-20260228 --timeframe 5m
+
+# 2026-03-05 12:04:18.258229
++/run freqtrade download-data --timerange 20260227-20260228 --timeframe 5m
+
+# 2026-03-05 12:06:23.189735
++/drop
+
+# 2026-03-05 12:06:25.579041
++/clear
+
+# 2026-03-05 12:06:43.508055
++[WHY]
++Blocks must be "stateless" functions to be hot-swappable.
++
++[HOW]
++Create standardized Python files in user_data/strategies/blocks/.
++
++[WHAT]
++Create rsi_simple.py:
++
++populate_indicators(df, params): Calculate RSI using pandas_ta.
++
++populate_entry_trend(df, params): Set enter_long where df['rsi'] < params['buy_rsi'].
++
++populate_exit_trend(df, params): Return df unchanged (exit is handled by other blocks).
++
++Create exit_basic.py:
++
++populate_indicators(df, params): Return df.
++
++populate_entry_trend(df, params): Return df.
++
++populate_exit_trend(df, params): Set exit_long where df['rsi'] > params['sell_rsi'].
++
++Constraint: Use .loc for all assignments to avoid SettingWithCopyWarnings.
+
+# 2026-03-05 12:40:58.555350
++[WHY]
++Now that the logic blocks (rsi_simple.py, exit_basic.py) are ready, we need the main engine V2Assembler.py to orchestrate them.
++
++[HOW]
++Implement a dynamic Freqtrade strategy that imports blocks from user_data/strategies/blocks/ at runtime.
++
++[WHAT]
++Create V2Assembler.py:
++
++Import sys and importlib.
++
++In __init__, add the strategy folder to sys.path.
++
++Load active_blocks from config_v2.json.
++
++Implement populate_indicators, populate_entry_trend, and populate_exit_trend by looping through each active block and calling its respective function.
++
++Constraint: Use try/except for block loading to prevent the whole strategy from crashing if one file has a syntax error.
++
++Sync: Ensure it uses the parameters defined in config_v2.json for things like buy_rsi and sell_rsi.
+
+# 2026-03-05 12:43:43.915920
++/run freqtrade backtesting --strategy V2Assembler --timerange 20240101-20250101
+
+# 2026-03-05 12:43:43.916000
++/run freqtrade backtesting --strategy V2Assembler --timerange 20240101-20250101
+
+# 2026-03-05 12:50:58.831564
++[WHY]
++The strategy V2Assembler.py is failing to load because of an incorrect import: cannot import name 'Decimal' from 'freqtrade.strategy'. We need to fix the imports and refine the block loading logic.
++
++[HOW]
++Remove the broken import and simplify the sys.path injection.
++
++[WHAT]
++Fix Imports: In V2Assembler.py, remove from freqtrade.strategy import ..., Decimal. If Decimal is needed, use from decimal import Decimal.
++
++Refine sys.path: Instead of sys.path.insert(0, ...), use sys.path.append() to avoid shadowing standard libraries.
++
++Validation: Ensure PathResolver is used to get the absolute path to user_data/strategies/blocks.
++
++Check Block Loading: Verify that importlib.import_module uses the correct namespace.
+
+# 2026-03-05 12:52:35.010653
++/run freqtrade backtesting --strategy V2Assembler --timerange 20240101-20250101
+
+# 2026-03-05 12:52:35.010807
++/run freqtrade backtesting --strategy V2Assembler --timerange 20240101-20250101
+
+# 2026-03-05 12:55:53.361435
++[WHY]
++Phase 2 is successful. Now we move to Phase 3: Building the Library. We need more "Lego Blocks" to give the Assembler more options for mutation.
++
++[HOW]
++Create 3 new files in user_data/strategies/blocks/ following the established stateless pattern.
++
++[WHAT]
++macd_simple.py:
++
++Indicators: MACD (12, 26, 9).
++
++Entry: macd > macdsignal.
++
++Exit: macd < macdsignal.
++
++bollinger_basic.py:
++
++Indicators: Bollinger Bands (20, 2).
++
++Entry: close < lower_band.
++
++Exit: close > upper_band.
++
++ema_cross.py:
++
++Indicators: EMA 9 and EMA 20.
++
++Entry: ema_9 > ema_20.
++
++Exit: ema_9 < ema_20.
++
++[CONSTRAINT]
++Ensure all files use .loc for signal assignments and return the dataframe correctly.
++
++
+
+# 2026-03-05 12:59:42.326413
++/run python -c "import sys; sys.path.append('user_data/strategies/blocks'); import macd_simple, bollinger_basic, ema_cross; print('All blocks import successfully')"
+
+# 2026-03-05 12:59:42.326459
++/run python -c "import sys; sys.path.append('user_data/strategies/blocks'); import macd_simple, bollinger_basic, ema_cross; print('All blocks import successfully')"
+
+# 2026-03-05 13:00:22.932794
++/run cd /home/saus/crypto-crew-4.0 && python -c "import sys; sys.path.append('user_data/strategies/blocks'); import macd_simple; print('macd_simple imports ok')"
+
+# 2026-03-05 13:00:22.932956
++/run cd /home/saus/crypto-crew-4.0 && python -c "import sys; sys.path.append('user_data/strategies/blocks'); import macd_simple; print('macd_simple imports ok')"
+
+# 2026-03-05 13:00:24.593233
++/run python -m py_compile user_data/strategies/blocks/bollinger_basic.py user_data/strategies/blocks/ema_cross.py
+
+# 2026-03-05 13:00:24.593391
++/run python -m py_compile user_data/strategies/blocks/bollinger_basic.py user_data/strategies/blocks/ema_cross.py
+
+# 2026-03-05 13:05:05.862466
++/undo
+
+# 2026-03-05 13:08:24.140721
++/home/saus/freqtrade/.venv/bin/python -c "import sys; sys.path.append('user_data/strategies/blocks'); import macd_simple, bollinger_basic, ema_cross; print('All blocks import successfully')"
