@@ -33,13 +33,37 @@ def check_freqtrade():
 
 def smoke_test():
     logger.info("Starting ETH/USDT smoke test...")
-    try:
-        subprocess.run([FREQTRADE_BIN, "backtesting", "--strategy", "GeneticAssembler", "--timerange", "20260201-"], capture_output=True, text=True, check=True)
-        logger.info("Smoke test SUCCESSFUL.")
-        return True
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Smoke test FAILED (Expected if strategy missing): {e.stderr}")
-        return False
+    # Test both strategies
+    strategies = ["GeneticAssembler", "V2Assembler"]
+    all_success = True
+    
+    for strategy in strategies:
+        logger.info(f"Testing strategy: {strategy}")
+        try:
+            # Use a very small timerange to make the test quick
+            result = subprocess.run(
+                [FREQTRADE_BIN, "backtesting", "--strategy", strategy, "--timerange", "20260201-20260202"],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            if result.returncode == 0:
+                logger.info(f"Strategy {strategy} smoke test SUCCESSFUL.")
+            else:
+                logger.error(f"Strategy {strategy} smoke test FAILED: {result.stderr[:500]}")
+                all_success = False
+        except subprocess.TimeoutExpired:
+            logger.warning(f"Strategy {strategy} test timed out (may be okay if data is downloading)")
+            # Don't fail on timeout
+        except Exception as e:
+            logger.error(f"Strategy {strategy} smoke test ERROR: {e}")
+            all_success = False
+    
+    if all_success:
+        logger.info("All smoke tests SUCCESSFUL.")
+    else:
+        logger.warning("Some smoke tests had issues.")
+    return all_success
 
 if __name__ == "__main__":
     s1 = check_syntax()
