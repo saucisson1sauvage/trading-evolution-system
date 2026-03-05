@@ -58,13 +58,49 @@ class GeneticAssembler(IStrategy):
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # Phase 1: Force-Buy Test
-        # Hard-code all entries to 1 to prove execution
-        dataframe.loc[:, 'enter_long'] = 1
+        # Restore modular voting logic with required_votes = 1
+        params = self.dna.get("parameters", {})
+        dataframe.loc[:, 'enter_long'] = 0
         
-        # Log for debugging
-        print(f"DEBUG: Force-Buy Test - All enter_long set to 1")
-        print(f"DEBUG: Total rows: {len(dataframe)}")
+        # Track votes from each block
+        vote_columns = []
+        for i, block in enumerate(self.blocks):
+            if hasattr(block, "populate_entry_trend"):
+                # Create a temporary dataframe to avoid modifying original
+                temp_df = dataframe.copy()
+                temp_df = block.populate_entry_trend(temp_df, metadata, params)
+                # Check if the block added enter_long signals
+                if 'enter_long' in temp_df.columns:
+                    # Create a vote column for this block
+                    vote_col = f'vote_{i}'
+                    dataframe[vote_col] = temp_df['enter_long'].fillna(0).astype(int)
+                    vote_columns.append(vote_col)
+        
+        # Sum votes and require at least 1 vote
+        if vote_columns:
+            dataframe['total_votes'] = dataframe[vote_columns].sum(axis=1)
+            dataframe.loc[dataframe['total_votes'] >= 1, 'enter_long'] = 1
+            
+            # Deep-trace audit: print last 10 candles with RSI and votes
+            if 'rsi' in dataframe.columns:
+                # Create a display dataframe with relevant columns
+                display_cols = ['date']
+                if 'rsi' in dataframe.columns:
+                    display_cols.append('rsi')
+                display_cols.extend(vote_columns)
+                display_cols.append('total_votes')
+                display_cols.append('enter_long')
+                
+                print("DEBUG: Last 10 candles with RSI and voting state:")
+                print(dataframe[display_cols].tail(10))
+                
+                # Also print statistics
+                print(f"DEBUG: Total rows with votes >= 1: {(dataframe['total_votes'] >= 1).sum()}")
+                print(f"DEBUG: Max votes: {dataframe['total_votes'].max()}")
+                print(f"DEBUG: RSI range: [{dataframe['rsi'].min():.2f}, {dataframe['rsi'].max():.2f}]")
+                print(f"DEBUG: RSI mean: {dataframe['rsi'].mean():.2f}")
+        else:
+            print("DEBUG: No voting blocks found")
         
         return dataframe
 

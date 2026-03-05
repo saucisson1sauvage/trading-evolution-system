@@ -17,11 +17,11 @@
 ### TEST 2: RSI Indicator Audit
 **Objective**: Restore modular logic and audit RSI indicators for NaN values.
 **Implementation**: 
-1. Restored original entry logic in GeneticAssembler.py with voting system
-2. Added NaN detection in populate_indicators
-3. Ensured RSI block uses .fillna(50) (already present in rsi_simple.py)
-4. Adjusted RSI parameters in dna.json to be more permissive (buy_rsi=70, sell_rsi=30) to ensure signal generation
-**Status**: Backtest pending with adjusted parameters.
+1. Reverted hard-coded enter_long = 1 in GeneticAssembler.py
+2. Restored modular voting logic with deep-trace debugging
+3. Enhanced RSI block with detailed NaN audit and debugging
+4. RSI parameters in dna.json are set to buy_rsi=70, sell_rsi=30 (very permissive)
+**Status**: Ready for modular backtest execution.
 
 ## [CANDIDATES FOR GAUNTLET]
 - Automated check for `startup_candle_count`.
@@ -31,8 +31,8 @@
 ## [AUDIT RESULTS]
 - **Data Verification**: Confirmed data exists for ETH/USDT
 - **Pipe Test**: SUCCESS - 29 trades generated with force-buy logic
-- **Indicator Test**: Pending - modular logic with RSI block needs verification
-- **GitHub Sync**: All changes will be pushed to close the 11-hour gap
+- **Indicator Test**: In progress - modular logic with RSI block under deep-trace audit
+- **GitHub Sync**: Will be attempted after successful modular test
 
 ## [NEXT STEPS]
 1. Complete backtest with adjusted RSI parameters

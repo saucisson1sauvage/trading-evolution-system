@@ -3,9 +3,19 @@ from pandas import DataFrame
 import numpy as np
 
 def populate_indicators(dataframe: DataFrame, metadata: dict, params: dict) -> DataFrame:
-    dataframe['rsi'] = ta.rsi(dataframe['close'], length=params.get('rsi_period', 14))
-    # Requirement: Fix NaN issues discovered during audit
+    rsi_period = params.get('rsi_period', 14)
+    # Calculate RSI
+    dataframe['rsi'] = ta.rsi(dataframe['close'], length=rsi_period)
+    
+    # Deep audit: Check for NaN before and after fill
+    nan_before = dataframe['rsi'].isna().sum()
     dataframe['rsi'] = dataframe['rsi'].fillna(50)
+    nan_after = dataframe['rsi'].isna().sum()
+    
+    # Print debug info
+    print(f"RSI BLOCK DEBUG: period={rsi_period}, NaN before fill: {nan_before}, after fill: {nan_after}")
+    print(f"RSI BLOCK DEBUG: RSI sample values (last 5): {dataframe['rsi'].tail(5).tolist()}")
+    
     return dataframe
 
 def populate_entry_trend(dataframe: DataFrame, metadata: dict, params: dict) -> DataFrame:
