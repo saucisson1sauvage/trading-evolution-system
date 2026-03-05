@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Dict, Any, Union
 import pandas as pd
+from pandas import DataFrame
 from freqtrade.strategy import IStrategy
 
 # Freqtrade standard pathing for user_data/strategies

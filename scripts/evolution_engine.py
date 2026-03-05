@@ -54,7 +54,7 @@ def run_backtest(timerange: str = "20241101-20241115") -> bool:
         "--config", str(PROJECT_ROOT / "config.json"),
         "--userdir", str(PROJECT_ROOT / "user_data"),
         "--export", "trades",
-        "--export-filename", "evolution_results.json"
+        "--notes", "evolution_engine"
     ]
     try:
         res = subprocess.run(command, capture_output=True, text=True)
@@ -68,7 +68,7 @@ def run_backtest(timerange: str = "20241101-20241115") -> bool:
 
 def calculate_fitness() -> float:
     # Search for the exported file in the results dir
-    pattern = str(PROJECT_ROOT / "user_data/backtest_results/evolution_results.json")
+    pattern = str(PROJECT_ROOT / "user_data/backtest_results/evolution_engine")
     if not os.path.exists(pattern):
         # Fallback: Find the most recent json if filename failed
         files = glob.glob(str(PROJECT_ROOT / "user_data/backtest_results/*.json"))

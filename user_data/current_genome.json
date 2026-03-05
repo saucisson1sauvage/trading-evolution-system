@@ -1,18 +1,43 @@
 {
   "entry_tree": {
-    "operator": "NOT",
+    "operator": "OR",
     "children": [
       {
-        "operator": "NOT",
+        "operator": "AND",
         "children": [
           {
             "operator": "OR",
             "children": [
               {
-                "constant": 51.58
+                "constant": 64.71
               },
               {
-                "constant": 78.3
+                "primitive": "BB_UPPER",
+                "parameters": {
+                  "window": 17,
+                  "std": 2.4
+                }
+              }
+            ]
+          },
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "constant": 18.13
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "constant": 76.62
               }
             ]
           }
@@ -24,20 +49,18 @@
     "operator": "NOT",
     "children": [
       {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 24
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "RSI",
+            "parameters": {
+              "window": 45
+            }
+          },
+          {
+            "constant": 11.73
           }
-        },
-        "right": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 8,
-            "std": 2.4
-          }
-        }
+        ]
       }
     ]
   }
