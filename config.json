@@ -4,6 +4,8 @@
     "max_open_trades": 3,
     "dry_run": true,
     "dry_run_wallet": 1000,
+    "trading_mode": "spot",
+    "margin_mode": "",
     "dataformat_ohlcv": "feather",
     "dataformat_trades": "feather",
     "exchange": {
