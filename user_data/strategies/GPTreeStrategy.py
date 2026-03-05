@@ -8,8 +8,10 @@ from user_data.strategies.gp_blocks import *
 
 class GPTreeStrategy(IStrategy):
     """
-    A genetic programming tree-based strategy that dynamically loads and evaluates
-    trading logic from a genome JSON file.
+    Dynamic Genetic Programming strategy shell.
+    Loads and executes entry/exit logic trees from user_data/current_genome.json.
+    All signals are computed recursively via evaluate_node using gp_blocks primitives.
+    Fault-tolerant: evaluation failures result in no signals rather than crashes.
     """
     INTERFACE_VERSION = 3
     can_short = False
@@ -26,6 +28,7 @@ class GPTreeStrategy(IStrategy):
             config: Freqtrade configuration dictionary
         """
         super().__init__(config)
+        self.logger = logging.getLogger(__name__)
         self.genome_path = Path("user_data/current_genome.json")
         self.genome: Dict[str, Any] = {}
         self._load_genome()
@@ -120,8 +123,7 @@ class GPTreeStrategy(IStrategy):
         Returns:
             DataFrame with added indicators
         """
-        # The genome evaluation happens in populate_entry_trend and populate_exit_trend
-        # We don't need to add indicators here as they're computed dynamically
+        # No pre-computation needed — indicators are evaluated dynamically in evaluate_node
         return dataframe
 
     def populate_entry_trend(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
@@ -135,10 +137,11 @@ class GPTreeStrategy(IStrategy):
         Returns:
             DataFrame with 'enter_long' column added
         """
-        if "entry_tree" in self.genome:
-            entry_condition = self.evaluate_node(self.genome["entry_tree"], dataframe)
-            dataframe.loc[entry_condition, 'enter_long'] = 1
-        else:
+        try:
+            entry_signal = self.evaluate_node(self.genome["entry_tree"], dataframe)
+            dataframe['enter_long'] = entry_signal.astype(int)
+        except Exception as e:
+            self.logger.error(f"Entry tree evaluation failed: {str(e)}")
             dataframe['enter_long'] = 0
         return dataframe
 
@@ -153,9 +156,10 @@ class GPTreeStrategy(IStrategy):
         Returns:
             DataFrame with 'exit_long' column added
         """
-        if "exit_tree" in self.genome:
-            exit_condition = self.evaluate_node(self.genome["exit_tree"], dataframe)
-            dataframe.loc[exit_condition, 'exit_long'] = 1
-        else:
+        try:
+            exit_signal = self.evaluate_node(self.genome["exit_tree"], dataframe)
+            dataframe['exit_long'] = exit_signal.astype(int)
+        except Exception as e:
+            self.logger.error(f"Exit tree evaluation failed: {str(e)}")
             dataframe['exit_long'] = 0
         return dataframe
