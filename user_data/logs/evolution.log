@@ -277,3 +277,29 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-05 20:03:32,315 | WARNING | No backtest result file found → likely 0 trades or failed run
 2026-03-05 20:03:32,315 | INFO | Fitness score: 0.0000
 2026-03-05 20:03:32,315 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_200332_fitness_0.0000.json
+2026-03-05 21:15:54,611 | INFO | Starting Evolution: 50 generations, Population: 10
+2026-03-05 21:15:54,611 | INFO | --- Generation 0 ---
+2026-03-05 21:15:58,810 | INFO | Gen 0 | Ind 1/10 | Fitness: 0.0000
+2026-03-05 21:16:03,220 | INFO | Gen 0 | Ind 2/10 | Fitness: 0.0000
+2026-03-05 21:16:07,837 | INFO | Gen 0 | Ind 3/10 | Fitness: 0.0000
+2026-03-05 21:16:12,568 | INFO | Gen 0 | Ind 4/10 | Fitness: 0.0000
+2026-03-05 21:16:16,751 | INFO | Gen 0 | Ind 5/10 | Fitness: 0.0000
+2026-03-05 21:16:20,914 | INFO | Gen 0 | Ind 6/10 | Fitness: 0.0000
+2026-03-05 21:16:25,561 | INFO | Gen 0 | Ind 7/10 | Fitness: 0.0000
+2026-03-05 21:16:29,663 | INFO | Gen 0 | Ind 8/10 | Fitness: 0.0000
+2026-03-05 21:16:33,939 | INFO | Gen 0 | Ind 9/10 | Fitness: 0.0000
+2026-03-05 21:16:38,302 | INFO | Gen 0 | Ind 10/10 | Fitness: 0.0000
+2026-03-05 21:16:38,303 | INFO | TOP FITNESS GEN 0: 0.0000
+2026-03-05 21:28:58,068 | INFO | Starting Evolution: 50 generations, Population: 10
+2026-03-05 21:28:58,068 | INFO | --- Generation 0 ---
+2026-03-05 21:29:02,681 | INFO | Gen 0 | Ind 1/10 | Fitness: 0.0000
+2026-03-05 21:29:08,469 | INFO | Gen 0 | Ind 2/10 | Fitness: 0.0000
+2026-03-05 21:29:13,064 | INFO | Gen 0 | Ind 3/10 | Fitness: 0.0000
+2026-03-05 21:29:17,011 | INFO | Gen 0 | Ind 4/10 | Fitness: 0.0000
+2026-03-05 21:29:22,241 | INFO | Gen 0 | Ind 5/10 | Fitness: 0.0000
+2026-03-05 21:29:26,373 | INFO | Gen 0 | Ind 6/10 | Fitness: 0.0000
+2026-03-05 21:29:30,473 | INFO | Gen 0 | Ind 7/10 | Fitness: 0.0000
+2026-03-05 21:29:34,403 | INFO | Gen 0 | Ind 8/10 | Fitness: 0.0000
+2026-03-05 21:29:38,350 | INFO | Gen 0 | Ind 9/10 | Fitness: 0.0000
+2026-03-05 21:29:42,252 | INFO | Gen 0 | Ind 10/10 | Fitness: 0.0000
+2026-03-05 21:29:42,252 | INFO | TOP FITNESS GEN 0: 0.0000
