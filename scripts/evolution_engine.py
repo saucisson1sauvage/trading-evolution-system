@@ -6,6 +6,10 @@ import random
 import json
 import os
 import copy
+import logging
+import glob
+import subprocess
+import time
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 
@@ -237,20 +241,152 @@ def load_genome(path: str = "user_data/current_genome.json") -> Dict[str, Any]:
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
+def save_current_genome(genome: dict) -> None:
+    """
+    Save the genome to user_data/current_genome.json.
+    
+    Args:
+        genome: The genome dictionary to save
+    """
+    path = "user_data/current_genome.json"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(genome, f, indent=2, ensure_ascii=False)
+
+def run_backtest(timerange: str = "20241101-20241115") -> bool:
+    """
+    Run a backtest using GPTreeStrategy.
+    
+    Args:
+        timerange: Timerange for backtesting (default "20241101-20241115")
+        
+    Returns:
+        True if backtest succeeded, False otherwise
+    """
+    command = [
+        "/home/saus/freqtrade/.venv/bin/freqtrade",
+        "backtesting",
+        "--strategy", "GPTreeStrategy",
+        "--timerange", timerange,
+        "--config", "config.json",
+        "--userdir", "user_data"
+    ]
+    
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        
+        if result.returncode != 0:
+            logging.error(f"Backtest failed with return code {result.returncode}")
+            logging.error(f"STDOUT:\n{result.stdout}")
+            logging.error(f"STDERR:\n{result.stderr}")
+            return False
+        return True
+    except Exception as e:
+        logging.error(f"Exception while running backtest: {e}")
+        return False
+
+def calculate_fitness() -> float:
+    """
+    Calculate fitness score from the most recent backtest result.
+    
+    Returns:
+        Fitness score as float. Returns 0.0 if no valid result found.
+    """
+    try:
+        # Find all JSON files in backtest_results directory
+        pattern = "user_data/backtest_results/*.json"
+        files = glob.glob(pattern)
+        
+        # Exclude .meta.json files
+        files = [f for f in files if not f.endswith('.meta.json')]
+        
+        if not files:
+            logging.warning("No backtest result files found")
+            return 0.0
+        
+        # Sort by modification time (most recent first)
+        files.sort(key=os.path.getmtime, reverse=True)
+        latest_file = files[0]
+        
+        with open(latest_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Find the strategy result for GPTreeStrategy
+        strategy_result = None
+        if isinstance(data, dict) and "strategy" in data:
+            # Single strategy result format
+            if data.get("strategy") == "GPTreeStrategy":
+                strategy_result = data
+        elif isinstance(data, list):
+            # Multiple strategy results format
+            for item in data:
+                if isinstance(item, dict) and item.get("strategy") == "GPTreeStrategy":
+                    strategy_result = item
+                    break
+        
+        if not strategy_result:
+            logging.warning("GPTreeStrategy result not found in backtest results")
+            return 0.0
+        
+        # Extract metrics
+        total_trades = strategy_result.get("total_trades", 0)
+        if total_trades == 0:
+            logging.info("No trades executed, fitness is 0.0")
+            return 0.0
+        
+        profit_percent = strategy_result.get("profit_total", 0.0)
+        sharpe_ratio = strategy_result.get("sharpe", 0.0)
+        max_drawdown_percent = abs(strategy_result.get("max_drawdown_account", 0.0))
+        
+        # Calculate fitness
+        fitness = (profit_percent * sharpe_ratio) / (1 + abs(max_drawdown_percent))
+        
+        logging.info(f"Fitness: {fitness:.4f} | Trades: {total_trades}")
+        return fitness
+        
+    except Exception as e:
+        logging.error(f"Error calculating fitness: {e}")
+        return 0.0
+
 if __name__ == "__main__":
-    import json
-    print("Generating random tree (max_depth=3)...")
-    tree = generate_random_tree(max_depth=3)
-    print(json.dumps(tree, indent=2))
+    # Setup logging
+    log_path = "user_data/logs/evolution.log"
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s | %(levelname)s | %(message)s',
+        handlers=[
+            logging.FileHandler(log_path, mode='a'),
+            logging.StreamHandler()
+        ]
+    )
     
-    print("\nMutating tree...")
-    mutated = mutate_tree(tree, mutation_rate=0.3)
-    print(json.dumps(mutated, indent=2))
+    # Generate a random tree
+    tree = generate_random_tree(max_depth=5)
     
-    # Create a sample genome with entry and exit trees
-    genome = {
-        "entry_tree": tree,
-        "exit_tree": mutated
-    }
-    save_genome(genome, "user_data/current_genome_test.json")
-    print("\nSaved test genome to user_data/current_genome_test.json")
+    # Save as current genome
+    save_current_genome(tree)
+    logging.info("Saved new random genome. Starting backtest...")
+    
+    # Run backtest
+    success = run_backtest(timerange="20241101-20241115")
+    if not success:
+        logging.error("Backtest failed")
+        exit(1)
+    
+    # Calculate fitness
+    fitness = calculate_fitness()
+    logging.info(f"Fitness score: {fitness:.4f}")
+    
+    # Save genome with timestamp for history
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    history_path = f"user_data/genome_history/genome_{timestamp}_fitness_{fitness:.4f}.json"
+    os.makedirs(os.path.dirname(history_path), exist_ok=True)
+    with open(history_path, 'w', encoding='utf-8') as f:
+        json.dump(tree, f, indent=2, ensure_ascii=False)
+    logging.info(f"Saved historical genome to {history_path}")
