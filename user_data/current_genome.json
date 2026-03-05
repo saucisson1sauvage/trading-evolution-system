@@ -12,16 +12,41 @@
     }
   },
   "exit_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "constant": 64.81
-    },
-    "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 43
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "constant": 54.85
+          },
+          {
+            "primitive": "SMA",
+            "parameters": {
+              "window": 35
+            }
+          }
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "BB_LOWER",
+            "parameters": {
+              "window": 10,
+              "std": 1.6
+            }
+          },
+          {
+            "primitive": "EMA",
+            "parameters": {
+              "window": 15
+            }
+          }
+        ]
       }
-    }
+    ]
   },
   "fitness": -999.0
 }
