@@ -58,14 +58,39 @@ class GeneticAssembler(IStrategy):
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # TEST 1: Force enter_long = 1 for 20241101-20241115
-        # For now, always set enter_long to 1 to prove trades > 0
-        # We'll implement date-based logic later
-        dataframe.loc[:, 'enter_long'] = 1
+        # TEST 1: Force enter_long = 1 only for 20241101-20241115
+        # Initialize enter_long to 0
+        dataframe.loc[:, 'enter_long'] = 0
         
-        # Log for debugging
-        signal_count = dataframe['enter_long'].sum()
-        print(f"DEBUG: Forced enter_long signals: {signal_count}")
+        # Convert date strings to datetime for comparison
+        # The dataframe index should be datetime
+        if not dataframe.empty:
+            # Check if any timestamps are within our test range
+            # The timerange is 20241101-20241115
+            start_date = np.datetime64('2024-11-01')
+            end_date = np.datetime64('2024-11-16')  # Exclusive
+            
+            # Get timestamps from the dataframe
+            # Assuming the index is datetime
+            if hasattr(dataframe.index, 'to_numpy'):
+                timestamps = dataframe.index.to_numpy()
+            else:
+                timestamps = dataframe.index
+            
+            # Create a mask for dates within range
+            mask = (timestamps >= start_date) & (timestamps < end_date)
+            
+            # Set enter_long to 1 for rows within the date range
+            dataframe.loc[mask, 'enter_long'] = 1
+            
+            # Log for debugging
+            signal_count = dataframe['enter_long'].sum()
+            print(f"DEBUG: Forced enter_long signals in 20241101-20241115 range: {signal_count}")
+            
+            # Also log the number of timestamps in range
+            print(f"DEBUG: Total rows in range: {mask.sum()}")
+        else:
+            print("DEBUG: Dataframe is empty")
         
         return dataframe
 

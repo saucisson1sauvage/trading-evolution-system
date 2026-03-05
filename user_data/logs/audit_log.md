@@ -28,10 +28,14 @@
 - NaN detection in block output columns.
 
 ## [NEXT STEPS]
-1. Run backtest with command:
+1. Install freqtrade if not present:
    ```bash
-   freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+   pip install -U freqtrade
    ```
-2. Verify trade count > 0.
-3. Update this log with results.
+2. Run backtest with command:
+   ```bash
+   python -m freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115
+   ```
+3. Verify trade count > 0.
+4. Update this log with results.
 EOF
