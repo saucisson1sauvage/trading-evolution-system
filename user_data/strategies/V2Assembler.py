@@ -8,7 +8,8 @@ from typing import Dict, List
 import pandas as pd
 from pandas import DataFrame
 
-from freqtrade.strategy import IStrategy, Decimal, TemporalParameter, IntParameter, \
+from decimal import Decimal
+from freqtrade.strategy import IStrategy, TemporalParameter, IntParameter, \
     CategoricalParameter, stoploss_from_open, RealParameter
 
 # Import PathResolver from our scripts
