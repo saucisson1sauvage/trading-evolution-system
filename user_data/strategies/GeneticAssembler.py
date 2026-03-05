@@ -58,39 +58,13 @@ class GeneticAssembler(IStrategy):
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # TEST 1: Force enter_long = 1 only for 20241101-20241115
-        # Initialize enter_long to 0
-        dataframe.loc[:, 'enter_long'] = 0
+        # Phase 1: Force-Buy Test
+        # Hard-code all entries to 1 to prove execution
+        dataframe.loc[:, 'enter_long'] = 1
         
-        # Convert date strings to datetime for comparison
-        # The dataframe index should be datetime
-        if not dataframe.empty:
-            # Check if any timestamps are within our test range
-            # The timerange is 20241101-20241115
-            start_date = np.datetime64('2024-11-01')
-            end_date = np.datetime64('2024-11-16')  # Exclusive
-            
-            # Get timestamps from the dataframe
-            # Assuming the index is datetime
-            if hasattr(dataframe.index, 'to_numpy'):
-                timestamps = dataframe.index.to_numpy()
-            else:
-                timestamps = dataframe.index
-            
-            # Create a mask for dates within range
-            mask = (timestamps >= start_date) & (timestamps < end_date)
-            
-            # Set enter_long to 1 for rows within the date range
-            dataframe.loc[mask, 'enter_long'] = 1
-            
-            # Log for debugging
-            signal_count = dataframe['enter_long'].sum()
-            print(f"DEBUG: Forced enter_long signals in 20241101-20241115 range: {signal_count}")
-            
-            # Also log the number of timestamps in range
-            print(f"DEBUG: Total rows in range: {mask.sum()}")
-        else:
-            print("DEBUG: Dataframe is empty")
+        # Log for debugging
+        print(f"DEBUG: Force-Buy Test - All enter_long set to 1")
+        print(f"DEBUG: Total rows: {len(dataframe)}")
         
         return dataframe
 
