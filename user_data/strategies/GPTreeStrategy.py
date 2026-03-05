@@ -52,10 +52,9 @@ class GPTreeStrategy(IStrategy):
         """
         super().__init__(config)
         self.logger = logging.getLogger(__name__)
-        # Use absolute path to current_genome.json relative to the user_data directory
-        # Freqtrade provides the user_data path via config
-        user_data_dir = Path(config.get('user_data_dir', 'user_data'))
-        self.genome_path = user_data_dir / "current_genome.json"
+        # Use absolute path to ensure consistency across contexts
+        self.genome_path = Path("/home/saus/crypto-crew-4.0/user_data/current_genome.json")
+        print(f"DEBUG: Loading genome from {self.genome_path}")
         self.genome: Dict[str, Any] = {}
         self._load_genome()
 

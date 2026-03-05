@@ -10,8 +10,12 @@ import logging
 import glob
 import subprocess
 import time
+import sys
 from typing import Dict, Any, List, Optional, Tuple, Union
 from pathlib import Path
+
+# Add project root to sys.path for consistent imports
+sys.path.append("/home/saus/crypto-crew-4.0")
 
 # Constants
 OPERATORS = ["AND", "OR", "NOT"]
@@ -467,42 +471,70 @@ def save_current_genome(genome: dict) -> None:
     Args:
         genome: The genome dictionary to save
     """
-    from pathlib import Path
-    
-    # Use absolute path to ensure consistency with GPTreeStrategy's loading logic
-    genome_path = Path.cwd() / "user_data" / "current_genome.json"
+    # Use absolute path to ensure consistency across contexts
+    genome_path = Path("/home/saus/crypto-crew-4.0/user_data/current_genome.json")
     genome_path.parent.mkdir(parents=True, exist_ok=True)
     
     with genome_path.open('w', encoding='utf-8') as f:
         json.dump(genome, f, indent=2, ensure_ascii=False)
     logging.info(f"Saved genome to {genome_path}")
+    print(f"Saved genome to {genome_path}")
 
-def run_backtest(timerange: str = "20241101-20241115") -> bool:
+def get_random_timerange() -> str:
+    """
+    Generate a random 30-day timerange within 2024-10-01 to 2025-12-01.
+    
+    Returns:
+        Timerange string in format YYYYMMDD-YYYYMMDD
+    """
+    from datetime import datetime, timedelta
+    import random
+    
+    start_base = datetime(2024, 10, 1)
+    end_limit   = datetime(2025, 12, 1)
+    
+    # Ensure at least 30 days between start and end limit
+    max_offset = (end_limit - start_base).days - 30
+    if max_offset <= 0:
+        # Fallback to a fixed range if calculation fails
+        return "20241001-20241031"
+    
+    start_offset = random.randint(0, max_offset)
+    start_date = start_base + timedelta(days=start_offset)
+    end_date   = start_date + timedelta(days=30)
+    
+    return f"{start_date.strftime('%Y%m%d')}-{end_date.strftime('%Y%m%d')}"
+
+def run_backtest(timerange: str = None) -> bool:
     """
     Run a backtest using GPTreeStrategy.
     
     Args:
-        timerange: Timerange for backtesting (default "20241101-20241115")
+        timerange: Timerange for backtesting. If None, a random timerange is generated.
         
     Returns:
         True if backtest succeeded, False otherwise
     """
-    from pathlib import Path
+    if timerange is None:
+        timerange = get_random_timerange()
     
-    # Use absolute path for userdir to ensure Freqtrade finds the strategy correctly
-    userdir_abs = str((Path.cwd() / "user_data").resolve())
-    config_path = str((Path.cwd() / "config.json").resolve())
+    # Ensure the output directory exists
+    result_dir = Path("/home/saus/crypto-crew-4.0/user_data/backtest_results")
+    result_dir.mkdir(parents=True, exist_ok=True)
     
     command = [
         "/home/saus/freqtrade/.venv/bin/freqtrade",
         "backtesting",
         "--strategy", "GPTreeStrategy",
         "--timerange", timerange,
-        "--config", config_path,
-        "--userdir", userdir_abs
+        "--config", "/home/saus/crypto-crew-4.0/config.json",
+        "--userdir", "/home/saus/crypto-crew-4.0/user_data",
+        "--export", "trades",
+        "--export-filename", "/home/saus/crypto-crew-4.0/user_data/backtest_results/evolution_last.json"
     ]
     
     logging.info(f"Running backtest with command: {' '.join(command)}")
+    print(f"Using timerange: {timerange}")
     
     try:
         result = subprocess.run(
@@ -513,13 +545,14 @@ def run_backtest(timerange: str = "20241101-20241115") -> bool:
         )
         
         if result.returncode != 0:
-            logging.error(f"Backtest failed with return code {result.returncode}")
-            logging.error(f"STDOUT:\n{result.stdout}")
-            logging.error(f"STDERR:\n{result.stderr}")
+            logging.error(f"Backtest failed with exit code {result.returncode}")
+            print(f"Backtest failed with exit code {result.returncode}")
+            print("STDERR:\n", result.stderr)
             return False
         return True
     except Exception as e:
         logging.error(f"Exception while running backtest: {e}")
+        print(f"Exception while running backtest: {e}")
         return False
 
 def generate_offspring(parents: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -550,28 +583,21 @@ def generate_offspring(parents: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def calculate_fitness() -> float:
     """
-    Calculate fitness score from the most recent backtest result.
+    Calculate fitness score from the forced export backtest result.
     
     Returns:
         Fitness score as float. Returns 0.0 if no valid result found.
     """
     try:
-        # Find all JSON files in backtest_results directory
-        pattern = "user_data/backtest_results/*.json"
-        files = glob.glob(pattern)
+        # Use the fixed export filename
+        result_file = Path("/home/saus/crypto-crew-4.0/user_data/backtest_results/evolution_last.json")
         
-        # Exclude .meta.json files
-        files = [f for f in files if not f.endswith('.meta.json')]
-        
-        if not files:
-            logging.warning("No backtest result files found")
+        if not result_file.exists():
+            logging.warning("No backtest result file found → likely 0 trades or failed run")
+            print("Backtest finished with 0 trades or no output.")
             return 0.0
         
-        # Sort by modification time (most recent first)
-        files.sort(key=os.path.getmtime, reverse=True)
-        latest_file = files[0]
-        
-        with open(latest_file, 'r', encoding='utf-8') as f:
+        with result_file.open('r', encoding='utf-8') as f:
             data = json.load(f)
         
         # Find the strategy result for GPTreeStrategy
@@ -594,7 +620,8 @@ def calculate_fitness() -> float:
         # Extract metrics
         total_trades = strategy_result.get("total_trades", 0)
         if total_trades == 0:
-            logging.info("No trades executed, fitness is 0.0")
+            logging.info("Backtest finished with 0 trades.")
+            print("Backtest finished with 0 trades.")
             return 0.0
         
         profit_percent = strategy_result.get("profit_total", 0.0)
@@ -605,10 +632,12 @@ def calculate_fitness() -> float:
         fitness = (profit_percent * sharpe_ratio) / (1 + abs(max_drawdown_percent))
         
         logging.info(f"Fitness: {fitness:.4f} | Trades: {total_trades}")
+        print(f"Fitness: {fitness:.4f} | Trades: {total_trades}")
         return fitness
         
     except Exception as e:
         logging.error(f"Error calculating fitness: {e}")
+        print(f"Error calculating fitness: {e}")
         return 0.0
 
 if __name__ == "__main__":
@@ -674,10 +703,13 @@ if __name__ == "__main__":
     else:
         logging.info(f"Genome verified with keys: {list(saved_genome.keys())}")
     
-    # Run backtest
-    success = run_backtest(timerange="20241101-20241115")
+    # Run backtest with dynamic timerange
+    timerange = get_random_timerange()
+    print(f"Using timerange: {timerange}")
+    success = run_backtest(timerange=timerange)
     if not success:
         logging.error("Backtest failed")
+        print("Backtest failed")
         exit(1)
     
     # Calculate fitness
