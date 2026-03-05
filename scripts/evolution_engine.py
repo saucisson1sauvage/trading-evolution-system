@@ -467,11 +467,15 @@ def save_current_genome(genome: dict) -> None:
     Args:
         genome: The genome dictionary to save
     """
-    path = "user_data/current_genome.json"
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'w', encoding='utf-8') as f:
+    from pathlib import Path
+    
+    # Use absolute path to ensure consistency with GPTreeStrategy's loading logic
+    genome_path = Path.cwd() / "user_data" / "current_genome.json"
+    genome_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with genome_path.open('w', encoding='utf-8') as f:
         json.dump(genome, f, indent=2, ensure_ascii=False)
-    logging.info(f"Saved genome to {path}")
+    logging.info(f"Saved genome to {genome_path}")
 
 def run_backtest(timerange: str = "20241101-20241115") -> bool:
     """
@@ -483,14 +487,22 @@ def run_backtest(timerange: str = "20241101-20241115") -> bool:
     Returns:
         True if backtest succeeded, False otherwise
     """
+    from pathlib import Path
+    
+    # Use absolute path for userdir to ensure Freqtrade finds the strategy correctly
+    userdir_abs = str((Path.cwd() / "user_data").resolve())
+    config_path = str((Path.cwd() / "config.json").resolve())
+    
     command = [
         "/home/saus/freqtrade/.venv/bin/freqtrade",
         "backtesting",
         "--strategy", "GPTreeStrategy",
         "--timerange", timerange,
-        "--config", "config.json",
-        "--userdir", "user_data"
+        "--config", config_path,
+        "--userdir", userdir_abs
     ]
+    
+    logging.info(f"Running backtest with command: {' '.join(command)}")
     
     try:
         result = subprocess.run(
@@ -648,12 +660,13 @@ if __name__ == "__main__":
     
     # Verify the file was saved correctly
     # Check if the file exists and has the right structure
-    if not os.path.exists("user_data/current_genome.json"):
-        logging.error("Genome file not found at user_data/current_genome.json")
+    genome_path = Path.cwd() / "user_data" / "current_genome.json"
+    if not genome_path.exists():
+        logging.error(f"Genome file not found at {genome_path}")
         exit(1)
     
     # Check the contents
-    with open("user_data/current_genome.json", 'r', encoding='utf-8') as f:
+    with genome_path.open('r', encoding='utf-8') as f:
         saved_genome = json.load(f)
     if "entry_tree" not in saved_genome or "exit_tree" not in saved_genome:
         logging.error(f"Saved genome is missing required keys: {list(saved_genome.keys())}")

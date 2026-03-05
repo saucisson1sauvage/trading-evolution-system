@@ -1,10 +1,33 @@
 import json
 import logging
+import sys
 from pathlib import Path
 from typing import Dict, Any, Union
 import pandas as pd
 from freqtrade.strategy import IStrategy
-from user_data.strategies.gp_blocks import *
+
+# Ensure the strategies directory is in sys.path for importing gp_blocks
+# Freqtrade adds user_data/strategies to sys.path when running with --userdir,
+# but we need to handle cases where the strategy is loaded from other contexts.
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+# Import gp_blocks primitives using relative import path
+# This works because Freqtrade adds user_data/strategies to sys.path
+try:
+    from gp_blocks import *
+except ImportError:
+    # Fallback: try to import from the same directory
+    import importlib.util
+    gp_blocks_path = Path(__file__).parent / "gp_blocks.py"
+    spec = importlib.util.spec_from_file_location("gp_blocks", gp_blocks_path)
+    gp_blocks = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gp_blocks)
+    # Import all public functions from gp_blocks
+    for name in dir(gp_blocks):
+        if not name.startswith('_'):
+            globals()[name] = getattr(gp_blocks, name)
 
 class GPTreeStrategy(IStrategy):
     """
@@ -29,7 +52,10 @@ class GPTreeStrategy(IStrategy):
         """
         super().__init__(config)
         self.logger = logging.getLogger(__name__)
-        self.genome_path = Path("user_data/current_genome.json")
+        # Use absolute path to current_genome.json relative to the user_data directory
+        # Freqtrade provides the user_data path via config
+        user_data_dir = Path(config.get('user_data_dir', 'user_data'))
+        self.genome_path = user_data_dir / "current_genome.json"
         self.genome: Dict[str, Any] = {}
         self._load_genome()
 
@@ -41,10 +67,25 @@ class GPTreeStrategy(IStrategy):
             FileNotFoundError: If the genome file does not exist
             ValueError: If the genome is missing required keys
         """
-        if not self.genome_path.exists():
-            raise FileNotFoundError(f"Genome file not found: {self.genome_path}")
-        with self.genome_path.open('r', encoding='utf-8') as f:
-            self.genome = json.load(f)
+        # Try multiple possible locations for the genome file
+        possible_paths = [
+            self.genome_path,
+            Path("user_data/current_genome.json"),
+            Path(__file__).parent.parent / "current_genome.json"
+        ]
+        
+        genome_loaded = False
+        for path in possible_paths:
+            if path.exists():
+                with path.open('r', encoding='utf-8') as f:
+                    self.genome = json.load(f)
+                genome_loaded = True
+                self.logger.info(f"Loaded genome from {path}")
+                break
+        
+        if not genome_loaded:
+            raise FileNotFoundError(f"Genome file not found in any of the expected locations: {possible_paths}")
+        
         if "entry_tree" not in self.genome or "exit_tree" not in self.genome:
             raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
 
