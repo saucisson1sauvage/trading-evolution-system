@@ -1,35 +1,51 @@
-import json
 import sys
-import argparse
 from pathlib import Path
+# Add project root to path
+sys.path.append(str(Path(__file__).parent.parent))
+
+import json
+import argparse
 from scripts.paths import PathResolver
 
 def get_league_path():
-    return PathResolver.get_user_data_path() / "league.json"
+    # Updated to user_data/strategies/league.json
+    return PathResolver.get_strategies_path() / "league.json"
 
 def load_league():
     path = get_league_path()
     if not path.exists():
         return {"scores": []}
-    with open(path, "r") as f:
-        return json.load(f)
+    try:
+        with open(path, "r") as f:
+            data = json.load(f)
+            if "scores" not in data:
+                data["scores"] = []
+            return data
+    except Exception:
+        return {"scores": []}
 
 def save_league(data):
+    if "scores" not in data:
+        data["scores"] = []
     with open(get_league_path(), "w") as f:
         json.dump(data, f, indent=2)
 
 def run_gauntlet():
     print("Starting League Gauntlet...")
-    # This would typically loop through all strategies or current DNA
-    # For now, we call gauntlet.py logic
     from scripts.gauntlet import run_backtest
     score = run_backtest()
     
     if score is not None:
         league = load_league()
-        league["scores"].append({"bot": "GeneticAssembler", "score": score})
+        import datetime
+        timestamp = datetime.datetime.now().isoformat()
+        league["scores"].append({
+            "bot": "GeneticAssembler", 
+            "score": score,
+            "timestamp": timestamp
+        })
         save_league(league)
-        print(f"Gauntlet complete. Score {score} saved.")
+        print(f"Gauntlet complete. Score {score}% saved to {get_league_path()}")
 
 def rank():
     league = load_league()
@@ -42,7 +58,7 @@ def rank():
         # Sort by score descending
         sorted_scores = sorted(scores, key=lambda x: x['score'], reverse=True)
         for i, entry in enumerate(sorted_scores, 1):
-            print(f"{i}. {entry['bot']}: {entry['score']}%")
+            print(f"{i}. {entry['bot']}: {entry['score']}% (at {entry.get('timestamp', 'unknown')})")
     print("===========================\n")
 
 if __name__ == "__main__":

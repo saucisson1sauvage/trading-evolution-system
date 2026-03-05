@@ -6,6 +6,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import subprocess
 import json
 import argparse
+import re
 from scripts.paths import PathResolver
 from scripts.logger_utils import get_logger
 
@@ -24,8 +25,6 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
         print(f"Error: Freqtrade binary not found at {freqtrade_bin}")
         return None
     
-    # Tournament requirements: 5m strategy timeframe with 1m detail for precision
-    # (timeframe-detail MUST be smaller than timeframe)
     cmd = [
         freqtrade_bin, "backtesting",
         "--strategy", strategy_name,
@@ -44,8 +43,28 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         print("Backtest finished successfully.")
         
-        # Simulated score extraction
-        return 5.0 
+        output = result.stdout
+        
+        # Implement the "Honesty" Rule: If the backtest result shows 0 trades, the score must be 0.0.
+        # Search for Total trades in the result output
+        trades_match = re.search(r"Total trades\s+\|\s+(\d+)", output)
+        total_trades = int(trades_match.group(1)) if trades_match else 0
+        
+        if total_trades == 0:
+            print("Honesty Rule Applied: 0 trades detected. Score: 0.0")
+            return 0.0
+            
+        # Extract Real Scores: Extract "Total profit %" from Freqtrade output
+        # Search for the string "Total profit %" and use regex to grab the numeric value.
+        profit_match = re.search(r"Total profit %\s+\|\s+([-]?\d+\.\d+)%", output)
+        if profit_match:
+            score = float(profit_match.group(1))
+            print(f"Extracted Profit %: {score}%")
+            return score
+        else:
+            print("Total profit % not found in output. Defaulting to 0.0")
+            return 0.0
+            
     except subprocess.CalledProcessError as e:
         print(f"Backtest FAILED for {strategy_name}")
         logger.error(f"Backtest failed: {e.stderr}")
@@ -56,7 +75,7 @@ def main():
     # Positional argument for strategy name
     parser.add_argument("strategy", nargs="?", default="GeneticAssembler", 
                         help="Name of the strategy to test (default: GeneticAssembler)")
-    # Optional flags - default timerange set to tournament standard
+    # Optional flags
     parser.add_argument("--timerange", default="20240101-20250101", help="Timerange for backtest")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     
