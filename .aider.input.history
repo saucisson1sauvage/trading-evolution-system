@@ -329,3 +329,102 @@
 +   3. LOG: Update user_data/logs/audit_log.md with
 +      result 
 +freqtrade command should be fixed tho
+
+# 2026-03-05 07:38:00.957503
++[WHY]
++  The ETH/USDT tournament is returning 0 trades. We
++  have confirmed data exists from 2024-10-21 to
++  present. We must stop "guessing" and perform a
++  Serial Isolation Audit to prove the pipeline is open
++  before refining the logic.
++
++
++  [HOW]
++  You must follow these steps in order. You are not
++  allowed to claim "Success" until you produce a
++  backtest report with Total Trades > 0.
++
++  [WHAT]
++
++
++   1. Phase 1: Prove Execution (The "Force-Buy" Test)
++       * Action: In
++         user_data/strategies/GeneticAssembler.py,
++         inside populate_entry_trend, hard-code
++         dataframe.loc[:, 'enter_long'] = 1 at the
++         very end of the function.
++       * Command: Run
++         /home/saus/freqtrade/.venv/bin/freqtrade
++         backtesting --strategy GeneticAssembler
++         --timerange 20241101-20241115 --config
++         config.json --userdir user_data --timeframe
++         5m.
++       * Verification: If Total Trades == 0, STOP and
++         audit config.json for stake/wallet
++         mismatches. If Total Trades > 0, proceed.
++
++
++   2. Phase 2: Logic Restoration & NaN Audit
++       * Action: Restore the modular voting logic but
++         keep required_votes = 1.
++       * Indicator Check: Inject print(f"DEBUG RSI:
++         {dataframe['rsi'].tail(1).values}") into the
++         modular RSI block.
++       * Fix: If RSI is NaN, ensure
++         user_data/strategies/blocks/rsi_simple.py
++         uses .fillna(50).
++
++   3. Phase 3: GitHub Synchronization
++       * Action: After every successful test where
++         trades are generated, execute:
++
++
++   1         git add .
++   2         git commit -m "Audit Success: Proved
++     trade execution for ETH/USDT"
++   3         git push origin main
++
++   4. Final Requirement:
++       * Output the final backtest table to the chat
++         to prove trades occurred using modular logic.
++
++
++  [OPERATIONAL NOTE]
++  Use the absolute path to freqtrade:
++  /home/saus/freqtrade/.venv/bin/freqtrade. Do not
++  modify scripts/paths.py.
+
+# 2026-03-05 07:38:40.988105
++/run /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115 --config config.json --userdir user_data --timeframe 5m
+
+# 2026-03-05 07:38:40.988161
++/run /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115 --config config.json --userdir user_data --timeframe 5m
+
+# 2026-03-05 07:41:46.268298
++[WHY]
++The project has been locally "drifting" for 11 hours with 0 trades. We need to re-align with GitHub and prove the ETH/USDT trading logic is physically capable of firing a signal.
++
++[HOW]
++Follow the Serial Isolation Audit. Update user_data/logs/audit_log.md after every step. Crucially: Push every commit to GitHub immediately.
++
++[WHAT]
++
++STEP 1 (Data): Run /home/saus/freqtrade/.venv/bin/freqtrade list-data for ETH/USDT and log the result.
++
++STEP 2 (Pipe Test): Force enter_long = 1 in GeneticAssembler.py. Run a backtest on 20241101-20241115. If trades = 0, fix the config.json stake/wallet ratio. Push the fix.
++
++STEP 3 (Indicator Fix): Remove the forced buy. Add print() to catch NaN values in RSI. If found, add .fillna(50) to the blocks. Push the fix.
++
++STEP 4 (GitHub Sync): Run git push origin main at the end of this session to ensure the 11-hour gap is closed.
+
+# 2026-03-05 07:50:16.447324
++/run /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115 --config config.json --userdir user_data --timeframe 5m
+
+# 2026-03-05 07:50:16.447379
++/run /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GeneticAssembler --timerange 20241101-20241115 --config config.json --userdir user_data --timeframe 5m
+
+# 2026-03-05 07:50:25.442015
++/run git add .
+
+# 2026-03-05 07:50:25.442068
++/run git add .
