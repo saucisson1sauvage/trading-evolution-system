@@ -30,11 +30,6 @@ def populate_entry_trend(dataframe: DataFrame, metadata: dict, params: dict) -> 
     return dataframe
 
 def populate_exit_trend(dataframe: DataFrame, metadata: dict, params: dict) -> DataFrame:
-    sell_threshold = params.get('sell_rsi', 70)
-    dataframe.loc[
-        (
-            (dataframe['rsi'] > sell_threshold) &
-            (dataframe['volume'] > 0)
-        ),
-        'exit_long'] = 1
+    # According to requirements, exit is handled by other blocks
+    # So return the dataframe unchanged
     return dataframe

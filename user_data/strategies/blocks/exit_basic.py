@@ -25,10 +25,14 @@ def populate_exit_trend(dataframe: DataFrame, metadata: dict, params: dict) -> D
     
     sell_rsi = params.get('sell_rsi', 70)
     
-    # Set exit signal when RSI is above the sell threshold
+    # Initialize 'exit_long' column if it doesn't exist
+    if 'exit_long' not in dataframe.columns:
+        dataframe['exit_long'] = 0
+    
+    # Add exit signal when RSI is above the sell threshold using OR logic
     dataframe.loc[
         (dataframe['rsi'] > sell_rsi),
         'exit_long'
-    ] = 1
+    ] |= 1
     
     return dataframe
