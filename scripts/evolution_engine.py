@@ -244,6 +244,7 @@ def load_genome(path: str = "user_data/current_genome.json") -> Dict[str, Any]:
 def save_current_genome(genome: dict) -> None:
     """
     Save the genome to user_data/current_genome.json.
+    The genome should be a dictionary with 'entry_tree' and 'exit_tree' keys.
     
     Args:
         genome: The genome dictionary to save
@@ -252,6 +253,7 @@ def save_current_genome(genome: dict) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(genome, f, indent=2, ensure_ascii=False)
+    logging.info(f"Saved genome to {path}")
 
 def run_backtest(timerange: str = "20241101-20241115") -> bool:
     """
@@ -366,12 +368,34 @@ if __name__ == "__main__":
         ]
     )
     
-    # Generate a random tree
-    tree = generate_random_tree(max_depth=5)
+    # Generate entry and exit trees
+    entry_tree = generate_random_tree(max_depth=5)
+    exit_tree = generate_random_tree(max_depth=5)
+    
+    # Create a proper genome structure
+    genome = {
+        "entry_tree": entry_tree,
+        "exit_tree": exit_tree
+    }
     
     # Save as current genome
-    save_current_genome(tree)
-    logging.info("Saved new random genome. Starting backtest...")
+    save_current_genome(genome)
+    logging.info("Saved new random genome with entry and exit trees. Starting backtest...")
+    
+    # Verify the file was saved correctly
+    # Check if the file exists and has the right structure
+    if not os.path.exists("user_data/current_genome.json"):
+        logging.error("Genome file not found at user_data/current_genome.json")
+        exit(1)
+    
+    # Check the contents
+    with open("user_data/current_genome.json", 'r', encoding='utf-8') as f:
+        saved_genome = json.load(f)
+    if "entry_tree" not in saved_genome or "exit_tree" not in saved_genome:
+        logging.error(f"Saved genome is missing required keys: {list(saved_genome.keys())}")
+        exit(1)
+    else:
+        logging.info(f"Genome verified with keys: {list(saved_genome.keys())}")
     
     # Run backtest
     success = run_backtest(timerange="20241101-20241115")
@@ -388,5 +412,5 @@ if __name__ == "__main__":
     history_path = f"user_data/genome_history/genome_{timestamp}_fitness_{fitness:.4f}.json"
     os.makedirs(os.path.dirname(history_path), exist_ok=True)
     with open(history_path, 'w', encoding='utf-8') as f:
-        json.dump(tree, f, indent=2, ensure_ascii=False)
+        json.dump(genome, f, indent=2, ensure_ascii=False)
     logging.info(f"Saved historical genome to {history_path}")
