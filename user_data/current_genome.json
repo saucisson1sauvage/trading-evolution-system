@@ -8,7 +8,7 @@
       }
     },
     "right": {
-      "constant": 47.179616316286136
+      "constant": 53.18630934313299
     }
   },
   "exit_tree": {
@@ -20,7 +20,7 @@
       }
     },
     "right": {
-      "constant": 30.0
+      "constant": 92.8437926703866
     }
   },
   "fitness": -1.0

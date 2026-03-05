@@ -64,7 +64,15 @@ def run_evolution_round(genome: dict) -> float:
 
 def run_loop(gens=5, pop=4):
     logging.info(f"STARTING GP LOOP: {gens} gens, {pop} individuals")
-    population = [{"entry_tree": generate_random_tree(1), "exit_tree": {"primitive": "GREATER_THAN", "left": {"primitive": "RSI", "parameters": {"window": 14}}, "right": {"constant": 30.0}}, "fitness": -1.0} for _ in range(pop)]
+    # Dynamic initial population with randomized exit points
+    population = []
+    for _ in range(pop):
+        ind = {
+            "entry_tree": generate_random_tree(1), 
+            "exit_tree": {"primitive": "GREATER_THAN", "left": {"primitive": "RSI", "parameters": {"window": 14}}, "right": {"constant": random.uniform(70, 95)}},
+            "fitness": -1.0
+        }
+        population.append(ind)
 
     for g in range(gens):
         logging.info(f"Gen {g}")
