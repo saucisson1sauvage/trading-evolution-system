@@ -36,15 +36,30 @@ class GeneticAssembler(IStrategy):
 
     def _load_blocks(self):
         blocks = []
+        # Add project root to sys.path so we can import user_data...
+        project_root = str(PathResolver.get_project_root())
+        if project_root not in sys.path:
+            sys.path.insert(0, project_root)
+
         for block_name in self.dna.get("active_blocks", []):
             try:
+                # Absolute import based on project structure
                 module_path = f"user_data.strategies.blocks.{block_name}"
                 module = importlib.import_module(module_path)
                 importlib.reload(module)
                 blocks.append(module)
-                logger.info(f"Loaded block: {block_name}")
+                logger.info(f"Successfully loaded block: {block_name}")
             except Exception as e:
                 logger.error(f"Failed to load block {block_name}: {e}")
+                # Try relative import if absolute fails
+                try:
+                    module_path = f"blocks.{block_name}"
+                    module = importlib.import_module(module_path)
+                    importlib.reload(module)
+                    blocks.append(module)
+                    logger.info(f"Successfully loaded block (relative): {block_name}")
+                except Exception as e2:
+                    logger.error(f"Failed to load block {block_name} (relative): {e2}")
         return blocks
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -59,19 +74,19 @@ class GeneticAssembler(IStrategy):
         # Voting system: Count how many blocks signal entry
         dataframe.loc[:, 'enter_long_votes'] = 0
         
+        # Reset enter_long once at the start
+        dataframe.loc[:, 'enter_long'] = 0
+
         for block in self.blocks:
             if hasattr(block, "populate_entry_trend"):
-                # Reset enter_long before each block to capture its individual output
-                dataframe.loc[:, 'enter_long'] = 0
+                # Capturing individual block signal
                 dataframe = block.populate_entry_trend(dataframe, metadata, params)
-                # Increment votes based on this block's output
+                # Any block that sets enter_long=1 contributes a vote
                 dataframe['enter_long_votes'] += dataframe['enter_long'].fillna(0)
+                # Reset enter_long for the next block
+                dataframe.loc[:, 'enter_long'] = 0
         
-        # Reset enter_long one final time
-        dataframe.loc[:, 'enter_long'] = 0
-        
-        # Require only 1 vote to trigger entry, ensuring trades are made
-        # (A vote count >= 1 means at least one block signaled entry)
+        # Logic Fix: Require at least 1 vote to trigger entry
         dataframe.loc[dataframe['enter_long_votes'] >= 1, 'enter_long'] = 1
         
         return dataframe
