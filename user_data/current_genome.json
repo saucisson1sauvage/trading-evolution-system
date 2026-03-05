@@ -1,84 +1,44 @@
 {
   "entry_tree": {
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 11
+      }
+    },
+    "right": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 29,
+        "std": 2.4
+      }
+    }
+  },
+  "exit_tree": {
     "operator": "OR",
     "children": [
       {
         "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 28,
-            "std": 2.4
-          }
+          "constant": 84.83
         },
         "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 25
-          }
+          "constant": 36.48
         }
       },
       {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "constant": 61.32
-              }
-            ]
-          },
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 46
-              }
-            },
-            "right": {
-              "constant": 68.28
-            }
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_LOWER",
+          "parameters": {
+            "window": 26,
+            "std": 2.7
           }
-        ]
-      }
-    ]
-  },
-  "exit_tree": {
-    "operator": "AND",
-    "children": [
-      {
-        "operator": "OR",
-        "children": [
-          {
-            "constant": 54.85
-          },
-          {
-            "primitive": "SMA",
-            "parameters": {
-              "window": 35
-            }
-          }
-        ]
-      },
-      {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "BB_LOWER",
-            "parameters": {
-              "window": 10,
-              "std": 1.6
-            }
-          },
-          {
-            "primitive": "EMA",
-            "parameters": {
-              "window": 15
-            }
-          }
-        ]
+        },
+        "right": {
+          "constant": 57.12
+        }
       }
     ]
   },
