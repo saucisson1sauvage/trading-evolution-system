@@ -29,7 +29,7 @@ def generate_random_tree(max_depth: int, current_depth: int = 0) -> Dict[str, An
     Returns:
         A dictionary representing a valid tree node
     """
-    # If we've reached max depth, always generate a leaf (indicator)
+    # If we've reached max depth, always generate a leaf
     if current_depth >= max_depth:
         return _generate_indicator_node()
     
@@ -51,29 +51,38 @@ def generate_random_tree(max_depth: int, current_depth: int = 0) -> Dict[str, An
     else:
         # Generate comparator node
         comp = random.choice(COMPARATORS)
-        # Generate left and right children as indicator nodes
-        # We use current_depth + 1 to ensure they're leaves if max_depth is reached
+        # Generate left child as a leaf node
         left = _generate_indicator_node()
-        right = _generate_indicator_node()
+        # For right child, prefer constants (50% chance)
+        if random.random() < 0.5:
+            # Generate a constant node
+            right = {"constant": round(random.uniform(10, 90), 2)}
+        else:
+            right = _generate_indicator_node()
         return {"primitive": comp, "left": left, "right": right}
 
 def _generate_indicator_node() -> Dict[str, Any]:
     """
-    Generate a random indicator node with appropriate parameters.
+    Generate a random leaf node: either an indicator or a constant.
     
     Returns:
-        A dictionary representing an indicator primitive node
+        A dictionary representing either an indicator primitive node or a constant node
     """
-    indicator = random.choice(INDICATORS)
-    parameters = {}
-    
-    if indicator in ["RSI", "EMA", "SMA"]:
-        parameters["window"] = random.randint(7, 50)
-    elif indicator in ["BB_UPPER", "BB_MIDDLE", "BB_LOWER"]:
-        parameters["window"] = random.randint(10, 40)
-        parameters["std"] = round(random.uniform(1.5, 3.0), 1)
-    
-    return {"primitive": indicator, "parameters": parameters}
+    # 30% chance to generate a constant, 70% chance to generate an indicator
+    if random.random() < 0.30:
+        # Generate a constant value between 10 and 90, rounded to 2 decimal places
+        return {"constant": round(random.uniform(10, 90), 2)}
+    else:
+        indicator = random.choice(INDICATORS)
+        parameters = {}
+        
+        if indicator in ["RSI", "EMA", "SMA"]:
+            parameters["window"] = random.randint(7, 50)
+        elif indicator in ["BB_UPPER", "BB_MIDDLE", "BB_LOWER"]:
+            parameters["window"] = random.randint(10, 40)
+            parameters["std"] = round(random.uniform(1.5, 3.0), 1)
+        
+        return {"primitive": indicator, "parameters": parameters}
 
 def get_all_nodes(tree: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -86,7 +95,10 @@ def get_all_nodes(tree: Dict[str, Any]) -> List[Dict[str, Any]]:
         List of all node dictionaries in depth-first order
     """
     nodes = [tree]
-    if "primitive" in tree:
+    if "constant" in tree:
+        # Constant nodes are leaves, no children
+        pass
+    elif "primitive" in tree:
         # Check if it's a comparator node (has left/right)
         if "left" in tree:
             nodes.extend(get_all_nodes(tree["left"]))
@@ -170,9 +182,11 @@ def get_node_type(node: Dict[str, Any]) -> str:
         node: The tree node
         
     Returns:
-        "boolean" for operators and comparators, "numeric" for indicators
+        "boolean" for operators and comparators, "numeric" for indicators and constants
     """
-    if "operator" in node:
+    if "constant" in node:
+        return "numeric"
+    elif "operator" in node:
         return "boolean"
     elif "primitive" in node:
         if node["primitive"] in COMPARATORS:
@@ -303,7 +317,10 @@ def mutate_tree(tree: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, A
             _apply_mutation(node)
         
         # Recursively process children
-        if "primitive" in node:
+        if "constant" in node:
+            # Constant nodes are leaves, no children to process
+            pass
+        elif "primitive" in node:
             # Check if it's a comparator node (has left/right)
             if "left" in node:
                 _mutate_node(node["left"])
@@ -316,7 +333,20 @@ def mutate_tree(tree: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, A
         """Apply a random mutation to the given node."""
         mutation_type = random.random()
         
-        if "primitive" in node:
+        if "constant" in node:
+            # Constant node mutation
+            if mutation_type < 0.5:
+                # Additive mutation
+                delta = random.uniform(-5, 5)
+                new_val = node["constant"] + delta
+                # Clamp to reasonable range [0, 100]
+                node["constant"] = max(0.0, min(100.0, round(new_val, 2)))
+            else:
+                # Multiplicative mutation
+                factor = random.uniform(0.85, 1.15)
+                new_val = node["constant"] * factor
+                node["constant"] = max(0.0, min(100.0, round(new_val, 2)))
+        elif "primitive" in node:
             # Indicator or comparator node
             if "parameters" in node:
                 # Indicator node - point mutation

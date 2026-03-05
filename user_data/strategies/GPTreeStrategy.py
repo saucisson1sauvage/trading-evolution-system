@@ -62,6 +62,10 @@ class GPTreeStrategy(IStrategy):
         Raises:
             ValueError: If the node structure is invalid or contains unknown primitives/operators
         """
+        if "constant" in node:
+            # Return a Series broadcasting the constant value to match dataframe length
+            return pd.Series(node["constant"], index=dataframe.index)
+        
         if "primitive" in node:
             name = node["primitive"]
             params = node.get("parameters", {})
@@ -110,7 +114,7 @@ class GPTreeStrategy(IStrategy):
             else:
                 raise ValueError(f"Unknown operator: {op}")
 
-        raise ValueError("Node must contain either 'primitive' or 'operator' key")
+        raise ValueError("Node must contain 'constant', 'primitive', or 'operator' key")
 
     def populate_indicators(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
         """
