@@ -1,0 +1,44 @@
+{
+  "entry_tree": {
+    "operator": "NOT",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "constant": 51.58
+              },
+              {
+                "constant": 78.3
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "NOT",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 24
+          }
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 8,
+            "std": 2.4
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "entry_tree": {
+    "operator": "NOT",
+    "children": [
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 44
+          }
+        },
+        "right": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 12
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "operator": "NOT",
+                    "children": [
+                      {
+                        "primitive": "BB_UPPER",
+                        "parameters": {
+                          "window": 20,
+                          "std": 2.7
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "operator": "AND",
+                    "children": [
+                      {
+                        "primitive": "RSI",
+                        "parameters": {
+                          "window": 22
+                        }
+                      },
+                      {
+                        "primitive": "BB_MIDDLE",
+                        "parameters": {
+                          "window": 20,
+                          "std": 2.1
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "primitive": "BB_MIDDLE",
+                      "parameters": {
+                        "window": 28,
+                        "std": 2.5
+                      }
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 23
+                      }
+                    }
+                  },
+                  {
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 21,
+                        "std": 2.8
+                      }
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 44
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 14,
+                "std": 1.7
+              }
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 25
+              }
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "NOT",
+                "children": [
+                  {
+                    "operator": "NOT",
+                    "children": [
+                      {
+                        "primitive": "RSI",
+                        "parameters": {
+                          "window": 20
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 32
+                  }
+                },
+                "right": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 7
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

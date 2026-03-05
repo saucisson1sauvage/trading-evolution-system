@@ -1,0 +1,24 @@
+{
+  "entry_tree": {
+    "primitive": "LESS_THAN",
+    "left": {
+      "constant": 82.0
+    },
+    "right": {
+      "constant": 54.46
+    }
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "BB_UPPER",
+      "parameters": {
+        "window": 11,
+        "std": 2.2
+      }
+    },
+    "right": {
+      "constant": 38.05
+    }
+  }
+}

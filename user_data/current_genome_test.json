@@ -1,0 +1,76 @@
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 23,
+            "std": 2.6
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 42
+          }
+        }
+      },
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "BB_LOWER",
+          "parameters": {
+            "window": 37,
+            "std": 2.1
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 44
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 23,
+            "std": 2.6
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 42
+          }
+        }
+      },
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "BB_LOWER",
+          "parameters": {
+            "window": 37,
+            "std": 2.1
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 44
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "entry_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "constant": 85.38
+        },
+        "right": {
+          "constant": 66.35
+        }
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "constant": 37.43
+        },
+        "right": {
+          "constant": 40.0
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 12
+          }
+        },
+        "right": {
+          "constant": 66.35
+        }
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_LOWER",
+          "parameters": {
+            "window": 28,
+            "std": 2.1
+          }
+        },
+        "right": {
+          "constant": 40.0
+        }
+      }
+    ]
+  }
+}

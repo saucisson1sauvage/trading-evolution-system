@@ -1,0 +1,279 @@
+2026-03-05 18:34:55,856 | INFO | Saved new random genome. Starting backtest...
+2026-03-05 18:34:59,598 | ERROR | Backtest failed with return code 1
+2026-03-05 18:34:59,598 | ERROR | STDOUT:
+
+2026-03-05 18:34:59,598 | ERROR | STDERR:
+2026-03-05 18:34:56,013 - freqtrade - INFO - freqtrade 2026.3-dev-ac8f408
+2026-03-05 18:34:56,238 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2026-03-05 18:34:57,486 - freqtrade.configuration.load_config - INFO - Using config: config.json ...
+2026-03-05 18:34:57,489 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-03-05 18:34:57,489 - freqtrade.loggers - INFO - Logfile configured
+2026-03-05 18:34:57,490 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-03-05 18:34:57,490 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 3 ...
+2026-03-05 18:34:57,490 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20241101-20241115 ...
+2026-03-05 18:34:57,491 - freqtrade.configuration.configuration - INFO - Using user-data directory: user_data ...
+2026-03-05 18:34:57,491 - freqtrade.configuration.configuration - INFO - Using data directory: user_data/data/binance ...
+2026-03-05 18:34:57,492 - freqtrade.configuration.configuration - INFO - Parameter --cache=day detected ...
+2026-03-05 18:34:57,492 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20241101-20241115
+2026-03-05 18:34:57,492 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-03-05 18:34:57,504 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-03-05 18:34:57,504 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-03-05 18:34:57,505 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-03-05 18:34:57,506 - freqtrade.commands.optimize_commands - INFO - Starting freqtrade in Backtesting mode
+2026-03-05 18:34:57,507 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-03-05 18:34:57,507 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.40
+2026-03-05 18:34:57,521 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-03-05 18:34:58,980 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-03-05 18:34:59,014 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy GPTreeStrategy from '/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py'...
+2026-03-05 18:34:59,014 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-03-05 18:34:59,015 - freqtrade - ERROR - Fatal exception!
+Traceback (most recent call last):
+  File "/home/saus/freqtrade/freqtrade/main.py", line 53, in main
+    return_code = args["func"](args)
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/commands/optimize_commands.py", line 60, in start_backtesting
+    backtesting = Backtesting(config)
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/optimize/backtesting.py", line 163, in __init__
+    self.strategylist.append(StrategyResolver.load_strategy(self.config))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 51, in load_strategy
+    strategy: IStrategy = StrategyResolver._load_strategy(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 297, in _load_strategy
+    strategy = StrategyResolver._load_object(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/iresolver.py", line 184, in _load_object
+    return module(**kwargs)
+           ^^^^^^^^^^^^^^^^
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 34, in __init__
+    self._load_genome()
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 49, in _load_genome
+    raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
+ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
+
+2026-03-05 18:34:59,598 | ERROR | Backtest failed
+2026-03-05 18:36:40,208 | INFO | Saved new random genome. Starting backtest...
+2026-03-05 18:36:43,642 | ERROR | Backtest failed with return code 1
+2026-03-05 18:36:43,642 | ERROR | STDOUT:
+
+2026-03-05 18:36:43,642 | ERROR | STDERR:
+2026-03-05 18:36:40,345 - freqtrade - INFO - freqtrade 2026.3-dev-ac8f408
+2026-03-05 18:36:40,544 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2026-03-05 18:36:41,583 - freqtrade.configuration.load_config - INFO - Using config: config.json ...
+2026-03-05 18:36:41,585 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-03-05 18:36:41,586 - freqtrade.loggers - INFO - Logfile configured
+2026-03-05 18:36:41,586 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-03-05 18:36:41,586 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 3 ...
+2026-03-05 18:36:41,587 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20241101-20241115 ...
+2026-03-05 18:36:41,587 - freqtrade.configuration.configuration - INFO - Using user-data directory: user_data ...
+2026-03-05 18:36:41,588 - freqtrade.configuration.configuration - INFO - Using data directory: user_data/data/binance ...
+2026-03-05 18:36:41,588 - freqtrade.configuration.configuration - INFO - Parameter --cache=day detected ...
+2026-03-05 18:36:41,588 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20241101-20241115
+2026-03-05 18:36:41,589 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-03-05 18:36:41,598 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-03-05 18:36:41,599 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-03-05 18:36:41,599 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-03-05 18:36:41,601 - freqtrade.commands.optimize_commands - INFO - Starting freqtrade in Backtesting mode
+2026-03-05 18:36:41,602 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-03-05 18:36:41,602 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.40
+2026-03-05 18:36:41,615 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-03-05 18:36:42,992 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-03-05 18:36:43,019 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy GPTreeStrategy from '/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py'...
+2026-03-05 18:36:43,019 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-03-05 18:36:43,020 - freqtrade - ERROR - Fatal exception!
+Traceback (most recent call last):
+  File "/home/saus/freqtrade/freqtrade/main.py", line 53, in main
+    return_code = args["func"](args)
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/commands/optimize_commands.py", line 60, in start_backtesting
+    backtesting = Backtesting(config)
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/optimize/backtesting.py", line 163, in __init__
+    self.strategylist.append(StrategyResolver.load_strategy(self.config))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 51, in load_strategy
+    strategy: IStrategy = StrategyResolver._load_strategy(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 297, in _load_strategy
+    strategy = StrategyResolver._load_object(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/iresolver.py", line 184, in _load_object
+    return module(**kwargs)
+           ^^^^^^^^^^^^^^^^
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 34, in __init__
+    self._load_genome()
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 49, in _load_genome
+    raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
+ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
+
+2026-03-05 18:36:43,642 | ERROR | Backtest failed
+2026-03-05 18:38:14,037 | INFO | Saved new random genome. Starting backtest...
+2026-03-05 18:38:17,495 | ERROR | Backtest failed with return code 1
+2026-03-05 18:38:17,495 | ERROR | STDOUT:
+
+2026-03-05 18:38:17,495 | ERROR | STDERR:
+2026-03-05 18:38:14,168 - freqtrade - INFO - freqtrade 2026.3-dev-ac8f408
+2026-03-05 18:38:14,366 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2026-03-05 18:38:15,393 - freqtrade.configuration.load_config - INFO - Using config: config.json ...
+2026-03-05 18:38:15,395 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-03-05 18:38:15,396 - freqtrade.loggers - INFO - Logfile configured
+2026-03-05 18:38:15,396 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-03-05 18:38:15,397 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 3 ...
+2026-03-05 18:38:15,397 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20241101-20241115 ...
+2026-03-05 18:38:15,397 - freqtrade.configuration.configuration - INFO - Using user-data directory: user_data ...
+2026-03-05 18:38:15,398 - freqtrade.configuration.configuration - INFO - Using data directory: user_data/data/binance ...
+2026-03-05 18:38:15,398 - freqtrade.configuration.configuration - INFO - Parameter --cache=day detected ...
+2026-03-05 18:38:15,398 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20241101-20241115
+2026-03-05 18:38:15,399 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-03-05 18:38:15,406 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-03-05 18:38:15,406 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-03-05 18:38:15,406 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-03-05 18:38:15,408 - freqtrade.commands.optimize_commands - INFO - Starting freqtrade in Backtesting mode
+2026-03-05 18:38:15,409 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-03-05 18:38:15,409 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.40
+2026-03-05 18:38:15,421 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-03-05 18:38:16,858 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-03-05 18:38:16,885 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy GPTreeStrategy from '/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py'...
+2026-03-05 18:38:16,885 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-03-05 18:38:16,886 - freqtrade - ERROR - Fatal exception!
+Traceback (most recent call last):
+  File "/home/saus/freqtrade/freqtrade/main.py", line 53, in main
+    return_code = args["func"](args)
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/commands/optimize_commands.py", line 60, in start_backtesting
+    backtesting = Backtesting(config)
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/optimize/backtesting.py", line 163, in __init__
+    self.strategylist.append(StrategyResolver.load_strategy(self.config))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 51, in load_strategy
+    strategy: IStrategy = StrategyResolver._load_strategy(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 297, in _load_strategy
+    strategy = StrategyResolver._load_object(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/iresolver.py", line 184, in _load_object
+    return module(**kwargs)
+           ^^^^^^^^^^^^^^^^
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 34, in __init__
+    self._load_genome()
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 49, in _load_genome
+    raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
+ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
+
+2026-03-05 18:38:17,496 | ERROR | Backtest failed
+2026-03-05 18:38:29,911 | INFO | Saved new random genome. Starting backtest...
+2026-03-05 18:38:33,395 | ERROR | Backtest failed with return code 1
+2026-03-05 18:38:33,395 | ERROR | STDOUT:
+
+2026-03-05 18:38:33,396 | ERROR | STDERR:
+2026-03-05 18:38:30,042 - freqtrade - INFO - freqtrade 2026.3-dev-ac8f408
+2026-03-05 18:38:30,244 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2026-03-05 18:38:31,262 - freqtrade.configuration.load_config - INFO - Using config: config.json ...
+2026-03-05 18:38:31,265 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-03-05 18:38:31,265 - freqtrade.loggers - INFO - Logfile configured
+2026-03-05 18:38:31,266 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-03-05 18:38:31,266 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 3 ...
+2026-03-05 18:38:31,267 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20241101-20241115 ...
+2026-03-05 18:38:31,267 - freqtrade.configuration.configuration - INFO - Using user-data directory: user_data ...
+2026-03-05 18:38:31,268 - freqtrade.configuration.configuration - INFO - Using data directory: user_data/data/binance ...
+2026-03-05 18:38:31,268 - freqtrade.configuration.configuration - INFO - Parameter --cache=day detected ...
+2026-03-05 18:38:31,268 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20241101-20241115
+2026-03-05 18:38:31,269 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-03-05 18:38:31,276 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-03-05 18:38:31,276 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-03-05 18:38:31,276 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-03-05 18:38:31,278 - freqtrade.commands.optimize_commands - INFO - Starting freqtrade in Backtesting mode
+2026-03-05 18:38:31,279 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-03-05 18:38:31,279 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.40
+2026-03-05 18:38:31,291 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-03-05 18:38:32,758 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-03-05 18:38:32,783 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy GPTreeStrategy from '/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py'...
+2026-03-05 18:38:32,784 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-03-05 18:38:32,784 - freqtrade - ERROR - Fatal exception!
+Traceback (most recent call last):
+  File "/home/saus/freqtrade/freqtrade/main.py", line 53, in main
+    return_code = args["func"](args)
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/commands/optimize_commands.py", line 60, in start_backtesting
+    backtesting = Backtesting(config)
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/optimize/backtesting.py", line 163, in __init__
+    self.strategylist.append(StrategyResolver.load_strategy(self.config))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 51, in load_strategy
+    strategy: IStrategy = StrategyResolver._load_strategy(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/strategy_resolver.py", line 297, in _load_strategy
+    strategy = StrategyResolver._load_object(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/saus/freqtrade/freqtrade/resolvers/iresolver.py", line 184, in _load_object
+    return module(**kwargs)
+           ^^^^^^^^^^^^^^^^
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 34, in __init__
+    self._load_genome()
+  File "/home/saus/crypto-crew-4.0/user_data/strategies/GPTreeStrategy.py", line 49, in _load_genome
+    raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
+ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
+
+2026-03-05 18:38:33,396 | ERROR | Backtest failed
+2026-03-05 18:40:36,718 | INFO | Saved genome to user_data/current_genome.json
+2026-03-05 18:40:36,719 | INFO | Saved new random genome with entry and exit trees. Starting backtest...
+2026-03-05 18:40:36,719 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 18:40:41,530 | WARNING | No backtest result files found
+2026-03-05 18:40:41,530 | INFO | Fitness score: 0.0000
+2026-03-05 18:40:41,530 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_184041_fitness_0.0000.json
+2026-03-05 19:21:17,146 | INFO | Testing genetic operators...
+2026-03-05 19:21:17,146 | INFO | Crossover completed successfully
+2026-03-05 19:21:17,146 | INFO | Mutation completed successfully
+2026-03-05 19:21:17,146 | INFO | Offspring generation completed successfully
+2026-03-05 19:21:17,147 | INFO | Saved genome to user_data/current_genome.json
+2026-03-05 19:21:17,147 | INFO | Saved new genome generated with genetic operators. Starting backtest...
+2026-03-05 19:21:17,147 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 19:21:21,539 | WARNING | No backtest result files found
+2026-03-05 19:21:21,539 | INFO | Fitness score: 0.0000
+2026-03-05 19:21:21,539 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_192121_fitness_0.0000.json
+2026-03-05 19:25:36,617 | INFO | Testing genetic operators...
+2026-03-05 19:25:36,617 | INFO | Crossover completed successfully
+2026-03-05 19:25:36,617 | INFO | Mutation completed successfully
+2026-03-05 19:25:36,617 | INFO | Offspring generation completed successfully
+2026-03-05 19:25:36,618 | INFO | Saved genome to user_data/current_genome.json
+2026-03-05 19:25:36,618 | INFO | Saved new genome generated with genetic operators. Starting backtest...
+2026-03-05 19:25:36,618 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 19:25:41,078 | WARNING | No backtest result files found
+2026-03-05 19:25:41,078 | INFO | Fitness score: 0.0000
+2026-03-05 19:25:41,078 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_192541_fitness_0.0000.json
+2026-03-05 19:37:47,320 | INFO | Testing genetic operators...
+2026-03-05 19:37:47,321 | INFO | Crossover completed successfully
+2026-03-05 19:37:47,321 | INFO | Mutation completed successfully
+2026-03-05 19:37:47,321 | INFO | Offspring generation completed successfully
+2026-03-05 19:37:47,321 | INFO | Saved genome to /home/saus/crypto-crew-4.0/user_data/current_genome.json
+2026-03-05 19:37:47,321 | INFO | Saved new genome generated with genetic operators. Starting backtest...
+2026-03-05 19:37:47,322 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 19:37:47,322 | INFO | Running backtest with command: /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GPTreeStrategy --timerange 20241101-20241115 --config /home/saus/crypto-crew-4.0/config.json --userdir /home/saus/crypto-crew-4.0/user_data
+2026-03-05 19:37:51,521 | WARNING | No backtest result files found
+2026-03-05 19:37:51,521 | INFO | Fitness score: 0.0000
+2026-03-05 19:37:51,522 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_193751_fitness_0.0000.json
+2026-03-05 19:39:23,835 | INFO | Testing genetic operators...
+2026-03-05 19:39:23,835 | INFO | Crossover completed successfully
+2026-03-05 19:39:23,835 | INFO | Mutation completed successfully
+2026-03-05 19:39:23,836 | INFO | Offspring generation completed successfully
+2026-03-05 19:39:23,836 | INFO | Saved genome to /home/saus/crypto-crew-4.0/user_data/current_genome.json
+2026-03-05 19:39:23,836 | INFO | Saved new genome generated with genetic operators. Starting backtest...
+2026-03-05 19:39:23,836 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 19:39:23,837 | INFO | Running backtest with command: /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GPTreeStrategy --timerange 20241101-20241115 --config /home/saus/crypto-crew-4.0/config.json --userdir /home/saus/crypto-crew-4.0/user_data
+2026-03-05 19:39:28,385 | WARNING | No backtest result files found
+2026-03-05 19:39:28,386 | INFO | Fitness score: 0.0000
+2026-03-05 19:39:28,389 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_193928_fitness_0.0000.json
+2026-03-05 20:03:27,586 | INFO | Testing genetic operators...
+2026-03-05 20:03:27,586 | INFO | Crossover completed successfully
+2026-03-05 20:03:27,586 | INFO | Mutation completed successfully
+2026-03-05 20:03:27,587 | INFO | Offspring generation completed successfully
+2026-03-05 20:03:27,587 | INFO | Saved genome to /home/saus/crypto-crew-4.0/user_data/current_genome.json
+2026-03-05 20:03:27,588 | INFO | Saved new genome generated with genetic operators. Starting backtest...
+2026-03-05 20:03:27,588 | INFO | Genome verified with keys: ['entry_tree', 'exit_tree']
+2026-03-05 20:03:27,588 | INFO | Running backtest with command: /home/saus/freqtrade/.venv/bin/freqtrade backtesting --strategy GPTreeStrategy --timerange 20241213-20250112 --config /home/saus/crypto-crew-4.0/config.json --userdir /home/saus/crypto-crew-4.0/user_data --export trades --export-filename /home/saus/crypto-crew-4.0/user_data/backtest_results/evolution_last.json
+2026-03-05 20:03:32,315 | WARNING | No backtest result file found → likely 0 trades or failed run
+2026-03-05 20:03:32,315 | INFO | Fitness score: 0.0000
+2026-03-05 20:03:32,315 | INFO | Saved historical genome to user_data/genome_history/genome_20260305_200332_fitness_0.0000.json

@@ -1,0 +1,140 @@
+{
+  "entry_tree": {
+    "primitive": "LESS_THAN",
+    "left": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 41
+      }
+    },
+    "right": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 20
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "NOT",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 20
+                      }
+                    },
+                    "right": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 41
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "operator": "NOT",
+                    "children": [
+                      {
+                        "primitive": "RSI",
+                        "parameters": {
+                          "window": 13
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 30
+                      }
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 25
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 41
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 25
+                  }
+                }
+              },
+              {
+                "operator": "NOT",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 37
+                      }
+                    },
+                    "right": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 19
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 31,
+            "std": 2.1
+          }
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 10,
+            "std": 2.7
+          }
+        }
+      }
+    ]
+  }
+}

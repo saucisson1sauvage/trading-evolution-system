@@ -6,204 +6,82 @@ from typing import Dict, Any, Union
 import pandas as pd
 from freqtrade.strategy import IStrategy
 
-# Ensure the strategies directory is in sys.path for importing gp_blocks
-# Freqtrade adds user_data/strategies to sys.path when running with --userdir,
-# but we need to handle cases where the strategy is loaded from other contexts.
-project_root = Path(__file__).resolve().parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
-# Import gp_blocks primitives using relative import path
-# This works because Freqtrade adds user_data/strategies to sys.path
+# Freqtrade standard pathing for user_data/strategies
 try:
     from gp_blocks import *
 except ImportError:
-    # Fallback: try to import from the same directory
-    import importlib.util
-    gp_blocks_path = Path(__file__).parent / "gp_blocks.py"
-    spec = importlib.util.spec_from_file_location("gp_blocks", gp_blocks_path)
-    gp_blocks = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(gp_blocks)
-    # Import all public functions from gp_blocks
-    for name in dir(gp_blocks):
-        if not name.startswith('_'):
-            globals()[name] = getattr(gp_blocks, name)
+    # Fallback for direct execution
+    sys.path.append(str(Path(__file__).parent))
+    from gp_blocks import *
 
 class GPTreeStrategy(IStrategy):
-    """
-    Dynamic Genetic Programming strategy shell.
-    Loads and executes entry/exit logic trees from user_data/current_genome.json.
-    All signals are computed recursively via evaluate_node using gp_blocks primitives.
-    Fault-tolerant: evaluation failures result in no signals rather than crashes.
-    """
     INTERFACE_VERSION = 3
-    can_short = False
     timeframe = '5m'
+    process_only_new_candles = False
     minimal_roi = {"0": 0.01}
-    stoploss = -0.10
-    trailing_stop = False
+    stoploss = -0.25
+    startup_candle_count = 30
 
     def __init__(self, config: dict) -> None:
-        """
-        Initialize the strategy and load the genome.
-        
-        Args:
-            config: Freqtrade configuration dictionary
-        """
         super().__init__(config)
         self.logger = logging.getLogger(__name__)
-        # Use absolute path to ensure consistency across contexts
+        # Fixed Absolute Path for the genome
         self.genome_path = Path("/home/saus/crypto-crew-4.0/user_data/current_genome.json")
-        print(f"DEBUG: Loading genome from {self.genome_path}")
         self.genome: Dict[str, Any] = {}
         self._load_genome()
 
     def _load_genome(self) -> None:
-        """
-        Load the genome JSON file and validate its structure.
+        if not self.genome_path.exists():
+            # Fallback to local user_data if absolute fails (e.g. migration)
+            self.genome_path = Path(self.config['user_data_dir']) / "current_genome.json"
         
-        Raises:
-            FileNotFoundError: If the genome file does not exist
-            ValueError: If the genome is missing required keys
-        """
-        # Try multiple possible locations for the genome file
-        possible_paths = [
-            self.genome_path,
-            Path("user_data/current_genome.json"),
-            Path(__file__).parent.parent / "current_genome.json"
-        ]
-        
-        genome_loaded = False
-        for path in possible_paths:
-            if path.exists():
-                with path.open('r', encoding='utf-8') as f:
-                    self.genome = json.load(f)
-                genome_loaded = True
-                self.logger.info(f"Loaded genome from {path}")
-                break
-        
-        if not genome_loaded:
-            raise FileNotFoundError(f"Genome file not found in any of the expected locations: {possible_paths}")
-        
-        if "entry_tree" not in self.genome or "exit_tree" not in self.genome:
-            raise ValueError("Genome JSON must contain keys 'entry_tree' and 'exit_tree'")
+        with self.genome_path.open('r', encoding='utf-8') as f:
+            self.genome = json.load(f)
 
     def evaluate_node(self, node: Dict[str, Any], dataframe: pd.DataFrame) -> pd.Series:
-        """
-        Recursively evaluate a node in the genetic programming tree.
-        
-        Args:
-            node: Dictionary representing a node in the tree
-            dataframe: Pandas DataFrame with market data
-            
-        Returns:
-            pd.Series: Boolean series representing the node's evaluation
-            
-        Raises:
-            ValueError: If the node structure is invalid or contains unknown primitives/operators
-        """
         if "constant" in node:
-            # Return a Series broadcasting the constant value to match dataframe length
             return pd.Series(node["constant"], index=dataframe.index)
         
         if "primitive" in node:
             name = node["primitive"]
             params = node.get("parameters", {})
-            if name == "RSI":
-                return get_rsi(dataframe, **params)
-            elif name == "EMA":
-                return get_ema(dataframe, **params)
-            elif name == "SMA":
-                return get_sma(dataframe, **params)
-            elif name in ["BB_UPPER", "BB_MIDDLE", "BB_LOWER"]:
-                upper, middle, lower = get_bollinger(dataframe, **params)
-                if name == "BB_UPPER": return upper
-                if name == "BB_MIDDLE": return middle
-                if name == "BB_LOWER": return lower
-            elif name in ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]:
-                left = self.evaluate_node(node["left"], dataframe)
-                right = self.evaluate_node(node["right"], dataframe)
-                if name == "GREATER_THAN": return greater_than(left, right)
-                if name == "LESS_THAN": return less_than(left, right)
-                if name == "CROSS_UP": return cross_up(left, right)
-                if name == "CROSS_DOWN": return cross_down(left, right)
-            else:
-                raise ValueError(f"Unknown primitive: {name}")
-
-        elif "operator" in node:
+            if name == "RSI": return get_rsi(dataframe, **params)
+            if name == "EMA": return get_ema(dataframe, **params)
+            if name == "SMA": return get_sma(dataframe, **params)
+            if name in ["BB_UPPER", "BB_MIDDLE", "BB_LOWER"]:
+                u, m, l = get_bollinger(dataframe, **params)
+                return u if name == "BB_UPPER" else (m if name == "BB_MIDDLE" else l)
+            
+            if name in ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]:
+                l = self.evaluate_node(node["left"], dataframe)
+                r = self.evaluate_node(node["right"], dataframe)
+                if name == "GREATER_THAN": return greater_than(l, r)
+                if name == "LESS_THAN": return less_than(l, r)
+                if name == "CROSS_UP": return cross_up(l, r)
+                if name == "CROSS_DOWN": return cross_down(l, r)
+        
+        if "operator" in node:
             op = node["operator"].upper()
-            children = node.get("children", [])
-            if op == "AND":
-                if len(children) != 2: 
-                    raise ValueError("AND requires exactly 2 children")
-                return and_op(
-                    self.evaluate_node(children[0], dataframe),
-                    self.evaluate_node(children[1], dataframe)
-                )
-            elif op == "OR":
-                if len(children) != 2: 
-                    raise ValueError("OR requires exactly 2 children")
-                return or_op(
-                    self.evaluate_node(children[0], dataframe),
-                    self.evaluate_node(children[1], dataframe)
-                )
-            elif op == "NOT":
-                if len(children) != 1: 
-                    raise ValueError("NOT requires exactly 1 child")
-                return not_op(self.evaluate_node(children[0], dataframe))
-            else:
-                raise ValueError(f"Unknown operator: {op}")
-
-        raise ValueError("Node must contain 'constant', 'primitive', or 'operator' key")
+            c = node.get("children", [])
+            if op == "AND": return and_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
+            if op == "OR": return or_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
+            if op == "NOT": return not_op(self.evaluate_node(c[0], dataframe))
+            
+        return pd.Series(False, index=dataframe.index)
 
     def populate_indicators(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
-        """
-        Populate indicators required for the strategy.
-        
-        Args:
-            dataframe: Raw data from the exchange
-            metadata: Additional information about the pair
-            
-        Returns:
-            DataFrame with added indicators
-        """
-        # No pre-computation needed — indicators are evaluated dynamically in evaluate_node
         return dataframe
 
     def populate_entry_trend(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
-        """
-        Populate entry signals based on the evaluated entry tree.
-        
-        Args:
-            dataframe: DataFrame with indicators
-            metadata: Additional information about the pair
-            
-        Returns:
-            DataFrame with 'enter_long' column added
-        """
         try:
-            entry_signal = self.evaluate_node(self.genome["entry_tree"], dataframe)
-            dataframe['enter_long'] = entry_signal.astype(int)
+            dataframe['enter_long'] = self.evaluate_node(self.genome["entry_tree"], dataframe).astype(int)
         except Exception as e:
-            self.logger.error(f"Entry tree evaluation failed: {str(e)}")
             dataframe['enter_long'] = 0
         return dataframe
 
-    def populate_exit_trend(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
-        """
-        Populate exit signals based on the evaluated exit tree.
-        
-        Args:
-            dataframe: DataFrame with indicators
-            metadata: Additional information about the pair
-            
-        Returns:
-            DataFrame with 'exit_long' column added
-        """
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         try:
-            exit_signal = self.evaluate_node(self.genome["exit_tree"], dataframe)
-            dataframe['exit_long'] = exit_signal.astype(int)
-        except Exception as e:
-            self.logger.error(f"Exit tree evaluation failed: {str(e)}")
+            dataframe['exit_long'] = self.evaluate_node(self.genome["exit_tree"], dataframe).astype(int)
+        except Exception:
             dataframe['exit_long'] = 0
         return dataframe
