@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 class GeneticAssembler(IStrategy):
     INTERFACE_VERSION = 3
     timeframe = '5m'
-    minimal_roi = {"0": 0.1}
-    stoploss = -0.10
+    minimal_roi = {"0": 0.01}
+    stoploss = -0.25
 
     def __init__(self, config: dict) -> None:
         super().__init__(config)
