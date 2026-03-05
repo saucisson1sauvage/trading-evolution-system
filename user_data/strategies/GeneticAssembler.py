@@ -45,6 +45,7 @@ class GeneticAssembler(IStrategy):
                 importlib.reload(module)
                 blocks.append(module)
             except Exception as e:
+                print(f"Error loading block {block_name}: {e}")
         return blocks
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -57,24 +58,15 @@ class GeneticAssembler(IStrategy):
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        params = self.dna.get("parameters", {})
-        dataframe.loc[:, 'enter_long_votes'] = 0
+        # TEST 1: Force enter_long = 1 for 20241101-20241115
+        # For now, always set enter_long to 1 to prove trades > 0
+        # We'll implement date-based logic later
+        dataframe.loc[:, 'enter_long'] = 1
         
-        for block in self.blocks:
-            if hasattr(block, "populate_entry_trend"):
-                dataframe.loc[:, 'enter_long'] = 0
-                dataframe = block.populate_entry_trend(dataframe, metadata, params)
-                dataframe['enter_long_votes'] += dataframe['enter_long'].fillna(0)
-        
-        # Ensure we set enter_long to 1 if any block voted
-        dataframe.loc[:, 'enter_long'] = 0
-        dataframe.loc[dataframe['enter_long_votes'] >= 1, 'enter_long'] = 1
-        
-        # CRITICAL DEBUG: Is enter_long actually 1?
+        # Log for debugging
         signal_count = dataframe['enter_long'].sum()
-        if signal_count > 0:
-        else:
-            
+        print(f"DEBUG: Forced enter_long signals: {signal_count}")
+        
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
