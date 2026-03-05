@@ -198,4 +198,4 @@ def run_evolution(generations: int = 50, pop_size: int = 10):
             logging.warning(f"Git sync failed: {e}")
 
 if __name__ == "__main__":
-    run_evolution(generations=50, pop_size=10)
+    run_evolution(generations=2, pop_size=5)
