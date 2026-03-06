@@ -863,10 +863,10 @@
       "exit_tree": {
         "primitive": "TRENDING_UP",
         "parameters": {
-          "window": 9
+          "window": 12
         }
       },
-      "fitness": 0.0
+      "fitness": -1.0
     },
     {
       "entry_tree": {
@@ -1172,7 +1172,7 @@
                 }
               },
               {
-                "operator": "AND",
+                "operator": "OR",
                 "children": [
                   {
                     "primitive": "VOLATILE",
@@ -1286,7 +1286,7 @@
           }
         ]
       },
-      "fitness": 0.0
+      "fitness": -1.0
     },
     {
       "entry_tree": {
