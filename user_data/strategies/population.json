@@ -841,7 +841,8 @@
           "threshold": 2.5
         }
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -1290,7 +1291,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "LESS_THAN",
+        "primitive": "GREATER_THAN",
         "left": {
           "primitive": "BB_UPPER",
           "parameters": {
@@ -1341,7 +1342,8 @@
           }
         ]
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -1405,13 +1407,14 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 17
-                      }
+                      "constant": 52.26
                     },
                     "right": {
-                      "constant": 52.26
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 42,
+                        "std": 2.4
+                      }
                     }
                   }
                 ]
@@ -1449,7 +1452,8 @@
           }
         ]
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
