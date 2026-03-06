@@ -1216,13 +1216,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 70
+            "window": 80
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 70
+            "window": 80
           }
         }
       },
@@ -1231,17 +1231,17 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 70
+            "window": 80
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 70
+            "window": 80
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1388,7 +1388,7 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 180.0
+          "threshold": 200.0
         }
       },
       "fitness": -1.0,
