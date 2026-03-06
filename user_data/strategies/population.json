@@ -1,0 +1,99 @@
+{
+  "individuals": [
+    {
+      "entry_tree": {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 23.17
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 8
+              }
+            }
+          }
+        ]
+      },
+      "exit_tree": {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 32
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 19
+          }
+        }
+      },
+      "fitness": 0.0
+    },
+    {
+      "entry_tree": {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 20,
+                "std": 2.7
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 26,
+                "std": 2.3
+              }
+            }
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 56.18
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 26,
+                "std": 2.7
+              }
+            }
+          }
+        ]
+      },
+      "exit_tree": {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 23,
+                "std": 1.5
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 7,
+                "std": 2.0
+              }
+            }
+          }
+        ]
+      },
+      "fitness": 0.0
+    }
+  ]
+}
