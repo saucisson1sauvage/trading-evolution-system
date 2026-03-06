@@ -1,52 +1,24 @@
 {
   "entry_tree": {
-    "operator": "NOT",
-    "children": [
-      {
-        "primitive": "VOLATILE",
-        "parameters": {
-          "window": 29,
-          "threshold": 2.27
-        }
+    "primitive": "GREATER_THAN",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 22
       }
-    ]
+    },
+    "right": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 44
+      }
+    }
   },
   "exit_tree": {
-    "operator": "NOT",
-    "children": [
-      {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 42
-              }
-            },
-            "right": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 19,
-                "std": 1.9
-              }
-            }
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 23
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "primitive": "TRENDING_UP",
+    "parameters": {
+      "window": 23
+    }
   },
   "role": "outsider",
   "generation_age": 0,
