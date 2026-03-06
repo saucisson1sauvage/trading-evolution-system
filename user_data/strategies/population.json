@@ -866,7 +866,7 @@
           "window": 12
         }
       },
-      "fitness": -1.0
+      "fitness": 0.0
     },
     {
       "entry_tree": {
@@ -1286,7 +1286,7 @@
           }
         ]
       },
-      "fitness": -1.0
+      "fitness": 0.0
     },
     {
       "entry_tree": {
