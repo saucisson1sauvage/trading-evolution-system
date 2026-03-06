@@ -19,7 +19,7 @@
     "primitive": "VOLATILE",
     "parameters": {
       "window": 15,
-      "threshold": 180.0
+      "threshold": 200.0
     }
   },
   "fitness": -1.0,
