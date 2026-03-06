@@ -1,24 +1,115 @@
 {
   "entry_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "SMA",
-      "parameters": {
-        "window": 12
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 7,
+            "std": 1.8
+          }
+        },
+        "right": {
+          "constant": 75.3
+        }
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 10,
+                "std": 2.7
+              }
+            },
+            "right": {
+              "constant": 59.68
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 26
+                  }
+                },
+                "right": {
+                  "constant": 71.78
+                }
+              },
+              {
+                "primitive": "LESS_THAN",
+                "left": {
+                  "constant": 70.03
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 36,
+                    "std": 2.9
+                  }
+                }
+              }
+            ]
+          }
+        ]
       }
-    },
-    "right": {
-      "primitive": "SMA",
-      "parameters": {
-        "window": 32
-      }
-    }
+    ]
   },
   "exit_tree": {
-    "primitive": "VOLUME_SPIKE",
-    "parameters": {
-      "window": 35
-    }
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 36
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 49,
+                    "std": 2.2
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 29
+          }
+        },
+        "right": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
   },
   "role": "outsider",
   "generation_age": 0,
