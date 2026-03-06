@@ -129,8 +129,8 @@
                     "left": {
                       "primitive": "BB_MIDDLE",
                       "parameters": {
-                        "window": 11,
-                        "std": 2.9
+                        "window": 10,
+                        "std": 2.61
                       }
                     },
                     "right": {
@@ -221,15 +221,15 @@
         "right": {
           "primitive": "EMA",
           "parameters": {
-            "window": 21
+            "window": 20
           }
         }
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 0.9591716479462937,
+      "debuffed_fitness": 0.0,
       "role": "candidate",
-      "generation_age": 5
+      "generation_age": 6
     },
     {
       "entry_tree": {
@@ -238,7 +238,7 @@
           {
             "primitive": "LESS_THAN",
             "left": {
-              "constant": 30.0
+              "constant": 27.48
             },
             "right": {
               "primitive": "EMA",
@@ -283,12 +283,12 @@
         "right": {
           "primitive": "SMA",
           "parameters": {
-            "window": 40
+            "window": 42
           }
         }
       },
       "role": "candidate",
-      "generation_age": 2,
+      "generation_age": 3,
       "fitness": -1.0,
       "debuffed_fitness": 0.0,
       "ai_fixed": true
@@ -321,8 +321,8 @@
                     "left": {
                       "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 10,
-                        "std": 2.0
+                        "window": 21,
+                        "std": 1.7
                       }
                     },
                     "right": {
@@ -336,10 +336,33 @@
                 ]
               },
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 45
-                }
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "VOLUME_SPIKE",
+                    "parameters": {
+                      "window": 16
+                    }
+                  },
+                  {
+                    "operator": "NOT",
+                    "children": [
+                      {
+                        "primitive": "GREATER_THAN",
+                        "left": {
+                          "primitive": "BB_LOWER",
+                          "parameters": {
+                            "window": 42,
+                            "std": 1.6
+                          }
+                        },
+                        "right": {
+                          "constant": 20.77
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -386,17 +409,17 @@
         ]
       },
       "exit_tree": {
-        "primitive": "CROSS_UP",
+        "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "RSI",
+          "primitive": "SMA",
           "parameters": {
-            "window": 35
+            "window": 46
           }
         },
         "right": {
           "primitive": "SMA",
           "parameters": {
-            "window": 31
+            "window": 21
           }
         }
       },
@@ -410,13 +433,13 @@
       "entry_tree": {
         "primitive": "VOLUME_SPIKE",
         "parameters": {
-          "window": 43
+          "window": 15
         }
       },
       "exit_tree": {
-        "primitive": "TRENDING_UP",
+        "primitive": "VOLUME_SPIKE",
         "parameters": {
-          "window": 40
+          "window": 17
         }
       },
       "role": "outsider",
@@ -428,31 +451,53 @@
         "operator": "NOT",
         "children": [
           {
-            "operator": "NOT",
+            "operator": "AND",
             "children": [
               {
-                "operator": "OR",
+                "operator": "AND",
                 "children": [
                   {
-                    "primitive": "CROSS_DOWN",
+                    "primitive": "LESS_THAN",
                     "left": {
-                      "constant": 32.36
+                      "constant": 55.18
                     },
                     "right": {
-                      "primitive": "EMA",
+                      "primitive": "RSI",
                       "parameters": {
-                        "window": 11
+                        "window": 48
                       }
                     }
                   },
                   {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 38,
-                      "threshold": 1.63
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 14,
+                        "std": 2.3
+                      }
+                    },
+                    "right": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 48,
+                        "std": 2.4
+                      }
                     }
                   }
                 ]
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 11
+                  }
+                },
+                "right": {
+                  "constant": 66.88
+                }
               }
             ]
           }
@@ -462,46 +507,11 @@
         "operator": "NOT",
         "children": [
           {
-            "operator": "AND",
-            "children": [
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "VOLUME_SPIKE",
-                    "parameters": {
-                      "window": 41
-                    }
-                  }
-                ]
-              },
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "TRENDING_UP",
-                    "parameters": {
-                      "window": 41
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 37
-                      }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 40
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 43,
+              "threshold": 1.63
+            }
           }
         ]
       },
