@@ -1178,7 +1178,7 @@
           "threshold": 30.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1394,7 +1394,7 @@
             "operator": "NOT",
             "children": [
               {
-                "operator": "AND",
+                "operator": "OR",
                 "children": [
                   {
                     "primitive": "VOLUME_SPIKE",
@@ -1421,7 +1421,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1541,7 +1541,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
