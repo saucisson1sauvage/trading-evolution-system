@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1354,7 +1354,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 1500.0
+                  "constant": 2000.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1368,7 +1368,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1387,7 +1387,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 12000.0
+                  "constant": 14000.0
                 },
                 "right": {
                   "primitive": "RSI",
