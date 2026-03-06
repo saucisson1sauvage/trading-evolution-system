@@ -116,68 +116,6 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "constant": 30.0
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 13
-              }
-            }
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 34
-                    }
-                  },
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 14,
-                      "threshold": 2.03
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "exit_tree": {
-        "operator": "CROSS_UP",
-        "left": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 10
-          }
-        },
-        "right": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 38
-          }
-        }
-      },
-      "role": "candidate",
-      "generation_age": 1,
-      "fitness": -1.0,
-      "debuffed_fitness": 2.521125860306282,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
         "operator": "OR",
         "children": [
           {
@@ -258,7 +196,7 @@
                     "left": {
                       "primitive": "EMA",
                       "parameters": {
-                        "window": 9
+                        "window": 8
                       }
                     },
                     "right": {
@@ -276,8 +214,8 @@
         "left": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 46,
-            "std": 1.9
+            "window": 44,
+            "std": 2.06
           }
         },
         "right": {
@@ -289,81 +227,43 @@
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 1.1130230656214908,
+      "debuffed_fitness": 0.9591716479462937,
       "role": "candidate",
-      "generation_age": 4
+      "generation_age": 5
     },
     {
       "entry_tree": {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "EMA",
-                  "parameters": {
-                    "window": 50
-                  }
-                },
-                "right": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 20,
-                    "std": 2.5
-                  }
-                }
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 25,
-                    "std": 1.7
-                  }
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 15,
-                    "std": 2.3
-                  }
-                }
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 30.0
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 14
               }
-            ]
+            }
           },
           {
-            "operator": "AND",
+            "operator": "NOT",
             "children": [
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 55
-                }
-              },
-              {
-                "primitive": "AND",
+                "operator": "AND",
                 "children": [
                   {
-                    "primitive": "NOT",
-                    "children": [
-                      {
-                        "primitive": "VOLATILE",
-                        "parameters": {
-                          "window": 40,
-                          "threshold": 1.6
-                        }
-                      }
-                    ]
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 34
+                    }
                   },
                   {
                     "primitive": "VOLATILE",
                     "parameters": {
-                      "window": 30,
-                      "threshold": 1.1
+                      "window": 14,
+                      "threshold": 2.03
                     }
                   }
                 ]
@@ -373,97 +273,150 @@
         ]
       },
       "exit_tree": {
+        "operator": "CROSS_UP",
+        "left": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 10
+          }
+        },
+        "right": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 40
+          }
+        }
+      },
+      "role": "candidate",
+      "generation_age": 2,
+      "fitness": -1.0,
+      "debuffed_fitness": 0.0,
+      "ai_fixed": true
+    },
+    {
+      "entry_tree": {
         "operator": "OR",
         "children": [
           {
             "operator": "OR",
             "children": [
               {
-                "operator": "OR",
+                "operator": "AND",
                 "children": [
                   {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 24,
-                      "threshold": 2.4
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "primitive": "BB_MIDDLE",
+                      "parameters": {
+                        "window": 11,
+                        "std": 2.9
+                      }
+                    },
+                    "right": {
+                      "constant": 62.8
                     }
                   },
                   {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 18
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 10,
+                        "std": 2.0
+                      }
+                    },
+                    "right": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 9,
+                        "std": 2.3
+                      }
                     }
                   }
                 ]
               },
               {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 30.0
-                },
-                "right": {
-                  "constant": "RSI",
-                  "parameters": {
-                    "window": 20
-                  }
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 45
                 }
               }
             ]
           },
           {
-            "operator": "NOT",
+            "operator": "AND",
             "children": [
               {
-                "primitive": "GREATER_THAN",
+                "primitive": "CROSS_DOWN",
                 "left": {
-                  "constant": 23.1
+                  "constant": 36.23
                 },
                 "right": {
-                  "constant": 21.06
+                  "constant": 79.78
                 }
+              },
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "constant": 26.46
+                    },
+                    "right": {
+                      "constant": 68.28
+                    }
+                  },
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 10
+                      }
+                    },
+                    "right": {
+                      "constant": 34.14
+                    }
+                  }
+                ]
               }
             ]
           }
         ]
-      },
-      "fitness": -1.0,
-      "validation_tier": -1,
-      "debuffed_fitness": 2.814418615930167,
-      "role": "mutant",
-      "generation_age": 0,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 37
-          }
-        },
-        "right": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 26,
-            "std": 1.8
-          }
-        }
       },
       "exit_tree": {
         "primitive": "CROSS_UP",
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 46
+            "window": 35
           }
         },
         "right": {
-          "primitive": "BB_UPPER",
+          "primitive": "SMA",
           "parameters": {
-            "window": 45,
-            "std": 2.3
+            "window": 31
           }
+        }
+      },
+      "fitness": -1.0,
+      "validation_tier": -1,
+      "debuffed_fitness": 2.814418615930167,
+      "role": "mutant",
+      "generation_age": 0
+    },
+    {
+      "entry_tree": {
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {
+          "window": 43
+        }
+      },
+      "exit_tree": {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 40
         }
       },
       "role": "outsider",
@@ -472,97 +425,81 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "NOT",
         "children": [
           {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 43
-                }
-              },
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 8
-                }
-              }
-            ]
-          },
-          {
-            "operator": "OR",
+            "operator": "NOT",
             "children": [
               {
                 "operator": "OR",
                 "children": [
                   {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 12,
-                      "threshold": 2.41
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "constant": 32.36
+                    },
+                    "right": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 11
+                      }
                     }
                   },
                   {
-                    "primitive": "TRENDING_DOWN",
+                    "primitive": "VOLATILE",
                     "parameters": {
-                      "window": 8
+                      "window": 38,
+                      "threshold": 1.63
                     }
                   }
                 ]
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 35.0
-                },
-                "right": {
-                  "constant": "RSI",
-                  "parameters": {
-                    "window": 19
-                  }
-                }
               }
             ]
           }
         ]
       },
       "exit_tree": {
-        "operator": "OR",
+        "operator": "NOT",
         "children": [
           {
-            "operator": "OR",
+            "operator": "AND",
             "children": [
               {
-                "operator": "OR",
+                "operator": "NOT",
                 "children": [
                   {
-                    "primitive": "VOLATILE",
+                    "primitive": "VOLUME_SPIKE",
                     "parameters": {
-                      "window": 12,
-                      "threshold": 2.41
-                    }
-                  },
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 8
+                      "window": 41
                     }
                   }
                 ]
               },
               {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 35.0
-                },
-                "right": {
-                  "constant": "RSI",
-                  "parameters": {
-                    "window": 19
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "TRENDING_UP",
+                    "parameters": {
+                      "window": 41
+                    }
+                  },
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 37
+                      }
+                    },
+                    "right": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 40
+                      }
+                    }
                   }
-                }
+                ]
               }
             ]
           }
@@ -570,8 +507,7 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0,
-      "ai_fixed": true
+      "fitness": -1.0
     }
   ]
 }
