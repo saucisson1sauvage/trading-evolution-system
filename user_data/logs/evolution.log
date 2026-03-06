@@ -4102,3 +4102,7 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 09:49:13,192 | INFO |   > SUCCESS: Trades: 14, Profit: -0.08%, Sharpe: -0.24, DD: 1.02% -> Fitness: -0.1820
 2026-03-06 09:49:13,192 | WARNING |   > Gauntlet Failed at tier 1. Returning to base pool.
 2026-03-06 09:49:13,193 | INFO | BEST FITNESS: 8.0990
+2026-03-06 09:51:18,844 | INFO | STARTING GP LOOP: 1 gens, 20 individuals
+2026-03-06 09:51:18,844 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 09:51:18,845 | INFO | --- Generation 288 ---
+2026-03-06 09:51:18,845 | INFO | BEST FITNESS: 8.0990
