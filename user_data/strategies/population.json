@@ -1022,7 +1022,7 @@
           "constant": 200.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1145,7 +1145,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1183,10 +1183,24 @@
         }
       },
       "exit_tree": {
-        "primitive": "TRENDING_UP",
+        "primitive": "AND",
         "parameters": {
           "window": 12
-        }
+        },
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          }
+        ]
       },
       "fitness": -1.0,
       "ai_fixed": true
@@ -1430,7 +1444,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
