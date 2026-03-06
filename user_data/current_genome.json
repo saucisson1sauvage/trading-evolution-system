@@ -14,7 +14,7 @@
           {
             "primitive": "GREATER_THAN",
             "left": {
-              "constant": 3500.0
+              "constant": 4000.0
             },
             "right": {
               "primitive": "RSI",

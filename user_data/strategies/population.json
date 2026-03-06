@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1178,7 +1178,7 @@
           "threshold": 30.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1358,7 +1358,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 250.0
+                  "constant": 300.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1492,7 +1492,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
