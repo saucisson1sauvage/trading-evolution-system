@@ -1474,7 +1474,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 50000.0
+                  "constant": 100000.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
