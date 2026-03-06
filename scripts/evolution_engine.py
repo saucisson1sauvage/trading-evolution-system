@@ -155,19 +155,16 @@ def save_to_vault(king: dict):
     for i, v in enumerate(vault):
         v_hash = get_similarity_hash(v)
         if v_hash == king_hash:
-            # Overwrite clone if new king is strictly better
             if king.get("fitness", 0.0) > v.get("fitness", 0.0):
                 vault[i] = copy.deepcopy(king)
                 vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
                 with open(VAULT_FILE, 'w') as f:
                     json.dump(vault, f, indent=2)
                 logging.info(f"  > VAULT UPDATED (Overwrote clone). Top fitness: {vault[0].get('fitness', 0.0):.4f}")
-            return # Already in vault as clone
+            return
 
     vault.append(copy.deepcopy(king))
     vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
-    
-    # Keep top 3
     vault = vault[:3]
     
     VAULT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -175,12 +172,7 @@ def save_to_vault(king: dict):
         json.dump(vault, f, indent=2)
     logging.info(f"  > VAULT UPDATED. Top strategy fitness: {vault[0].get('fitness', 0.0):.4f}")
 
-def run_evolution_round(genome: dict, timerange: str = None) -> float:
-    if not timerange:
-        end_date = datetime.datetime.now()
-        start_date = end_date - datetime.timedelta(days=180)
-        timerange = f"{start_date.strftime('%Y%m%d')}-{end_date.strftime('%Y%m%d')}"
-
+def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
     CURRENT_GENOME_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(CURRENT_GENOME_FILE, 'w') as f:
         json.dump(genome, f, indent=2)
@@ -197,46 +189,61 @@ def run_evolution_round(genome: dict, timerange: str = None) -> float:
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
         
-        with open(PROJECT_ROOT / "user_data/logs/freqtrade_runs.log", "a") as flog:
-            flog.write(f"\n--- NEW RUN [{timerange}] ---\n{output}\n")
-        
-        strat_summary_idx = output.find("STRATEGY SUMMARY")
-        if strat_summary_idx != -1:
-            print("\n" + output[strat_summary_idx:].strip() + "\n")
-        
-        profit_pct = 0.0
-        trades = 0
-        sharpe = -5.0
-        drawdown = 100.0
-        
         sum_match = re.search(r"GPTreeStrategy\s+[|│]\s+(\d+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)", output)
-        if sum_match:
-            trades = int(sum_match.group(1))
-            profit_pct = float(sum_match.group(4))
-            
         sharpe_match = re.search(r"Sharpe\s+[|│]\s+([\d\.-]+)", output)
-        if sharpe_match:
-            sharpe = float(sharpe_match.group(1))
-            
         dd_match = re.search(r"Absolute drawdown\s+[|│]\s+[\d\.-]+\s+USDT\s+\(([\d\.-]+)%\)", output)
+        
+        results = {"trades": 0, "profit": 0.0, "sharpe": -5.0, "drawdown": 100.0}
+        if sum_match:
+            results["trades"] = int(sum_match.group(1))
+            results["profit"] = float(sum_match.group(4))
+        if sharpe_match:
+            results["sharpe"] = float(sharpe_match.group(1))
         if dd_match:
-            drawdown = float(dd_match.group(1))
+            results["drawdown"] = float(dd_match.group(1))
             
-        if trades < 5 or profit_pct <= 0:
-            fitness = 0.0
-            logging.info(f"  > FAIL: Trades: {trades}, Profit: {profit_pct}% -> Fitness: 0.0000")
-        else:
-            s = max(0.01, sharpe)
-            fitness = (profit_pct * s * math.log(trades + 1)) / (1 + drawdown)
-            logging.info(f"  > SUCCESS: Trades: {trades}, Profit: {profit_pct}%, Sharpe: {sharpe}, DD: {drawdown}% -> Fitness: {fitness:.4f}")
-            
-        return fitness
-    except subprocess.TimeoutExpired:
-        logging.error("  > Backtest timed out.")
-        return 0.0
-    except Exception as e:
-        logging.error(f"  > Exec Error: {e}")
-        return 0.0
+        return results
+    except Exception:
+        return {"trades": 0, "profit": 0.0, "sharpe": -5.0, "drawdown": 100.0}
+
+def run_evolution_round(genome: dict) -> float:
+    # 1. Recent Market (Last 30 days)
+    end_date = datetime.datetime.now()
+    start_date = end_date - datetime.timedelta(days=30)
+    timerange_recent = f"{start_date.strftime('%Y%m%d')}-{end_date.strftime('%Y%m%d')}"
+    
+    # 2. Key Regimes
+    periods = [
+        timerange_recent,
+        "20241105-20241205", # Bull
+        "20250110-20250125", # Bear
+        "20240804-20240808", # Crash
+        "20241215-20250105"  # Sideways
+    ]
+    
+    total_profit = 0.0
+    total_trades = 0
+    total_sharpe = 0.0
+    max_drawdown = 0.0
+    
+    for tr in periods:
+        res = run_single_backtest(genome, tr)
+        total_profit += res["profit"]
+        total_trades += res["trades"]
+        total_sharpe += max(0, res["sharpe"])
+        max_drawdown = max(max_drawdown, res["drawdown"])
+        
+    avg_sharpe = total_sharpe / len(periods)
+    
+    if total_trades < 10 or total_profit <= 0:
+        fitness = 0.0
+        logging.info(f"  > FAIL: Aggregated Trades: {total_trades}, Profit: {total_profit}% -> Fitness: 0.0000")
+    else:
+        s = max(0.01, avg_sharpe)
+        fitness = (total_profit * s * math.log(total_trades + 1)) / (1 + max_drawdown)
+        logging.info(f"  > SUCCESS: Aggregated Trades: {total_trades}, Profit: {total_profit}%, Avg Sharpe: {avg_sharpe:.2f}, Max DD: {max_drawdown}% -> Fitness: {fitness:.4f}")
+        
+    return fitness
 
 def run_loop(gens=50):
     logging.info(f"STARTING 6-SLOT ROLE-BASED GP LOOP")
@@ -259,7 +266,6 @@ def run_loop(gens=50):
         except Exception as e:
             logging.error(f"Failed to load population: {e}")
 
-    # Ensure we always have exactly 6 individuals
     while len(population) < 6:
         population.append({
             "entry_tree": generate_bool_node(0, 3),
@@ -273,14 +279,12 @@ def run_loop(gens=50):
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
         
-        # Evaluate
         for i, ind in enumerate(population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('role', 'unknown')})...")
                 fit = run_evolution_round(ind)
                 ind["fitness"] = fit
                 
-        # Calculate debuffed fitness
         for ind in population:
             age = ind.get("generation_age", 0)
             if ind.get("role") == "king":
@@ -288,7 +292,6 @@ def run_loop(gens=50):
             else:
                 ind["debuffed_fitness"] = ind["fitness"] * (0.85 ** age)
 
-        # 1. Find the King (Highest fitness across the board)
         population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
         king = copy.deepcopy(population[0])
         king["role"] = "king"
@@ -298,19 +301,14 @@ def run_loop(gens=50):
         logging.info(f"KING FITNESS: {king['fitness']:.4f}")
         save_to_vault(king)
 
-        # 2. Find Candidates (Next 2 highest by DEBUFFED fitness)
         remaining = population[1:]
         remaining.sort(key=lambda x: x.get("debuffed_fitness", 0.0), reverse=True)
         cand1_source = remaining[0]
         cand2_source = remaining[1]
 
-        # Build next generation
         next_population = []
-        
-        # Slot 0: The King (survives generationally)
         next_population.append(copy.deepcopy(king))
         
-        # Slot 1: Candidate 1 (Point Mutated)
         c1 = copy.deepcopy(cand1_source)
         apply_point_mutation(c1["entry_tree"])
         apply_point_mutation(c1["exit_tree"])
@@ -319,7 +317,6 @@ def run_loop(gens=50):
         c1["fitness"] = -1.0
         next_population.append(c1)
 
-        # Slot 2: Candidate 2 (Point Mutated)
         c2 = copy.deepcopy(cand2_source)
         apply_point_mutation(c2["entry_tree"])
         apply_point_mutation(c2["exit_tree"])
@@ -328,7 +325,6 @@ def run_loop(gens=50):
         c2["fitness"] = -1.0
         next_population.append(c2)
 
-        # Slot 3: The Mutant (Structural deviation of King)
         mut = copy.deepcopy(king)
         apply_structural_mutation(mut["entry_tree"])
         apply_structural_mutation(mut["exit_tree"])
@@ -337,7 +333,6 @@ def run_loop(gens=50):
         mut["fitness"] = -1.0
         next_population.append(mut)
 
-        # Slot 4 & 5: The Outsiders (Fresh)
         out1 = {
             "entry_tree": generate_bool_node(0, 3),
             "exit_tree": generate_bool_node(0, 3),
@@ -354,7 +349,6 @@ def run_loop(gens=50):
         }
         next_population.extend([out1, out2])
 
-        # Save state & population
         GENOME_DIR.mkdir(parents=True, exist_ok=True)
         with open(GENOME_DIR / f"gen_{current_gen}_king.json", 'w') as f:
             json.dump(king, f, indent=2)
@@ -368,7 +362,6 @@ def run_loop(gens=50):
             
         population = next_population
 
-        # Sync
         try:
             subprocess.run(["bash", str(PROJECT_ROOT / "scripts" / "auto_sync.sh")], cwd=PROJECT_ROOT)
         except Exception as e:

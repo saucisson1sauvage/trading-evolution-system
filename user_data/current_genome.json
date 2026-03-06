@@ -1,33 +1,87 @@
 {
   "entry_tree": {
-    "operator": "NOT",
+    "operator": "OR",
     "children": [
       {
-        "primitive": "VOLATILE",
-        "parameters": {
-          "window": 38,
-          "threshold": 1.97
-        }
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 44,
+                  "threshold": 2.17
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 32
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 50.0
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 30
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 33.61
+            },
+            "right": {
+              "primitive": "SMA",
+              "parameters": {
+                "window": 17
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 50
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 30
+              }
+            }
+          }
+        ]
       }
     ]
   },
   "exit_tree": {
-    "primitive": "LESS_THAN",
+    "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 15
-      }
+      "constant": 49.1
     },
     "right": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 23,
-        "std": 2.9
-      }
+      "constant": 76.16
     }
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "ai_fixed": true
 }
