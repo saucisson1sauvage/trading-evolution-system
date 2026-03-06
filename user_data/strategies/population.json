@@ -1178,7 +1178,7 @@
           "threshold": 50.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1387,7 +1387,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 18000.0
+                  "constant": 20000.0
                 },
                 "right": {
                   "primitive": "RSI",
