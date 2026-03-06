@@ -27,5 +27,5 @@
         "use_order_book": true,
         "order_book_top": 1
     },
-    "datadir": "/home/saus/crypto-crew-4.0/user_data/data"
+    "datadir": "user_data/data"
 }

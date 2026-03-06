@@ -12,7 +12,7 @@ from pathlib import Path
 import sys
 
 # Paths
-PROJECT_ROOT = Path("/home/saus/crypto-crew-4.0")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 STRATEGY_DIR = PROJECT_ROOT / "user_data/strategies"
 GENOME_DIR = STRATEGY_DIR / "genomes"
 POPULATION_FILE = STRATEGY_DIR / "population.json"
@@ -192,8 +192,10 @@ def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
     with open(CURRENT_GENOME_FILE, 'w') as f:
         json.dump(genome, f, indent=2)
     
+    freqtrade_bin = str(Path(sys.executable).parent / "freqtrade")
+    
     command = [
-        "/home/saus/freqtrade/.venv/bin/freqtrade", "backtesting",
+        freqtrade_bin, "backtesting",
         "--strategy", "GPTreeStrategy",
         "--timerange", timerange,
         "--config", str(PROJECT_ROOT / "config.json"),

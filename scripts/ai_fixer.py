@@ -8,7 +8,7 @@ import sys
 from typing import Dict, List, Optional
 
 # Setup absolute paths
-PROJECT_ROOT = Path("/home/saus/crypto-crew-4.0")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 POPULATION_FILE = PROJECT_ROOT / "user_data/strategies/population.json"
 HOF_FILE = PROJECT_ROOT / "user_data/logs/ai_success_hall_of_fame.log"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/ai_fixer.log"

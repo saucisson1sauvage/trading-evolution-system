@@ -26,7 +26,7 @@ class GPTreeStrategy(IStrategy):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
         self.logger = logging.getLogger(__name__)
-        self.genome_path = Path("/home/saus/crypto-crew-4.0/user_data/current_genome.json")
+        self.genome_path = Path(self.config['user_data_dir']) / "current_genome.json"
         self.genome: Dict[str, Any] = {}
         self._load_genome()
 
@@ -101,7 +101,8 @@ class GPTreeStrategy(IStrategy):
             res = self.evaluate_node(self.genome.get("entry_tree", {}), dataframe)
             dataframe['enter_long'] = res.fillna(False).astype(int)
         except Exception as e:
-            with open("/home/saus/crypto-crew-4.0/user_data/logs/strategy_debug.log", "a") as f:
+            log_path = Path(self.config['user_data_dir']) / "logs" / "strategy_debug.log"
+            with open(log_path, "a") as f:
                 f.write(f"ENTRY ERROR: {e}\n")
             dataframe['enter_long'] = 0
         return dataframe
@@ -111,7 +112,8 @@ class GPTreeStrategy(IStrategy):
             res = self.evaluate_node(self.genome.get("exit_tree", {}), dataframe)
             dataframe['exit_long'] = res.fillna(False).astype(int)
         except Exception as e:
-            with open("/home/saus/crypto-crew-4.0/user_data/logs/strategy_debug.log", "a") as f:
+            log_path = Path(self.config['user_data_dir']) / "logs" / "strategy_debug.log"
+            with open(log_path, "a") as f:
                 f.write(f"EXIT ERROR: {e}\n")
             dataframe['exit_long'] = 0
         return dataframe

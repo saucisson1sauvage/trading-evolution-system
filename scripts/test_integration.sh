@@ -1,6 +1,6 @@
 #!/bin/bash
 # Integration Test Gauntlet for Crypto-Crew 4.0
-PROJECT_ROOT="/home/saus/crypto-crew-4.0"
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_DIR="$PROJECT_ROOT/user_data/logs"
 EVO_LOG="$LOG_DIR/evolution.log"
 DEBUG_LOG="$LOG_DIR/strategy_debug.log"

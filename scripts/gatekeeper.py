@@ -6,7 +6,7 @@ from scripts.paths import PathResolver
 from scripts.logger_utils import get_logger
 
 logger = get_logger("gatekeeper")
-FREQTRADE_BIN = "/home/saus/freqtrade/.venv/bin/freqtrade"
+FREQTRADE_BIN = "freqtrade"
 
 def check_syntax():
     logger.info("Starting syntax check...")

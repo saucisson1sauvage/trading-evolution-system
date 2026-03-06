@@ -19,8 +19,9 @@ def run_backtest(strategy_name="GeneticAssembler", timerange="20240101-20250101"
     config_path = project_root / "config.json"
     
     # Verify binary path
-    freqtrade_bin = "/home/saus/freqtrade/.venv/bin/freqtrade"
-    if not Path(freqtrade_bin).exists():
+    import shutil
+    freqtrade_bin = shutil.which("freqtrade")
+    if not freqtrade_bin:
         logger.error(f"Freqtrade binary not found at {freqtrade_bin}")
         print(f"Error: Freqtrade binary not found at {freqtrade_bin}")
         return None
