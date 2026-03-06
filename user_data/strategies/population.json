@@ -1222,7 +1222,7 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 60
+            "window": 100
           }
         }
       },
@@ -1237,7 +1237,7 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 60
+            "window": 100
           }
         }
       },
@@ -1391,7 +1391,7 @@
           "threshold": 200.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
