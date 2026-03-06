@@ -1007,7 +1007,7 @@
           }
         },
         "right": {
-          "constant": 99.0
+          "constant": 100.0
         }
       },
       "exit_tree": {
@@ -1019,7 +1019,7 @@
           }
         },
         "right": {
-          "constant": 99.0
+          "constant": 100.0
         }
       },
       "fitness": -1.0,
@@ -1145,7 +1145,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1198,7 +1198,7 @@
           "window": 12
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1339,7 +1339,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1569,7 +1569,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
