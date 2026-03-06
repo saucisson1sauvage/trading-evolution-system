@@ -1169,10 +1169,10 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 20.0
+          "threshold": 30.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1343,7 +1343,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1463,7 +1463,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 140.0
+                  "constant": 150.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1564,7 +1564,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
