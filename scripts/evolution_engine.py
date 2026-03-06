@@ -21,6 +21,15 @@ LOG_FILE = PROJECT_ROOT / "user_data/logs/evolution.log"
 
 sys.path.append(str(PROJECT_ROOT))
 
+# Load .env
+if (PROJECT_ROOT / ".env").exists():
+    with open(PROJECT_ROOT / ".env") as f:
+        for line in f:
+            if '=' in line:
+                parts = line.strip().split('=', 1)
+                if len(parts) == 2:
+                    os.environ[parts[0]] = parts[1]
+
 # Grammar Definitions
 BOOL_PRIMITIVES = ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]
 BOOL_OPERATORS = ["AND", "OR", "NOT"]
@@ -43,7 +52,8 @@ def generate_num_node(depth: int, max_depth: int) -> Dict[str, Any]:
                  params["std"] = round(random.uniform(1.5, 3.0), 1)
              return {"primitive": name, "parameters": params}
         else:
-             return {"constant": round(random.uniform(10, 90), 2)}
+             # LOOSENED CONSTANTS: Start with more plausible values (20-80 instead of 10-90)
+             return {"constant": round(random.uniform(20, 80), 2)}
     
     # Numeric nodes are currently leaf-like (Indicators or Constants)
     name = random.choice(NUM_INDICATORS)
@@ -81,7 +91,7 @@ def get_all_nodes(node: Dict[str, Any], node_type: str) -> List[Dict[str, Any]]:
     
     # Determine type of current node
     current_type = None
-    if "operator" in node or ("primitive" in node and node["primitive"] in BOOL_PRIMITIVES):
+    if "operator" in node or ("primitive" in node and (node["primitive"] in BOOL_PRIMITIVES or node["primitive"] in BOOL_HELPERS)):
         current_type = "bool"
     elif "constant" in node or ("primitive" in node and node["primitive"] in NUM_INDICATORS):
         current_type = "num"
@@ -141,6 +151,8 @@ def mutate_tree(tree: Dict[str, Any], max_depth: int):
                 elif "primitive" in target:
                     if target["primitive"] in BOOL_PRIMITIVES:
                         target["primitive"] = random.choice(BOOL_PRIMITIVES)
+                    elif target["primitive"] in BOOL_HELPERS:
+                        target["primitive"] = random.choice(BOOL_HELPERS)
                     else:
                         target["primitive"] = random.choice(NUM_INDICATORS)
                         if "BB" in target["primitive"] and "std" not in target["parameters"]:
@@ -184,27 +196,25 @@ def run_evolution_round(genome: dict) -> float:
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
         
-        # Regex parsing for multiple metrics
+        # Regex parsing for multiple metrics (handling both | and │)
         profit_pct = 0.0
         trades = 0
         sharpe = -5.0
         drawdown = 100.0
         
         # 1. Strategy Summary Table (Profit & Trades)
-        # Matches: | GPTreeStrategy | 91 | -0.02 | -2.206 | -0.22 |
-        sum_match = re.search(r"GPTreeStrategy\s+\|\s+(\d+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)", output)
+        sum_match = re.search(r"GPTreeStrategy\s+[|│]\s+(\d+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)", output)
         if sum_match:
             trades = int(sum_match.group(1))
             profit_pct = float(sum_match.group(4))
             
         # 2. Sharpe Ratio (Summary Metrics)
-        sharpe_match = re.search(r"Sharpe\s+│\s+([\d\.-]+)", output)
+        sharpe_match = re.search(r"Sharpe\s+[|│]\s+([\d\.-]+)", output)
         if sharpe_match:
             sharpe = float(sharpe_match.group(1))
             
         # 3. Drawdown % (Summary Metrics)
-        # Matches: | Absolute drawdown | 8.721 USDT (0.87%) |
-        dd_match = re.search(r"Absolute drawdown\s+│\s+[\d\.-]+\s+USDT\s+\(([\d\.-]+)%\)", output)
+        dd_match = re.search(r"Absolute drawdown\s+[|│]\s+[\d\.-]+\s+USDT\s+\(([\d\.-]+)%\)", output)
         if dd_match:
             drawdown = float(dd_match.group(1))
             
