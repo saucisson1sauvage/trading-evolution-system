@@ -108,99 +108,48 @@
           }
         }
       },
-      "fitness": 8.099,
+      "fitness": 2.814418615930167,
       "validation_tier": -1,
-      "debuffed_fitness": 8.099,
+      "debuffed_fitness": 2.814418615930167,
       "role": "king",
       "generation_age": 0
     },
     {
       "entry_tree": {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
-            "operator": "OR",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "LESS_THAN",
-                    "left": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 13,
-                        "std": 3.33
-                      }
-                    },
-                    "right": {
-                      "constant": 62.8
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 21,
-                        "std": 1.7
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 7,
-                        "std": 2.65
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 45
-                }
+            "primitive": "LESS_THAN",
+            "left": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 13
               }
-            ]
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 40
+              }
+            }
           },
           {
-            "operator": "AND",
+            "operator": "NOT",
             "children": [
-              {
-                "primitive": "CROSS_DOWN",
-                "left": {
-                  "primitive": "SMA",
-                  "parameters": {
-                    "window": 49
-                  }
-                },
-                "right": {
-                  "constant": 79.78
-                }
-              },
               {
                 "operator": "AND",
                 "children": [
                   {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "constant": 26.46
-                    },
-                    "right": {
-                      "constant": 74.72
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 34
                     }
                   },
                   {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 10
-                      }
-                    },
-                    "right": {
-                      "constant": 34.14
+                    "primitive": "VOLATILE",
+                    "parameters": {
+                      "window": 14,
+                      "threshold": 2.03
                     }
                   }
                 ]
@@ -210,26 +159,24 @@
         ]
       },
       "exit_tree": {
-        "primitive": "CROSS_DOWN",
+        "primitive": "CROSS_UP",
         "left": {
-          "primitive": "SMA",
+          "primitive": "EMA",
           "parameters": {
-            "window": 47
+            "window": 10
           }
         },
         "right": {
-          "primitive": "BB_MIDDLE",
+          "primitive": "SMA",
           "parameters": {
-            "window": 11,
-            "std": 1.39
+            "window": 38
           }
         }
       },
-      "fitness": -1.0,
-      "validation_tier": -1,
-      "debuffed_fitness": 1.9705127646674157,
       "role": "candidate",
-      "generation_age": 5
+      "generation_age": 1,
+      "fitness": -1.0,
+      "debuffed_fitness": 2.521125860306282
     },
     {
       "entry_tree": {
@@ -313,7 +260,7 @@
                     "left": {
                       "primitive": "EMA",
                       "parameters": {
-                        "window": 10
+                        "window": 9
                       }
                     },
                     "right": {
@@ -338,15 +285,15 @@
         "right": {
           "primitive": "EMA",
           "parameters": {
-            "window": 20
+            "window": 21
           }
         }
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 1.3275732151505797,
+      "debuffed_fitness": 1.1130230656214908,
       "role": "candidate",
-      "generation_age": 3
+      "generation_age": 4
     },
     {
       "entry_tree": {
@@ -381,9 +328,10 @@
                       }
                     },
                     "right": {
-                      "primitive": "RSI",
+                      "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 34
+                        "window": 9,
+                        "std": 2.3
                       }
                     }
                   }
@@ -413,12 +361,9 @@
                 "operator": "AND",
                 "children": [
                   {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "constant": 26.46
-                    },
-                    "right": {
-                      "constant": 68.28
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 22
                     }
                   },
                   {
@@ -442,7 +387,10 @@
       "exit_tree": {
         "primitive": "CROSS_DOWN",
         "left": {
-          "constant": 74.38
+          "primitive": "RSI",
+          "parameters": {
+            "window": 26
+          }
         },
         "right": {
           "primitive": "BB_MIDDLE",
@@ -454,66 +402,40 @@
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 8.099,
+      "debuffed_fitness": 2.814418615930167,
       "role": "mutant",
       "generation_age": 0
     },
     {
       "entry_tree": {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 14
-              }
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 40
-              }
-            }
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 34
-                    }
-                  },
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 14,
-                      "threshold": 2.03
-                    }
-                  }
-                ]
-              }
-            ]
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 37
           }
-        ]
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 26,
+            "std": 1.8
+          }
+        }
       },
       "exit_tree": {
         "primitive": "CROSS_UP",
         "left": {
-          "primitive": "EMA",
+          "primitive": "RSI",
           "parameters": {
-            "window": 9
+            "window": 46
           }
         },
         "right": {
-          "primitive": "SMA",
+          "primitive": "BB_UPPER",
           "parameters": {
-            "window": 38
+            "window": 45,
+            "std": 2.3
           }
         }
       },
@@ -523,39 +445,99 @@
     },
     {
       "entry_tree": {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 28,
-            "std": 2.0
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "constant": 34.95
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 38
+                      }
+                    }
+                  },
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 17
+                    }
+                  }
+                ]
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 10
+                  }
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 19,
+                    "std": 2.5
+                  }
+                }
+              }
+            ]
           }
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 16
-          }
-        }
+        ]
       },
       "exit_tree": {
         "operator": "NOT",
         "children": [
           {
-            "primitive": "CROSS_UP",
-            "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 43
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "NOT",
+                "children": [
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "constant": 69.75
+                    },
+                    "right": {
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 42,
+                        "std": 1.5
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "constant": 32.01
+                    },
+                    "right": {
+                      "constant": 75.68
+                    }
+                  },
+                  {
+                    "primitive": "VOLUME_SPIKE",
+                    "parameters": {
+                      "window": 49
+                    }
+                  }
+                ]
               }
-            },
-            "right": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 36,
-                "std": 2.4
-              }
-            }
+            ]
           }
         ]
       },
