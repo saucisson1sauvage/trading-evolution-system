@@ -1,1 +1,2 @@
 EXIT ERROR: list index out of range
+EXIT ERROR: '>' not supported between instances of 'float' and 'str'

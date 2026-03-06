@@ -1,120 +1,93 @@
 {
   "entry_tree": {
-    "operator": "AND",
+    "operator": "OR",
     "children": [
-      {
-        "primitive": "VOLUME_SPIKE",
-        "parameters": {
-          "window": 12
-        }
-      },
       {
         "operator": "AND",
         "children": [
           {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "constant": 20000.0
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 19
-              }
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
             }
           },
           {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "SMA",
-                  "parameters": {
-                    "window": 18
-                  }
-                },
-                "right": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 9,
-                    "std": 1.6
-                  }
-                }
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 25,
-                    "std": 2.5
-                  }
-                },
-                "right": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 18
-                  }
-                }
-              }
-            ]
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
           }
         ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
       }
     ]
   },
   "exit_tree": {
-    "operator": "AND",
+    "operator": "OR",
     "children": [
-      {
-        "primitive": "TRENDING_UP",
-        "parameters": {
-          "window": 47
-        }
-      },
       {
         "operator": "OR",
         "children": [
           {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
               {
-                "primitive": "VOLUME_SPIKE",
+                "primitive": "VOLATILE",
                 "parameters": {
-                  "window": 27
+                  "window": 12,
+                  "threshold": 2.41
                 }
               },
               {
-                "primitive": "VOLUME_SPIKE",
+                "primitive": "TRENDING_DOWN",
                 "parameters": {
-                  "window": 38
+                  "window": 8
                 }
               }
             ]
           },
           {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 41
-                }
-              },
-              {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 50,
-                  "threshold": 2.0
-                }
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
               }
-            ]
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 28.1
+            },
+            "right": {
+              "constant": 24.06
+            }
           }
         ]
       }
     ]
   },
-  "fitness": -0.019000000000000003,
+  "fitness": -1.0,
   "ai_fixed": true
 }
