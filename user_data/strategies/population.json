@@ -1222,12 +1222,12 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 60
           }
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1237,7 +1237,7 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 60
           }
         }
       },
@@ -1391,7 +1391,7 @@
           "threshold": 200.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     }
   ]
