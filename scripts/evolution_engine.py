@@ -296,8 +296,35 @@ def check_retirement(genome: dict, outsiders_max_fitness: float):
             genome["status"] = "retired"
             logging.info(f"  > Lineage {genome.get('lineage_id', 'unknown')[:8]} RETIRED due to low debuffed fitness.")
 
+def generate_ai_outsider(type: str) -> Dict[str, Any]:
+    """Generate a fresh random genome for AI outsiders."""
+    if type == "guided":
+        # For now, same as alien, but can be enhanced later
+        pass
+    # Generate fresh individual
+    individual = create_fresh_individual("outsider")
+    individual["lineage_id"] = str(uuid.uuid4())
+    individual["status"] = "outsider"
+    individual["debuff_active_gens"] = 0
+    individual["fitness"] = -1.0
+    log_aider(f"Generated {type} outsider with lineage {individual['lineage_id'][:8]}")
+    return individual
+
+def load_vault() -> List[Dict[str, Any]]:
+    """Load and sort the Vault (hall_of_fame.json)."""
+    vault = []
+    if VAULT_FILE.exists():
+        try:
+            with open(VAULT_FILE, 'r') as f:
+                vault = json.load(f)
+            # Sort by fitness in descending order
+            vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
+        except Exception as e:
+            logging.error(f"Failed to load Vault: {e}")
+    return vault
+
 def run_loop(gens=50):
-    logging.info(f"STARTING 6-SLOT ROLE-BASED GP LOOP")
+    logging.info(f"STARTING 6-SLOT ASSEMBLY LINE GP LOOP")
     
     current_gen = 0
     if STATE_FILE.exists():
@@ -308,127 +335,120 @@ def run_loop(gens=50):
         except Exception:
             pass
 
-    population = []
-    if POPULATION_FILE.exists():
-        try:
-            with open(POPULATION_FILE, 'r') as f:
-                data = json.load(f)
-                population = data.get("individuals", [])
-                
-                # Upgrade legacy population structure
-                if population and "lineage_id" not in population[0]:
-                    logging.info("Old population format detected. Upgrading to Lineage schema.")
-                    for ind in population:
-                        ind["fitness"] = -1.0
-                        ind["lineage_id"] = str(uuid.uuid4())
-                        ind["generation_age"] = 0
-                        ind["debuff_active_gens"] = 0
-                        ind["status"] = ind.get("role", "outsider")
-        except Exception as e:
-            logging.error(f"Failed to load population: {e}")
-
-    while len(population) < 6:
-        population.append(create_fresh_individual())
-    population = population[:6]
-
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
         log_aider(f"--- STARTING GENERATION {current_gen} ---")
         
-        # Evaluate
-        for i, ind in enumerate(population):
+        # Load the Vault
+        vault = load_vault()
+        log_aider(f"Vault loaded with {len(vault)} lineages")
+        
+        # Prepare the 6 slots
+        next_population = []
+        
+        # SLOT 1: Mutated King (from Vault rank 1)
+        if len(vault) > 0:
+            king_source = copy.deepcopy(vault[0])
+            # Ensure it has required fields
+            if "lineage_id" not in king_source:
+                king_source["lineage_id"] = str(uuid.uuid4())
+            king = copy.deepcopy(king_source)
+            # Apply micro-mutation
+            apply_point_mutation(king["entry_tree"])
+            apply_point_mutation(king["exit_tree"])
+            king["status"] = "king"
+            king["generation_age"] = king.get("generation_age", 0) + 1
+            king["debuff_active_gens"] = 0
+            king["fitness"] = -1.0  # Needs to be re-evaluated
+            log_aider(f"Slot 1: Mutated King from lineage {king['lineage_id'][:8]}, Age incremented to {king['generation_age']}")
+        else:
+            # Fallback: generate alien outsider
+            king = generate_ai_outsider("alien")
+            king["status"] = "king"  # Override status for slot 1
+            log_aider(f"Slot 1: Fallback to Alien Outsider (Vault empty)")
+        next_population.append(king)
+        
+        # SLOT 2 & 3: Mutated Candidates (from Vault ranks 2 and 3)
+        for i in range(2):
+            slot_num = i + 2
+            if len(vault) > slot_num - 1:  # -1 because vault is 0-indexed
+                candidate_source = copy.deepcopy(vault[slot_num - 1])
+                # Ensure it has required fields
+                if "lineage_id" not in candidate_source:
+                    candidate_source["lineage_id"] = str(uuid.uuid4())
+                candidate = copy.deepcopy(candidate_source)
+                # Apply micro-mutation
+                apply_point_mutation(candidate["entry_tree"])
+                apply_point_mutation(candidate["exit_tree"])
+                candidate["status"] = "candidate"
+                candidate["debuff_active_gens"] = candidate.get("debuff_active_gens", 0) + 1
+                candidate["fitness"] = -1.0
+                log_aider(f"Slot {slot_num}: Mutated Candidate from lineage {candidate['lineage_id'][:8]}, debuff_active_gens={candidate['debuff_active_gens']}")
+            else:
+                # Fallback: generate alien outsider
+                candidate = generate_ai_outsider("alien")
+                candidate["status"] = "candidate"  # Override status for slots 2 and 3
+                log_aider(f"Slot {slot_num}: Fallback to Alien Outsider (Vault insufficient)")
+            next_population.append(candidate)
+        
+        # SLOT 4: AI Outsider (guided)
+        outsider_guided = generate_ai_outsider("guided")
+        outsider_guided["status"] = "outsider"
+        next_population.append(outsider_guided)
+        log_aider(f"Slot 4: Guided AI Outsider lineage {outsider_guided['lineage_id'][:8]}")
+        
+        # SLOTS 5 & 6: AI Outsider (alien)
+        for _ in range(2):
+            outsider_alien = generate_ai_outsider("alien")
+            outsider_alien["status"] = "outsider"
+            next_population.append(outsider_alien)
+            log_aider(f"Slot {len(next_population)}: Alien AI Outsider lineage {outsider_alien['lineage_id'][:8]}")
+        
+        # Ensure we have exactly 6 individuals
+        if len(next_population) != 6:
+            logging.error(f"Population size mismatch: {len(next_population)} != 6")
+            # Adjust by adding or removing as needed
+            while len(next_population) < 6:
+                next_population.append(generate_ai_outsider("alien"))
+            next_population = next_population[:6]
+        
+        # Evaluate all individuals
+        for i, ind in enumerate(next_population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('status', 'unknown')})...")
                 fit = run_evolution_round(ind)
                 ind["fitness"] = fit
+                log_aider(f"Slot {i+1} ({ind['status']}) evaluated with fitness {fit:.4f}")
             else:
                 logging.info(f"Skipping Individual {i+1}/6 ({ind.get('status', 'unknown')}) - already evaluated with fitness {ind['fitness']:.4f}")
-                
-        # 1. Find the King (Highest raw fitness)
-        population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
-        king_candidate = copy.deepcopy(population[0])
         
-        # If it's the same King from before, it ages. Otherwise, age=0.
-        prev_king = next((ind for ind in population if ind.get("status") == "king"), None)
-        if prev_king and prev_king.get("lineage_id") == king_candidate.get("lineage_id"):
-            king_candidate["generation_age"] = prev_king.get("generation_age", 0) + 1
-        else:
-            king_candidate["generation_age"] = 0
-            
-        king_candidate["status"] = "king"
-        king_candidate["debuff_active_gens"] = 0
-        king = copy.deepcopy(king_candidate)
-        king_age = king.get("generation_age", 0)
+        # Find the King (highest fitness) from evaluated population
+        next_population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
+        best_individual = copy.deepcopy(next_population[0])
         
-        # 2. Calculate debuffed fitness for everyone
-        for ind in population:
-            ind["debuffed_fitness"] = calculate_debuffed_fitness(ind, king_age)
-            
-        # 3. Check Retirement
-        outsiders = [ind for ind in population if ind.get("status") == "outsider"]
-        outsiders_max_fitness = max([ind.get("fitness", 0.0) for ind in outsiders]) if outsiders else 0.0
+        # Update king status if necessary
+        for ind in next_population:
+            if ind.get("lineage_id") == best_individual.get("lineage_id"):
+                ind["status"] = "king"
+                ind["generation_age"] = ind.get("generation_age", 0) + 1
+                ind["debuff_active_gens"] = 0
+                best_individual = copy.deepcopy(ind)
+                break
         
-        for ind in population:
-            check_retirement(ind, outsiders_max_fitness)
-            
-        logging.info(f"KING FITNESS: {king['fitness']:.4f} | Lineage: {king['lineage_id'][:8]} | Age: {king_age}")
-        log_aider(f"Best raw fitness found in Gen {current_gen}: {king['fitness']:.4f}")
-        save_to_vault(king)
-
-        # Find eligible Candidates
-        eligible_candidates = [ind for ind in population if ind.get("status") not in ["king", "retired"]]
-        eligible_candidates.sort(key=lambda x: x.get("debuffed_fitness", 0.0), reverse=True)
+        # Save best individual to Vault
+        save_to_vault(best_individual)
+        logging.info(f"KING FITNESS: {best_individual['fitness']:.4f} | Lineage: {best_individual['lineage_id'][:8]} | Age: {best_individual.get('generation_age', 0)}")
         
-        cand1_source = eligible_candidates[0] if len(eligible_candidates) > 0 else king
-        cand2_source = eligible_candidates[1] if len(eligible_candidates) > 1 else cand1_source
-
-        next_population = []
-        next_population.append(copy.deepcopy(king))
-        
-        # Candidate 1
-        c1 = copy.deepcopy(cand1_source)
-        apply_point_mutation(c1["entry_tree"])
-        apply_point_mutation(c1["exit_tree"])
-        c1["status"] = "candidate"
-        c1["debuff_active_gens"] = c1.get("debuff_active_gens", 0) + 1
-        c1["fitness"] = -1.0
-        next_population.append(c1)
-
-        # Candidate 2
-        c2 = copy.deepcopy(cand2_source)
-        apply_point_mutation(c2["entry_tree"])
-        apply_point_mutation(c2["exit_tree"])
-        c2["status"] = "candidate"
-        c2["debuff_active_gens"] = c2.get("debuff_active_gens", 0) + 1
-        c2["fitness"] = -1.0
-        next_population.append(c2)
-
-        # Mutant
-        mut = copy.deepcopy(king)
-        apply_structural_mutation(mut["entry_tree"])
-        apply_structural_mutation(mut["exit_tree"])
-        mut["status"] = "mutant"
-        mut["debuff_active_gens"] = 0
-        mut["fitness"] = -1.0
-        next_population.append(mut)
-
-        # Outsiders
-        next_population.append(create_fresh_individual("outsider"))
-        next_population.append(create_fresh_individual("outsider"))
-
-        GENOME_DIR.mkdir(parents=True, exist_ok=True)
-        with open(GENOME_DIR / f"gen_{current_gen}_king.json", 'w') as f:
-            json.dump(king, f, indent=2)
-
+        # Save population for next generation
         with open(POPULATION_FILE, 'w') as f:
             json.dump({"individuals": next_population}, f, indent=2)
-
+        
+        # Save generation state
         current_gen += 1
         with open(STATE_FILE, 'w') as f:
             json.dump({"current_generation": current_gen}, f, indent=2)
-            
-        population = next_population
-
+        
+        # Sync with git
         try:
             subprocess.run(["bash", str(PROJECT_ROOT / "scripts" / "auto_sync.sh")], cwd=PROJECT_ROOT)
         except Exception as e:
