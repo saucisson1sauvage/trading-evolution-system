@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1291,7 +1291,7 @@
               {
                 "primitive": "LESS_THAN",
                 "left": {
-                  "constant": 26.1
+                  "constant": 28.1
                 },
                 "right": {
                   "constant": 24.06
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
