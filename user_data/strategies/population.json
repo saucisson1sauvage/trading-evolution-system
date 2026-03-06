@@ -999,7 +999,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1014,7 +1014,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1175,10 +1175,10 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 30.0
+          "threshold": 50.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1354,7 +1354,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 1000.0
+                  "constant": 1500.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1368,7 +1368,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
