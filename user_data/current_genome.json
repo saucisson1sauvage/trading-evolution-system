@@ -1,59 +1,24 @@
 {
   "entry_tree": {
-    "operator": "OR",
-    "children": [
-      {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "constant": 79.37
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 10
-              }
-            }
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 12,
-                "std": 2.8
-              }
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 18
-              }
-            }
-          }
-        ]
-      },
-      {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 32
-          }
-        },
-        "right": {
-          "constant": 61.02
-        }
-      }
-    ]
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 12
+    }
   },
   "exit_tree": {
-    "primitive": "VOLATILE",
-    "parameters": {
-      "window": 25,
-      "threshold": 1.78
+    "primitive": "LESS_THAN",
+    "left": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 34,
+        "std": 1.9
+      }
+    },
+    "right": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 36
+      }
     }
   },
   "fitness": -1.0
