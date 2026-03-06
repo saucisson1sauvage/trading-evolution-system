@@ -1003,13 +1003,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 14
+            "window": 16
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 15
+            "window": 17
           }
         }
       },
@@ -1018,13 +1018,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 14
+            "window": 16
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 15
+            "window": 17
           }
         }
       },
@@ -1435,7 +1435,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 800.0
+                  "constant": 1000.0
                 },
                 "right": {
                   "primitive": "RSI",
