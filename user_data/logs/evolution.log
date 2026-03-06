@@ -4475,3 +4475,17 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 13:50:53,264 | INFO |   > FAIL: Aggregated Trades: 0, Profit: 0.0% -> Fitness: 0.0000
 2026-03-06 13:50:53,264 | INFO | KING FITNESS: 6.2544
 2026-03-06 13:50:53,265 | INFO |   > VAULT UPDATED. Top strategy fitness: 8.0990
+2026-03-06 13:51:55,569 | INFO | STARTING 6-SLOT ROLE-BASED GP LOOP
+2026-03-06 13:51:55,569 | INFO | --- Generation 317 ---
+2026-03-06 13:51:55,569 | INFO | Skipping Individual 1/6 (king) - already evaluated with fitness 6.2544
+2026-03-06 13:51:55,569 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-06 13:52:19,562 | INFO |   > SUCCESS: Aggregated Trades: 83, Profit: 0.5599999999999995%, Avg Sharpe: 1.31, Max DD: 2.5% -> Fitness: 0.9273
+2026-03-06 13:52:19,562 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-06 13:52:42,907 | INFO |   > SUCCESS: Aggregated Trades: 96, Profit: 1.3000000000000007%, Avg Sharpe: 1.52, Max DD: 2.21% -> Fitness: 2.8087
+2026-03-06 13:52:42,907 | INFO | Evaluating Individual 4/6 (mutant)...
+2026-03-06 13:53:05,989 | INFO |   > FAIL: Aggregated Trades: 5, Profit: 3.47% -> Fitness: 0.0000
+2026-03-06 13:53:05,989 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-06 13:53:26,624 | INFO |   > FAIL: Aggregated Trades: 0, Profit: 0.0% -> Fitness: 0.0000
+2026-03-06 13:53:26,624 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-06 13:53:49,875 | INFO |   > FAIL: Aggregated Trades: 540, Profit: -9.31% -> Fitness: 0.0000
+2026-03-06 13:53:49,875 | INFO | KING FITNESS: 6.2544
