@@ -567,10 +567,10 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
-            "operator": "OR",
+            "operator": "AND",
             "children": [
               {
                 "operator": "AND",
@@ -593,7 +593,7 @@
               {
                 "primitive": "LESS_THAN",
                 "left": {
-                  "constant": 46.62
+                  "constant": 50.0
                 },
                 "right": {
                   "primitive": "EMA",
@@ -649,7 +649,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
