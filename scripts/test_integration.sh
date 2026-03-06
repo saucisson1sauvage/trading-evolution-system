@@ -14,13 +14,15 @@ fi
 
 # 2. Run a dry generation (1 gen, population exists)
 echo "🏃 Running 1-generation dry run..."
-START_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+MARKER="--- TEST START $(date +%s) ---"
+echo "$MARKER" >> "$EVO_LOG"
+
 python3 -c "import sys; sys.path.append('scripts'); from evolution_engine import run_loop; run_loop(gens=1)"
 
-# 3. Check for Tracebacks in the log since START_TIME
-echo "🔍 Checking logs for errors since $START_TIME..."
-# We use awk to filter logs after START_TIME
-ERROR_FOUND=$(awk -v start="$START_TIME" '$0 >= start' "$EVO_LOG" | grep "Traceback")
+# 3. Check for Tracebacks in the log since the marker
+echo "🔍 Checking logs for errors since test start..."
+# We extract all lines after the marker and look for Traceback
+ERROR_FOUND=$(sed -n "/$MARKER/,\$p" "$EVO_LOG" | grep "Traceback")
 
 if [ ! -z "$ERROR_FOUND" ]; then
     echo "❌ ERROR: Traceback detected in current test run!"

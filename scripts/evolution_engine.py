@@ -258,6 +258,11 @@ def run_loop(gens=50):
             with open(POPULATION_FILE, 'r') as f:
                 data = json.load(f)
                 population = data.get("individuals", [])
+                # Reset fitness if transitioning from old engine (individuals missing 'role')
+                if population and "role" not in population[0]:
+                    logging.info("Old population format detected. Resetting fitness for recalibration.")
+                    for ind in population:
+                        ind["fitness"] = -1.0
         except Exception as e:
             logging.error(f"Failed to load population: {e}")
 

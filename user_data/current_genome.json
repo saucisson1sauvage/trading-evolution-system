@@ -1,26 +1,40 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
+    "primitive": "LESS_THAN",
     "left": {
       "primitive": "BB_UPPER",
       "parameters": {
-        "window": 43,
-        "std": 2.4
+        "window": 28,
+        "std": 2.0
       }
     },
     "right": {
-      "primitive": "BB_LOWER",
+      "primitive": "EMA",
       "parameters": {
-        "window": 35,
-        "std": 2.6
+        "window": 16
       }
     }
   },
   "exit_tree": {
-    "primitive": "TRENDING_DOWN",
-    "parameters": {
-      "window": 29
-    }
+    "operator": "NOT",
+    "children": [
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 43
+          }
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 36,
+            "std": 2.4
+          }
+        }
+      }
+    ]
   },
   "role": "outsider",
   "generation_age": 0,
