@@ -1,25 +1,122 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
+    "primitive": "CROSS_UP",
     "left": {
       "primitive": "BB_LOWER",
       "parameters": {
-        "window": 41,
-        "std": 2.4
+        "window": 26,
+        "std": 2.0
       }
     },
     "right": {
-      "primitive": "EMA",
+      "primitive": "BB_LOWER",
       "parameters": {
-        "window": 46
+        "window": 27,
+        "std": 2.1
       }
     }
   },
   "exit_tree": {
-    "primitive": "TRENDING_UP",
-    "parameters": {
-      "window": 12
-    }
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 18,
+                    "std": 2.8
+                  }
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 1.9
+                  }
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 45
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 30
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 10,
+                    "std": 2.3
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 27,
+                    "std": 2.2
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 16
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "SMA",
+              "parameters": {
+                "window": 26
+              }
+            },
+            "right": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 45,
+                "std": 2.7
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
   "fitness": -1.0,
   "ai_fixed": true

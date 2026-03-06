@@ -959,7 +959,7 @@
           "constant": 95.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1109,7 +1109,7 @@
           "threshold": 2.5
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1260,7 +1260,7 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
             "operator": "NOT",
@@ -1315,10 +1315,10 @@
           }
         },
         "right": {
-          "constant": 80
+          "constant": 100
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
