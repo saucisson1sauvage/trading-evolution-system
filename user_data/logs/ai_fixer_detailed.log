@@ -132463,3 +132463,1121 @@ Adjust constants and operators to ensure the strategy finds consistent entry poi
   "profit": 1.17
 }
 ==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades or is failing.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+### CRITICAL GOAL: INCREASE TRADE FREQUENCY
+We want strategies that trigger MANY trades across the 6-month period. A strategy with only 1-2 "lucky" trades is considered a failure. 
+Adjust constants and operators to ensure the strategy finds consistent entry points. 
+
+
+### EXAMPLES OF PREVIOUS SUCCESSFUL GENOMES (THAT MADE PROFIT):
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 28.1
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.16
+}
+---
+{
+  "entry_tree": {
+    "primitive": "GREATER_THAN",
+    "left": {
+      "primitive": "BB_UPPER",
+      "parameters": {
+        "window": 28,
+        "std": 1.8
+      }
+    },
+    "right": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 13,
+        "std": 2.9
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 43
+        }
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 38,
+                  "threshold": 2.38
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 25,
+              "threshold": 1.13
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.1
+}
+---
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 24,
+            "std": 2.9
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 20
+          }
+        }
+      },
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 18,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 45
+      }
+    },
+    "right": {
+      "constant": 100
+    }
+  },
+  "profit": "N/A"
+}
+
+
+### CURRENT FAILED GENOME TO FIX:
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "LESS_THAN",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 2.9
+                  }
+                },
+                "right": {
+                  "constant": 62.8
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 21,
+                    "std": 1.7
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 9,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 45
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "constant": 36.23
+            },
+            "right": {
+              "constant": 79.78
+            }
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "constant": 26.46
+                },
+                "right": {
+                  "constant": 68.28
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 10
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 36
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 46
+      }
+    },
+    "right": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 33
+      }
+    }
+  },
+  "fitness": -1.0,
+  "validation_tier": -1,
+  "debuffed_fitness": 8.099,
+  "role": "mutant",
+  "generation_age": 0
+}
+
+### RULES:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, change GREATER_THAN to a lower value, or change AND to OR.
+4. Aim for logic that triggers at least 20-50 trades in 6 months.
+5. Use the provided EXAMPLES to see what profitable, active logic looks like.
+6. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 28.1
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.16
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 28.1
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.16
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades or is failing.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+### CRITICAL GOAL: INCREASE TRADE FREQUENCY
+We want strategies that trigger MANY trades across the 6-month period. A strategy with only 1-2 "lucky" trades is considered a failure. 
+Adjust constants and operators to ensure the strategy finds consistent entry points. 
+
+
+### EXAMPLES OF PREVIOUS SUCCESSFUL GENOMES (THAT MADE PROFIT):
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 28.1
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.16
+}
+---
+{
+  "entry_tree": {
+    "primitive": "GREATER_THAN",
+    "left": {
+      "primitive": "BB_UPPER",
+      "parameters": {
+        "window": 28,
+        "std": 1.8
+      }
+    },
+    "right": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 13,
+        "std": 2.9
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 43
+        }
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 38,
+                  "threshold": 2.38
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 25,
+              "threshold": 1.13
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "profit": 2.1
+}
+---
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 24,
+            "std": 2.9
+          }
+        },
+        "right": {
+          "primitive": "RSI",
+          "parameters": {
+            "window": 20
+          }
+        }
+      },
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 18,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 45
+      }
+    },
+    "right": {
+      "constant": 100
+    }
+  },
+  "profit": "N/A"
+}
+
+
+### CURRENT FAILED GENOME TO FIX:
+{
+  "entry_tree": {
+    "primitive": "TRENDING_DOWN",
+    "parameters": {
+      "window": 41
+    }
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 32
+                  }
+                },
+                "right": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 22
+                  }
+                }
+              },
+              {
+                "primitive": "LESS_THAN",
+                "left": {
+                  "constant": 22.3
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 13,
+                    "std": 2.8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 49
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 44
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 43,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "role": "outsider",
+  "generation_age": 0,
+  "fitness": -1.0
+}
+
+### RULES:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, change GREATER_THAN to a lower value, or change AND to OR.
+4. Aim for logic that triggers at least 20-50 trades in 6 months.
+5. Use the provided EXAMPLES to see what profitable, active logic looks like.
+6. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 28,
+                "std": 1.8
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 20
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 24,
+                "std": 2.9
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 20
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 38,
+                  "threshold": 2.38
+                }
+              },
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 25,
+                  "threshold": 1.13
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 38,
+              "threshold": 2.38
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 44
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 43,
+                "std": 2.3
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "role": "outsider",
+  "generation_age": 0,
+  "fitness": 2.1
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 28,
+                "std": 1.8
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 20
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 24,
+                "std": 2.9
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 20
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 38,
+                  "threshold": 2.38
+                }
+              },
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 25,
+                  "threshold": 1.13
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 38,
+              "threshold": 2.38
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 44
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 43,
+                "std": 2.3
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "role": "outsider",
+  "generation_age": 0,
+  "fitness": 2.1
+}
+==================================================

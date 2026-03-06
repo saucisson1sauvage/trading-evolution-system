@@ -1,33 +1,43 @@
 {
   "entry_tree": {
-    "primitive": "VOLATILE",
-    "parameters": {
-      "window": 28,
-      "threshold": 2.48
-    }
-  },
-  "exit_tree": {
-    "operator": "OR",
+    "operator": "NOT",
     "children": [
       {
-        "primitive": "GREATER_THAN",
+        "primitive": "LESS_THAN",
         "left": {
-          "primitive": "SMA",
+          "primitive": "BB_UPPER",
           "parameters": {
-            "window": 50
+            "window": 37,
+            "std": 2.9
           }
         },
         "right": {
           "primitive": "EMA",
           "parameters": {
-            "window": 22
+            "window": 10
           }
         }
-      },
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "NOT",
+    "children": [
       {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 19
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 10,
+            "std": 2.3
+          }
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 22,
+            "std": 2.6
+          }
         }
       }
     ]
