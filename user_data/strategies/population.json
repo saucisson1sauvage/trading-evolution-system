@@ -136,7 +136,7 @@
                         "right": {
                           "primitive": "RSI",
                           "parameters": {
-                            "window": 17
+                            "window": 18
                           }
                         }
                       }
