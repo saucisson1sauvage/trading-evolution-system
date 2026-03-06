@@ -1,95 +1,28 @@
 {
   "entry_tree": {
-    "operator": "AND",
-    "children": [
-      {
-        "operator": "NOT",
-        "children": [
-          {
-            "primitive": "TRENDING_UP",
-            "parameters": {
-              "window": 48
-            }
-          }
-        ]
-      },
-      {
-        "operator": "AND",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "CROSS_DOWN",
-                "left": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 38
-                  }
-                },
-                "right": {
-                  "primitive": "EMA",
-                  "parameters": {
-                    "window": 33
-                  }
-                }
-              },
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 46
-                }
-              }
-            ]
-          },
-          {
-            "primitive": "CROSS_UP",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 17,
-                "std": 2.3
-              }
-            },
-            "right": {
-              "constant": 32.53
-            }
-          }
-        ]
-      }
-    ]
+    "primitive": "TRENDING_UP",
+    "parameters": {
+      "window": 45
+    }
   },
   "exit_tree": {
-    "operator": "OR",
-    "children": [
-      {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "constant": 48.73
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 29
-          }
-        }
-      },
-      {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 24,
-            "std": 2.6
-          }
-        },
-        "right": {
-          "constant": 38.02
-        }
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 15
       }
-    ]
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 40,
+        "std": 3.5
+      }
+    }
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "ai_fixed": true
 }
