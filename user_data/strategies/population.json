@@ -1388,10 +1388,10 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 200.0
+          "threshold": 300.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1421,7 +1421,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
