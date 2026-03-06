@@ -1268,10 +1268,10 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 50.0
+          "threshold": 100.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1312,7 +1312,7 @@
         }
       },
       "exit_tree": {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
             "operator": "AND",
@@ -1354,7 +1354,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 2000.0
+                  "constant": 2100.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1368,7 +1368,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1387,7 +1387,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 20000.0
+                  "constant": 22000.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
