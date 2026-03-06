@@ -1,60 +1,116 @@
 {
   "entry_tree": {
-    "primitive": "EMA",
-    "parameters": {
-      "window": 21
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 26,
+        "std": 2.1
+      }
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 27,
+        "std": 2.2
+      }
     }
   },
   "exit_tree": {
     "operator": "OR",
     "children": [
       {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "TRENDING_DOWN",
-            "parameters": {
-              "window": 12
-            }
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 31,
-                "std": 3.0
-              }
-            },
-            "right": {
-              "primitive": "BB_LOWER",
-              "parameters": {
-                "window": 17,
-                "std": 1.8
-              }
-            }
-          }
-        ]
-      },
-      {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
             "primitive": "VOLUME_SPIKE",
             "parameters": {
-              "window": 45
+              "window": 8
             }
           },
           {
-            "primitive": "CROSS_UP",
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 20,
+                    "std": 3.9
+                  }
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 13,
+                    "std": 2.9
+                  }
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 45
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 30
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 12,
+                    "std": 2.3
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 27,
+                    "std": 2.2
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 16
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_DOWN",
             "left": {
-              "constant": 50000.0
+              "primitive": "SMA",
+              "parameters": {
+                "window": 27
+              }
             },
             "right": {
-              "primitive": "BB_UPPER",
+              "primitive": "BB_MIDDLE",
               "parameters": {
-                "window": 42,
-                "std": 2.4
+                "window": 45,
+                "std": 2.7
               }
             }
           }
