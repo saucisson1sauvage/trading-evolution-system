@@ -1,25 +1,52 @@
 {
   "entry_tree": {
-    "primitive": "VOLUME_SPIKE",
-    "parameters": {
-      "window": 12
-    }
+    "operator": "NOT",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 14,
+                  "threshold": 1.35
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 43.0
+                },
+                "right": {
+                  "constant": 64.53
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 49.07
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 21
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
   "exit_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 34,
-        "std": 1.9
-      }
-    },
-    "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 36
-      }
+    "primitive": "TRENDING_DOWN",
+    "parameters": {
+      "window": 31
     }
   },
-  "fitness": -1.0
+  "fitness": -0.007000000000000001
 }

@@ -83,16 +83,20 @@ class GPTreeStrategy(IStrategy):
     def populate_entry_trend(self, dataframe: pd.DataFrame, metadata: dict) -> pd.DataFrame:
         try:
             # Force signals to be boolean then int
-            res = self.evaluate_node(self.genome["entry_tree"], dataframe)
+            res = self.evaluate_node(self.genome.get("entry_tree", {}), dataframe)
             dataframe['enter_long'] = res.fillna(False).astype(int)
         except Exception as e:
+            with open("/home/saus/crypto-crew-4.0/user_data/logs/strategy_debug.log", "a") as f:
+                f.write(f"ENTRY ERROR: {e}\n")
             dataframe['enter_long'] = 0
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         try:
-            res = self.evaluate_node(self.genome["exit_tree"], dataframe)
+            res = self.evaluate_node(self.genome.get("exit_tree", {}), dataframe)
             dataframe['exit_long'] = res.fillna(False).astype(int)
-        except Exception:
+        except Exception as e:
+            with open("/home/saus/crypto-crew-4.0/user_data/logs/strategy_debug.log", "a") as f:
+                f.write(f"EXIT ERROR: {e}\n")
             dataframe['exit_long'] = 0
         return dataframe

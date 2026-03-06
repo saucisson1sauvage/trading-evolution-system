@@ -189,12 +189,17 @@ def run_evolution_round(genome: dict) -> float:
         "--strategy", "GPTreeStrategy",
         "--timerange", "20241101-20241115",
         "--config", str(PROJECT_ROOT / "config.json"),
-        "--userdir", str(PROJECT_ROOT / "user_data")
+        "--userdir", str(PROJECT_ROOT / "user_data"),
+        "--cache", "none"
     ]
     try:
         logging.info(f"  > Launching Freqtrade Backtest...")
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
+        
+        # Log Freqtrade output
+        with open(PROJECT_ROOT / "user_data/logs/freqtrade_runs.log", "a") as flog:
+            flog.write(f"\n--- NEW RUN ---\n{output}\n")
         
         # Regex parsing for multiple metrics (handling both | and │)
         profit_pct = 0.0
@@ -285,6 +290,7 @@ def run_loop(gens=50, pop_size=20):
         # Selection & Reproduction
         new_population = population[:2] # Elitism (top 2)
         
+        mutations_done = 0
         while len(new_population) < pop_size:
             r = random.random()
             if r < 0.7: # Crossover
@@ -294,12 +300,13 @@ def run_loop(gens=50, pop_size=20):
                 new_population.append({"entry_tree": ce1, "exit_tree": cx1, "fitness": -1.0})
                 if len(new_population) < pop_size:
                     new_population.append({"entry_tree": ce2, "exit_tree": cx2, "fitness": -1.0})
-            elif r < 0.9: # Mutation
+            elif r < 0.9 and mutations_done < 5: # Mutation (Capped at 5)
                 p = copy.deepcopy(random.choice(population[:max(5, len(population)//2)]))
                 mutate_tree(p["entry_tree"], 3)
                 mutate_tree(p["exit_tree"], 3)
                 p["fitness"] = -1.0
                 new_population.append(p)
+                mutations_done += 1
             else: # Random New Blood
                 new_population.append({
                     "entry_tree": generate_bool_node(0, 3),
