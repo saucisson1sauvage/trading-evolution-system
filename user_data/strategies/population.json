@@ -79,68 +79,73 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
-            "primitive": "VOLUME_SPIKE",
-            "parameters": {
-              "window": 12
-            }
-          },
-          {
-            "operator": "OR",
+            "operator": "AND",
             "children": [
               {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "TRENDING_UP",
-                    "parameters": {
-                      "window": 44
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 51,
-                        "std": 3.01
-                      }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 38
-                      }
-                    }
-                  }
-                ]
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 12
+                }
               },
               {
                 "operator": "OR",
                 "children": [
                   {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 45,
-                      "threshold": 2.1
-                    }
+                    "operator": "AND",
+                    "children": [
+                      {
+                        "primitive": "TRENDING_UP",
+                        "parameters": {
+                          "window": 44
+                        }
+                      },
+                      {
+                        "primitive": "CROSS_UP",
+                        "left": {
+                          "primitive": "BB_UPPER",
+                          "parameters": {
+                            "window": 51,
+                            "std": 3.01
+                          }
+                        },
+                        "right": {
+                          "primitive": "EMA",
+                          "parameters": {
+                            "window": 38
+                          }
+                        }
+                      }
+                    ]
                   },
                   {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 43
+                    "operator": "OR",
+                    "children": [
+                      {
+                        "primitive": "VOLATILE",
+                        "parameters": {
+                          "window": 45,
+                          "threshold": 2.1
+                        }
+                      },
+                      {
+                        "primitive": "CROSS_UP",
+                        "left": {
+                          "primitive": "EMA",
+                          "parameters": {
+                            "window": 43
+                          }
+                        },
+                        "right": {
+                          "primitive": "EMA",
+                          "parameters": {
+                            "window": 27
+                          }
+                        }
                       }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 27
-                      }
-                    }
+                    ]
                   }
                 ]
               }
