@@ -1177,19 +1177,9 @@
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "BB_LOWER",
-          "parameters": {
-            "window": 41,
-            "std": 2.4
-          }
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 46
-          }
+        "primitive": "EMA",
+        "parameters": {
+          "window": 46
         }
       },
       "exit_tree": {
@@ -1198,7 +1188,7 @@
           "window": 12
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1339,23 +1329,14 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 21
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 50
-          }
+        "primitive": "EMA",
+        "parameters": {
+          "window": 21
         }
       },
       "exit_tree": {
@@ -1449,7 +1430,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1468,7 +1449,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 100.0
+                  "constant": 120.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1569,7 +1550,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
