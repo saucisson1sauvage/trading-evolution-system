@@ -81,7 +81,7 @@
       "entry_tree": {
         "primitive": "VOLUME_SPIKE",
         "parameters": {
-          "window": 24
+          "window": 48
         }
       },
       "exit_tree": {
@@ -98,8 +98,8 @@
                     "left": {
                       "primitive": "BB_MIDDLE",
                       "parameters": {
-                        "window": 18,
-                        "std": 2.4
+                        "window": 22,
+                        "std": 1.6
                       }
                     },
                     "right": {
@@ -285,7 +285,7 @@
                       }
                     },
                     "right": {
-                      "constant": 38.36
+                      "constant": 40.0
                     }
                   },
                   {
@@ -298,13 +298,13 @@
                       }
                     },
                     "right": {
-                      "constant": 30.38
+                      "constant": 30.0
                     }
                   }
                 ]
               },
               {
-                "primitive": "CROSS_DOWN",
+                "operator": "CROSS_DOWN",
                 "left": {
                   "primitive": "RSI",
                   "parameters": {
@@ -318,7 +318,7 @@
             ]
           },
           {
-            "primitive": "CROSS_UP",
+            "operator": "CROSS_UP",
             "left": {
               "primitive": "EMA",
               "parameters": {
@@ -353,7 +353,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
