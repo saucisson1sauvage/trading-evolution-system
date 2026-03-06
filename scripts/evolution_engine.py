@@ -7,6 +7,7 @@ import subprocess
 import re
 import math
 import datetime
+import uuid
 from typing import Dict, Any, List, Tuple
 from pathlib import Path
 import sys
@@ -156,7 +157,7 @@ def apply_structural_mutation(tree: Dict[str, Any]):
 
 def get_similarity_hash(genome: dict) -> str:
     """Creates a structural hash of the genome by rounding all floats to integers, preventing 99% identical clones."""
-    raw_str = json.dumps({"entry": genome["entry_tree"], "exit": genome["exit_tree"]})
+    raw_str = json.dumps({"entry": genome.get("entry_tree", {}), "exit": genome.get("exit_tree", {})})
     return re.sub(r'(\d+\.\d+)', lambda m: str(round(float(m.group(1)))), raw_str)
 
 def save_to_vault(king: dict):
@@ -167,20 +168,23 @@ def save_to_vault(king: dict):
                 vault = json.load(f)
         except Exception:
             pass
-    
-    king_hash = get_similarity_hash(king)
+            
+    # Highlander: Only one per lineage
+    lineage_found = False
     for i, v in enumerate(vault):
-        v_hash = get_similarity_hash(v)
-        if v_hash == king_hash:
+        if v.get("lineage_id") == king.get("lineage_id"):
+            lineage_found = True
             if king.get("fitness", 0.0) > v.get("fitness", 0.0):
                 vault[i] = copy.deepcopy(king)
                 vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
                 with open(VAULT_FILE, 'w') as f:
                     json.dump(vault, f, indent=2)
-                logging.info(f"  > VAULT UPDATED (Overwrote clone). Top fitness: {vault[0].get('fitness', 0.0):.4f}")
+                logging.info(f"  > VAULT UPDATED (Lineage improved). Top fitness: {vault[0].get('fitness', 0.0):.4f}")
             return
-
-    vault.append(copy.deepcopy(king))
+            
+    if not lineage_found:
+        vault.append(copy.deepcopy(king))
+        
     vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
     vault = vault[:3]
     
@@ -259,6 +263,39 @@ def run_evolution_round(genome: dict) -> float:
         
     return fitness
 
+def create_fresh_individual(status="outsider"):
+    return {
+        "lineage_id": str(uuid.uuid4()),
+        "entry_tree": generate_bool_node(0, 3),
+        "exit_tree": generate_bool_node(0, 3),
+        "fitness": -1.0,
+        "generation_age": 0,
+        "debuff_active_gens": 0,
+        "status": status
+    }
+
+def calculate_debuffed_fitness(genome: dict, king_age: int) -> float:
+    if genome.get("status") == "king":
+        return genome.get("fitness", 0.0)
+    
+    if king_age <= 10:
+        r = 0.05
+    elif king_age >= 1000:
+        r = 0.01
+    else:
+        r = 0.05 - ((king_age - 10) / 990.0) * 0.04
+        
+    debuff_active_gens = genome.get("debuff_active_gens", 0)
+    penalty = r * debuff_active_gens
+    
+    return genome.get("fitness", 0.0) * max(0.0, (1.0 - penalty))
+
+def check_retirement(genome: dict, outsiders_max_fitness: float):
+    if genome.get("status") in ["candidate", "mutant"]:
+        if genome.get("debuffed_fitness", 0.0) < outsiders_max_fitness:
+            genome["status"] = "retired"
+            logging.info(f"  > Lineage {genome.get('lineage_id', 'unknown')[:8]} RETIRED due to low debuffed fitness.")
+
 def run_loop(gens=50):
     logging.info(f"STARTING 6-SLOT ROLE-BASED GP LOOP")
     
@@ -277,100 +314,107 @@ def run_loop(gens=50):
             with open(POPULATION_FILE, 'r') as f:
                 data = json.load(f)
                 population = data.get("individuals", [])
-                # Reset fitness if transitioning from old engine (individuals missing 'role')
-                if population and "role" not in population[0]:
-                    logging.info("Old population format detected. Resetting fitness for recalibration.")
+                
+                # Upgrade legacy population structure
+                if population and "lineage_id" not in population[0]:
+                    logging.info("Old population format detected. Upgrading to Lineage schema.")
                     for ind in population:
                         ind["fitness"] = -1.0
+                        ind["lineage_id"] = str(uuid.uuid4())
+                        ind["generation_age"] = 0
+                        ind["debuff_active_gens"] = 0
+                        ind["status"] = ind.get("role", "outsider")
         except Exception as e:
             logging.error(f"Failed to load population: {e}")
 
     while len(population) < 6:
-        population.append({
-            "entry_tree": generate_bool_node(0, 3),
-            "exit_tree": generate_bool_node(0, 3),
-            "fitness": -1.0,
-            "generation_age": 0,
-            "role": "outsider"
-        })
+        population.append(create_fresh_individual())
     population = population[:6]
 
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
         log_aider(f"--- STARTING GENERATION {current_gen} ---")
+        
         # Evaluate
         for i, ind in enumerate(population):
             if ind.get("fitness", -1.0) < 0:
-                logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('role', 'unknown')})...")
+                logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('status', 'unknown')})...")
                 fit = run_evolution_round(ind)
                 ind["fitness"] = fit
             else:
-                logging.info(f"Skipping Individual {i+1}/6 ({ind.get('role', 'unknown')}) - already evaluated with fitness {ind['fitness']:.4f}")
+                logging.info(f"Skipping Individual {i+1}/6 ({ind.get('status', 'unknown')}) - already evaluated with fitness {ind['fitness']:.4f}")
                 
-        for ind in population:
-            age = ind.get("generation_age", 0)
-            if ind.get("role") == "king":
-                ind["debuffed_fitness"] = ind["fitness"]
-            else:
-                ind["debuffed_fitness"] = ind["fitness"] * (0.85 ** age)
-
+        # 1. Find the King (Highest raw fitness)
         population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
-        king = copy.deepcopy(population[0])
-        king["role"] = "king"
-        king["generation_age"] = 0
-        king["debuffed_fitness"] = king["fitness"]
+        king_candidate = copy.deepcopy(population[0])
         
-        logging.info(f"KING FITNESS: {king['fitness']:.4f}")
+        # If it's the same King from before, it ages. Otherwise, age=0.
+        prev_king = next((ind for ind in population if ind.get("status") == "king"), None)
+        if prev_king and prev_king.get("lineage_id") == king_candidate.get("lineage_id"):
+            king_candidate["generation_age"] = prev_king.get("generation_age", 0) + 1
+        else:
+            king_candidate["generation_age"] = 0
+            
+        king_candidate["status"] = "king"
+        king_candidate["debuff_active_gens"] = 0
+        king = copy.deepcopy(king_candidate)
+        king_age = king.get("generation_age", 0)
+        
+        # 2. Calculate debuffed fitness for everyone
+        for ind in population:
+            ind["debuffed_fitness"] = calculate_debuffed_fitness(ind, king_age)
+            
+        # 3. Check Retirement
+        outsiders = [ind for ind in population if ind.get("status") == "outsider"]
+        outsiders_max_fitness = max([ind.get("fitness", 0.0) for ind in outsiders]) if outsiders else 0.0
+        
+        for ind in population:
+            check_retirement(ind, outsiders_max_fitness)
+            
+        logging.info(f"KING FITNESS: {king['fitness']:.4f} | Lineage: {king['lineage_id'][:8]} | Age: {king_age}")
         log_aider(f"Best raw fitness found in Gen {current_gen}: {king['fitness']:.4f}")
         save_to_vault(king)
 
-        remaining = population[1:]
-        remaining.sort(key=lambda x: x.get("debuffed_fitness", 0.0), reverse=True)
-        cand1_source = remaining[0]
-        cand2_source = remaining[1]
+        # Find eligible Candidates
+        eligible_candidates = [ind for ind in population if ind.get("status") not in ["king", "retired"]]
+        eligible_candidates.sort(key=lambda x: x.get("debuffed_fitness", 0.0), reverse=True)
+        
+        cand1_source = eligible_candidates[0] if len(eligible_candidates) > 0 else king
+        cand2_source = eligible_candidates[1] if len(eligible_candidates) > 1 else cand1_source
 
         next_population = []
         next_population.append(copy.deepcopy(king))
         
+        # Candidate 1
         c1 = copy.deepcopy(cand1_source)
         apply_point_mutation(c1["entry_tree"])
         apply_point_mutation(c1["exit_tree"])
-        c1["role"] = "candidate"
-        c1["generation_age"] = c1.get("generation_age", 0) + 1
+        c1["status"] = "candidate"
+        c1["debuff_active_gens"] = c1.get("debuff_active_gens", 0) + 1
         c1["fitness"] = -1.0
         next_population.append(c1)
 
+        # Candidate 2
         c2 = copy.deepcopy(cand2_source)
         apply_point_mutation(c2["entry_tree"])
         apply_point_mutation(c2["exit_tree"])
-        c2["role"] = "candidate"
-        c2["generation_age"] = c2.get("generation_age", 0) + 1
+        c2["status"] = "candidate"
+        c2["debuff_active_gens"] = c2.get("debuff_active_gens", 0) + 1
         c2["fitness"] = -1.0
         next_population.append(c2)
 
+        # Mutant
         mut = copy.deepcopy(king)
         apply_structural_mutation(mut["entry_tree"])
         apply_structural_mutation(mut["exit_tree"])
-        mut["role"] = "mutant"
-        mut["generation_age"] = 0
+        mut["status"] = "mutant"
+        mut["debuff_active_gens"] = 0
         mut["fitness"] = -1.0
         next_population.append(mut)
 
-        out1 = {
-            "entry_tree": generate_bool_node(0, 3),
-            "exit_tree": generate_bool_node(0, 3),
-            "role": "outsider",
-            "generation_age": 0,
-            "fitness": -1.0
-        }
-        out2 = {
-            "entry_tree": generate_bool_node(0, 3),
-            "exit_tree": generate_bool_node(0, 3),
-            "role": "outsider",
-            "generation_age": 0,
-            "fitness": -1.0
-        }
-        next_population.extend([out1, out2])
+        # Outsiders
+        next_population.append(create_fresh_individual("outsider"))
+        next_population.append(create_fresh_individual("outsider"))
 
         GENOME_DIR.mkdir(parents=True, exist_ok=True)
         with open(GENOME_DIR / f"gen_{current_gen}_king.json", 'w') as f:
