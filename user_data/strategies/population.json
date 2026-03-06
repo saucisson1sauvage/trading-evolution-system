@@ -1172,7 +1172,7 @@
           "threshold": 20.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1202,7 +1202,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1564,7 +1564,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
