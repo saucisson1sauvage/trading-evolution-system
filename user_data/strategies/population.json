@@ -97,10 +97,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 11
-                      }
+                      "constant": 32.37
                     },
                     "right": {
                       "constant": 32.37

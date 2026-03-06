@@ -1,36 +1,28 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_UP",
-    "left": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 50,
-        "std": 2.2
-      }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 9
-      }
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 12
     }
   },
   "exit_tree": {
-    "primitive": "CROSS_DOWN",
+    "primitive": "AND",
     "left": {
-      "primitive": "SMA",
+      "primitive": "BB_MIDDLE",
       "parameters": {
-        "window": 35
+        "window": 34,
+        "std": 1.9
       }
     },
     "right": {
-      "primitive": "RSI",
+      "primitive": "EMA",
       "parameters": {
-        "window": 19
+        "window": 36
       }
     }
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "ai_fixed": true
 }
