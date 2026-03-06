@@ -4145,3 +4145,16 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 11:10:23,180 | INFO | --- Generation 293 ---
 2026-03-06 11:10:23,180 | INFO | KING FITNESS: 8.0990
 2026-03-06 11:10:23,180 | INFO |   > VAULT UPDATED. Top strategy fitness: 8.0990
+2026-03-06 11:10:32,002 | INFO | STARTING 6-SLOT ROLE-BASED GP LOOP
+2026-03-06 11:10:32,002 | INFO | --- Generation 294 ---
+2026-03-06 11:10:32,002 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-06 11:10:40,930 | INFO |   > FAIL: Trades: 552, Profit: -10.5% -> Fitness: 0.0000
+2026-03-06 11:10:40,930 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-06 11:10:49,800 | INFO |   > FAIL: Trades: 128, Profit: -2.1% -> Fitness: 0.0000
+2026-03-06 11:10:49,800 | INFO | Evaluating Individual 4/6 (mutant)...
+2026-03-06 11:10:58,896 | INFO |   > FAIL: Trades: 1, Profit: 0.36% -> Fitness: 0.0000
+2026-03-06 11:10:58,896 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-06 11:11:07,330 | INFO |   > FAIL: Trades: 1, Profit: 0.37% -> Fitness: 0.0000
+2026-03-06 11:11:07,330 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-06 11:11:16,035 | INFO |   > FAIL: Trades: 1, Profit: 0.37% -> Fitness: 0.0000
+2026-03-06 11:11:16,035 | INFO | KING FITNESS: 8.0990
