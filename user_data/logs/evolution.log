@@ -4083,3 +4083,7 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 08:05:49,311 | INFO | Loaded 20 individuals from persistence.
 2026-03-06 08:05:49,311 | INFO | --- Generation 285 ---
 2026-03-06 08:05:49,311 | INFO | BEST FITNESS: 6.2810
+2026-03-06 09:48:36,485 | INFO | STARTING GP LOOP: 1 gens, 2 individuals
+2026-03-06 09:48:36,486 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 09:48:36,486 | INFO | --- Generation 286 ---
+2026-03-06 09:48:36,486 | INFO | BEST FITNESS: 6.2810

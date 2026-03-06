@@ -179,7 +179,7 @@ def mutate_tree(tree: Dict[str, Any], max_depth: int):
                 target.update(new_sub)
                 break
 
-def run_evolution_round(genome: dict) -> float:
+def run_evolution_round(genome: dict, timerange: str = "20241105-20241205", is_validation: bool = False) -> float:
     # Ensure directory exists
     CURRENT_GENOME_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(CURRENT_GENOME_FILE, 'w') as f:
@@ -188,24 +188,25 @@ def run_evolution_round(genome: dict) -> float:
     command = [
         "/home/saus/freqtrade/.venv/bin/freqtrade", "backtesting",
         "--strategy", "GPTreeStrategy",
-        "--timerange", "20241101-20241115",
+        "--timerange", timerange,
         "--config", str(PROJECT_ROOT / "config.json"),
         "--userdir", str(PROJECT_ROOT / "user_data"),
         "--cache", "none"
     ]
     try:
-        logging.info(f"  > Launching Freqtrade Backtest...")
+        logging.info(f"  > Launching Freqtrade Backtest [{timerange}]...")
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
         
         # Log Freqtrade output
         with open(PROJECT_ROOT / "user_data/logs/freqtrade_runs.log", "a") as flog:
-            flog.write(f"\n--- NEW RUN ---\n{output}\n")
+            flog.write(f"\n--- NEW RUN [{timerange}] ---\n{output}\n")
         
-        # Print the cool table for the user
-        strat_summary_idx = output.find("STRATEGY SUMMARY")
-        if strat_summary_idx != -1:
-            print("\n" + output[strat_summary_idx:].strip() + "\n")
+        # Print the cool table for the user (only for main Bull evaluation to avoid spam)
+        if not is_validation:
+            strat_summary_idx = output.find("STRATEGY SUMMARY")
+            if strat_summary_idx != -1:
+                print("\n" + output[strat_summary_idx:].strip() + "\n")
         
         # Regex parsing for multiple metrics (handling both | and │)
         profit_pct = 0.0
@@ -238,12 +239,6 @@ def run_evolution_round(genome: dict) -> float:
                 fitness = profit_pct + (max(0, sharpe) * 0.5) - (drawdown * 0.1)
                 
             logging.info(f"  > SUCCESS: Trades: {trades}, Profit: {profit_pct}%, Sharpe: {sharpe}, DD: {drawdown}% -> Fitness: {fitness:.4f}")
-            
-            # REWARD TRACKING: If AI fixed this and it made profit, log it for future LLM context
-            if genome.get("ai_fixed") and profit_pct > 0:
-                with open(PROJECT_ROOT / "user_data/logs/ai_success_hall_of_fame.log", "a") as f:
-                    f.write(json.dumps({"fitness": fitness, "profit": profit_pct, "genome": genome}) + "\n")
-            
             return fitness
         
         logging.warning("  > No trades found or parsing failed.")
@@ -284,17 +279,48 @@ def run_loop(gens=50, pop_size=20):
         population.append({
             "entry_tree": generate_bool_node(0, 3),
             "exit_tree": generate_bool_node(0, 3),
-            "fitness": -1.0
+            "fitness": -1.0,
+            "validation_tier": 0
         })
 
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
         
-        # Evaluate
+        # Evaluate & Validate
         for i, ind in enumerate(population):
+            # 1. Base Evaluation (Bull)
             if ind.get("fitness", -1.0) < 0:
-                logging.info(f"Evaluating Individual {i+1}/{pop_size}...")
-                ind["fitness"] = run_evolution_round(ind)
+                logging.info(f"Evaluating Individual {i+1}/{pop_size} (BULL)...")
+                ind["fitness"] = run_evolution_round(ind, timerange="20241105-20241205", is_validation=False)
+                # If profitable in Bull, push to validation queue
+                ind["validation_tier"] = 1 if ind["fitness"] > 0 else 0
+            
+            # 2. Tiered Validation (Gauntlet)
+            while ind.get("validation_tier", 0) > 0 and ind.get("validation_tier", 0) < 4:
+                tier = ind["validation_tier"]
+                if tier == 1:
+                    logging.info(f"  > GAUNTLET: Testing Bear Market...")
+                    val_fit = run_evolution_round(ind, timerange="20250110-20250125", is_validation=True)
+                elif tier == 2:
+                    logging.info(f"  > GAUNTLET: Testing Crash Market...")
+                    val_fit = run_evolution_round(ind, timerange="20240804-20240808", is_validation=True)
+                elif tier == 3:
+                    logging.info(f"  > GAUNTLET: Testing Sideways Market...")
+                    val_fit = run_evolution_round(ind, timerange="20241215-20250105", is_validation=True)
+                
+                if val_fit > 0:
+                    ind["validation_tier"] += 1
+                    if ind["validation_tier"] == 4:
+                        logging.info(f"  > 🏆 SURVIVED THE GAUNTLET! All-Weather Strategy Found.")
+                        # Save to Hall of Fame
+                        hof_file = "ai_success_hall_of_fame.log" if ind.get("ai_fixed") else "hall_of_fame.log"
+                        with open(PROJECT_ROOT / f"user_data/logs/{hof_file}", "a") as f:
+                             f.write(json.dumps({"fitness": ind["fitness"], "genome": ind, "note": "All-Weather Survivor"}) + "\n")
+                        break
+                else:
+                    logging.warning(f"  > Gauntlet Failed at tier {tier}. Returning to base pool.")
+                    ind["validation_tier"] = -1 # Failed validation, but keep its Bull fitness for reproduction
+                    break
         
         population.sort(key=lambda x: x.get("fitness", -999.0), reverse=True)
         best = population[0]
@@ -324,21 +350,23 @@ def run_loop(gens=50, pop_size=20):
                 p1, p2 = random.sample(population[:max(5, len(population)//2)], 2)
                 ce1, ce2 = crossover_tree(p1["entry_tree"], p2["entry_tree"])
                 cx1, cx2 = crossover_tree(p1["exit_tree"], p2["exit_tree"])
-                new_population.append({"entry_tree": ce1, "exit_tree": cx1, "fitness": -1.0})
+                new_population.append({"entry_tree": ce1, "exit_tree": cx1, "fitness": -1.0, "validation_tier": 0})
                 if len(new_population) < pop_size:
-                    new_population.append({"entry_tree": ce2, "exit_tree": cx2, "fitness": -1.0})
+                    new_population.append({"entry_tree": ce2, "exit_tree": cx2, "fitness": -1.0, "validation_tier": 0})
             elif r < 0.9 and mutations_done < 5: # Mutation (Capped at 5)
                 p = copy.deepcopy(random.choice(population[:max(5, len(population)//2)]))
                 mutate_tree(p["entry_tree"], 3)
                 mutate_tree(p["exit_tree"], 3)
                 p["fitness"] = -1.0
+                p["validation_tier"] = 0
                 new_population.append(p)
                 mutations_done += 1
             else: # Random New Blood
                 new_population.append({
                     "entry_tree": generate_bool_node(0, 3),
                     "exit_tree": generate_bool_node(0, 3),
-                    "fitness": -1.0
+                    "fitness": -1.0,
+                    "validation_tier": 0
                 })
         
         population = new_population[:pop_size]
