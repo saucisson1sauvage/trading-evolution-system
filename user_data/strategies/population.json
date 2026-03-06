@@ -1145,7 +1145,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1172,7 +1172,7 @@
           "threshold": 20.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1183,7 +1183,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "parameters": {
           "window": 12
         },
@@ -1343,7 +1343,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1444,7 +1444,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1463,7 +1463,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 120.0
+                  "constant": 130.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1564,7 +1564,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
