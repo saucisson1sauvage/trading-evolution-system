@@ -1007,7 +1007,7 @@
           }
         },
         "right": {
-          "constant": 95.0
+          "constant": 99.0
         }
       },
       "exit_tree": {
@@ -1019,10 +1019,10 @@
           }
         },
         "right": {
-          "constant": 95.0
+          "constant": 99.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1172,7 +1172,7 @@
           "threshold": 2.5
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1217,7 +1217,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 30.0
+                  "constant": 40.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1318,7 +1318,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
