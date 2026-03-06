@@ -47,11 +47,13 @@ if (PROJECT_ROOT / ".env").exists():
                 if len(parts) == 2:
                     os.environ[parts[0]] = parts[1]
 
-# Grammar Definitions
-BOOL_PRIMITIVES = ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]
-BOOL_OPERATORS = ["AND", "OR", "NOT"]
-BOOL_HELPERS = ["TRENDING_UP", "TRENDING_DOWN", "VOLATILE", "VOLUME_SPIKE"]
-NUM_INDICATORS = ["RSI", "EMA", "SMA", "BB_UPPER", "BB_MIDDLE", "BB_LOWER"]
+from user_data.strategies.gp_blocks import BLOCK_REGISTRY
+
+# Grammar Definitions (Dynamically loaded from BLOCK_REGISTRY)
+BOOL_PRIMITIVES = list(BLOCK_REGISTRY['comparator'].keys())
+BOOL_OPERATORS = list(BLOCK_REGISTRY['operator'].keys())
+BOOL_HELPERS = list(BLOCK_REGISTRY['bool_helper'].keys())
+NUM_INDICATORS = list(BLOCK_REGISTRY['num'].keys())
 
 logging.basicConfig(
     level=logging.INFO,

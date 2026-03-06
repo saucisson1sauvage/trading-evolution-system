@@ -51,42 +51,35 @@ class GPTreeStrategy(IStrategy):
         if "primitive" in node:
             name = node["primitive"]
             params = node.get("parameters", {})
-            # Indicators
-            if name == "RSI": return get_rsi(dataframe, **params)
-            if name == "EMA": return get_ema(dataframe, **params)
-            if name == "SMA": return get_sma(dataframe, **params)
-            if name in ["BB_UPPER", "BB_MIDDLE", "BB_LOWER"]:
-                u, m, l = get_bollinger(dataframe, **params)
-                return u if name == "BB_UPPER" else (m if name == "BB_MIDDLE" else l)
             
-            # Additional Blocks from gp_blocks.py
-            if name == "TRENDING_UP": return is_trending_up(dataframe, **params)
-            if name == "TRENDING_DOWN": return is_trending_down(dataframe, **params)
-            if name == "VOLATILE": return is_volatile(dataframe, **params)
-            if name == "VOLUME_SPIKE": return volume_spike(dataframe, **params)
+            # Numeric & Bool Helper Blocks
+            if name in BLOCK_REGISTRY.get('num', {}) or name in BLOCK_REGISTRY.get('bool_helper', {}):
+                func = BLOCK_REGISTRY.get('num', {}).get(name) or BLOCK_REGISTRY.get('bool_helper', {}).get(name)
+                return func(dataframe, **params)
             
-            # Comparators
-            if name in ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]:
+            # Comparator Blocks
+            if name in BLOCK_REGISTRY.get('comparator', {}):
                 l = self.evaluate_node(node.get("left", {}), dataframe)
                 r = self.evaluate_node(node.get("right", {}), dataframe)
-                if name == "GREATER_THAN": return greater_than(l, r)
-                if name == "LESS_THAN": return less_than(l, r)
-                if name == "CROSS_UP": return cross_up(l, r)
-                if name == "CROSS_DOWN": return cross_down(l, r)
+                return BLOCK_REGISTRY['comparator'][name](l, r)
         
         if "operator" in node:
             op = node["operator"].upper()
             c = node.get("children", [])
-            if op == "AND": 
-                if len(c) >= 2: return and_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
-                return pd.Series(False, index=dataframe.index)
-            if op == "OR": 
-                if len(c) >= 2: return or_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
-                if len(c) == 1: return self.evaluate_node(c[0], dataframe)
-                return pd.Series(False, index=dataframe.index)
-            if op == "NOT": 
-                if len(c) >= 1: return not_op(self.evaluate_node(c[0], dataframe))
-                return pd.Series(False, index=dataframe.index)
+            
+            if op in BLOCK_REGISTRY.get('operator', {}):
+                # Dynamically evaluate children and pass them to the operator
+                c_evals = [self.evaluate_node(child, dataframe) for child in c]
+                # Fallback for empty/single child depending on operator requirements
+                if op == "AND" and len(c_evals) >= 2:
+                    return BLOCK_REGISTRY['operator'][op](c_evals[0], c_evals[1])
+                elif op == "OR":
+                    if len(c_evals) >= 2:
+                        return BLOCK_REGISTRY['operator'][op](c_evals[0], c_evals[1])
+                    elif len(c_evals) == 1:
+                        return c_evals[0]
+                elif op == "NOT" and len(c_evals) >= 1:
+                    return BLOCK_REGISTRY['operator'][op](c_evals[0])
             
         return pd.Series(False, index=dataframe.index)
 

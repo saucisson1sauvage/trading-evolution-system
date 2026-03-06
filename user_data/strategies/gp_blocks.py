@@ -1,124 +1,130 @@
 import pandas as pd
 import numpy as np
 import pandas_ta as ta
-from typing import Union, Tuple
+from typing import Union, Tuple, Callable, Dict, Any
 
-def get_rsi(df: pd.DataFrame, window: int = 14) -> pd.Series:
-    """
-    Calculate the Relative Strength Index (RSI) for the given DataFrame.
-    Returns a pd.Series with RSI values.
-    """
+# Universal Block Registry
+BLOCK_REGISTRY: Dict[str, Dict[str, Callable]] = {
+    'num': {},
+    'bool_helper': {},
+    'comparator': {},
+    'operator': {}
+}
+
+def register_block(category: str, name: str):
+    """Decorator to register a function into the BLOCK_REGISTRY."""
+    def decorator(func):
+        if category not in BLOCK_REGISTRY:
+            raise ValueError(f"Invalid block category: {category}")
+        BLOCK_REGISTRY[category][name] = func
+        return func
+    return decorator
+
+# --- BASE METRICS ---
+@register_block('num', 'OPEN')
+def get_open(df: pd.DataFrame, **kwargs) -> pd.Series:
+    return df['open']
+
+@register_block('num', 'HIGH')
+def get_high(df: pd.DataFrame, **kwargs) -> pd.Series:
+    return df['high']
+
+@register_block('num', 'LOW')
+def get_low(df: pd.DataFrame, **kwargs) -> pd.Series:
+    return df['low']
+
+@register_block('num', 'CLOSE')
+def get_close(df: pd.DataFrame, **kwargs) -> pd.Series:
+    return df['close']
+
+@register_block('num', 'VOLUME')
+def get_volume(df: pd.DataFrame, **kwargs) -> pd.Series:
+    return df['volume']
+
+# --- NUM INDICATORS ---
+@register_block('num', 'RSI')
+def get_rsi(df: pd.DataFrame, window: int = 14, **kwargs) -> pd.Series:
     return ta.rsi(close=df['close'], length=window)
 
-def get_ema(df: pd.DataFrame, window: int) -> pd.Series:
-    """
-    Calculate the Exponential Moving Average (EMA) for the given DataFrame.
-    Returns a pd.Series with EMA values.
-    """
+@register_block('num', 'EMA')
+def get_ema(df: pd.DataFrame, window: int, **kwargs) -> pd.Series:
     return ta.ema(close=df['close'], length=window)
 
-def get_sma(df: pd.DataFrame, window: int) -> pd.Series:
-    """
-    Calculate the Simple Moving Average (SMA) for the given DataFrame.
-    Returns a pd.Series with SMA values.
-    """
+@register_block('num', 'SMA')
+def get_sma(df: pd.DataFrame, window: int, **kwargs) -> pd.Series:
     return ta.sma(close=df['close'], length=window)
 
-def get_bollinger(df: pd.DataFrame, window: int = 20, std: float = 2.0) -> Tuple[pd.Series, pd.Series, pd.Series]:
-    """
-    Calculate Bollinger Bands (upper, middle, lower) for the given DataFrame.
-    Returns a tuple of three pd.Series: (upper_band, middle_band, lower_band).
-    """
+def get_bollinger(df: pd.DataFrame, window: int = 20, std: float = 2.0, **kwargs) -> Tuple[pd.Series, pd.Series, pd.Series]:
     bb = ta.bbands(close=df['close'], length=window, std=std)
     return bb[f'BBU_{window}_{std}'], bb[f'BBM_{window}_{std}'], bb[f'BBL_{window}_{std}']
 
-def greater_than(s1: pd.Series, s2: Union[pd.Series, float, int]) -> pd.Series:
-    """
-    Element-wise comparison: s1 > s2.
-    Returns a boolean pd.Series indicating where s1 is greater than s2.
-    """
+@register_block('num', 'BB_UPPER')
+def get_bb_upper(df: pd.DataFrame, window: int = 20, std: float = 2.0, **kwargs) -> pd.Series:
+    u, m, l = get_bollinger(df, window, std)
+    return u
+
+@register_block('num', 'BB_MIDDLE')
+def get_bb_middle(df: pd.DataFrame, window: int = 20, std: float = 2.0, **kwargs) -> pd.Series:
+    u, m, l = get_bollinger(df, window, std)
+    return m
+
+@register_block('num', 'BB_LOWER')
+def get_bb_lower(df: pd.DataFrame, window: int = 20, std: float = 2.0, **kwargs) -> pd.Series:
+    u, m, l = get_bollinger(df, window, std)
+    return l
+
+# --- COMPARATORS ---
+@register_block('comparator', 'GREATER_THAN')
+def greater_than(s1: pd.Series, s2: Union[pd.Series, float, int], **kwargs) -> pd.Series:
     return s1 > s2
 
-def less_than(s1: pd.Series, s2: Union[pd.Series, float, int]) -> pd.Series:
-    """
-    Element-wise comparison: s1 < s2.
-    Returns a boolean pd.Series indicating where s1 is less than s2.
-    """
+@register_block('comparator', 'LESS_THAN')
+def less_than(s1: pd.Series, s2: Union[pd.Series, float, int], **kwargs) -> pd.Series:
     return s1 < s2
 
-def cross_up(s1: pd.Series, threshold: Union[pd.Series, float, int]) -> pd.Series:
-    """
-    Detect upward crossings where s1 crosses above threshold.
-    Returns a boolean pd.Series indicating upward crossing points.
-    """
+@register_block('comparator', 'CROSS_UP')
+def cross_up(s1: pd.Series, threshold: Union[pd.Series, float, int], **kwargs) -> pd.Series:
     return (s1.shift(1) <= threshold) & (s1 > threshold)
 
-def cross_down(s1: pd.Series, threshold: Union[pd.Series, float, int]) -> pd.Series:
-    """
-    Detect downward crossings where s1 crosses below threshold.
-    Returns a boolean pd.Series indicating downward crossing points.
-    """
+@register_block('comparator', 'CROSS_DOWN')
+def cross_down(s1: pd.Series, threshold: Union[pd.Series, float, int], **kwargs) -> pd.Series:
     return (s1.shift(1) >= threshold) & (s1 < threshold)
 
-def and_op(b1: pd.Series, b2: pd.Series) -> pd.Series:
-    """
-    Element-wise logical AND between two boolean Series.
-    Returns a boolean pd.Series where both conditions are true.
-    """
+# --- OPERATORS ---
+@register_block('operator', 'AND')
+def and_op(b1: pd.Series, b2: pd.Series, **kwargs) -> pd.Series:
     return b1 & b2
 
-def or_op(b1: pd.Series, b2: pd.Series) -> pd.Series:
-    """
-    Element-wise logical OR between two boolean Series.
-    Returns a boolean pd.Series where at least one condition is true.
-    """
+@register_block('operator', 'OR')
+def or_op(b1: pd.Series, b2: pd.Series, **kwargs) -> pd.Series:
     return b1 | b2
 
-def not_op(b: pd.Series) -> pd.Series:
-    """
-    Element-wise logical NOT of a boolean Series.
-    Returns a boolean pd.Series with inverted truth values.
-    """
+@register_block('operator', 'NOT')
+def not_op(b: pd.Series, **kwargs) -> pd.Series:
     return ~b
 
-def is_trending_up(df: pd.DataFrame, window: int = 50) -> pd.Series:
-    """
-    Detect uptrend by checking if close price is above EMA.
-    Returns a boolean pd.Series indicating uptrend periods.
-    """
+# --- BOOL HELPERS ---
+@register_block('bool_helper', 'TRENDING_UP')
+def is_trending_up(df: pd.DataFrame, window: int = 50, **kwargs) -> pd.Series:
     ema = get_ema(df, window)
     return df['close'] > ema
 
-def is_trending_down(df: pd.DataFrame, window: int = 50) -> pd.Series:
-    """
-    Detect downtrend by checking if close price is below EMA.
-    Returns a boolean pd.Series indicating downtrend periods.
-    """
+@register_block('bool_helper', 'TRENDING_DOWN')
+def is_trending_down(df: pd.DataFrame, window: int = 50, **kwargs) -> pd.Series:
     ema = get_ema(df, window)
     return df['close'] < ema
 
-def is_volatile(df: pd.DataFrame, window: int = 14, threshold: float = 1.5) -> pd.Series:
-    """
-    Identify high volatility periods using ATR compared to its SMA.
-    Returns a boolean pd.Series where ATR exceeds its SMA multiplied by threshold.
-    """
+@register_block('bool_helper', 'VOLATILE')
+def is_volatile(df: pd.DataFrame, window: int = 14, threshold: float = 1.5, **kwargs) -> pd.Series:
     atr = ta.atr(high=df['high'], low=df['low'], close=df['close'], length=window)
     atr_sma = ta.sma(atr, length=window)
     return atr > atr_sma * threshold
 
-def volume_spike(df: pd.DataFrame, window: int = 20, threshold: float = 2.0) -> pd.Series:
-    """
-    Detect volume spikes where current volume exceeds its SMA multiplied by threshold.
-    Returns a boolean pd.Series indicating volume spike periods.
-    """
+@register_block('bool_helper', 'VOLUME_SPIKE')
+def volume_spike(df: pd.DataFrame, window: int = 20, threshold: float = 2.0, **kwargs) -> pd.Series:
     vol_sma = ta.sma(df['volume'], length=window)
     return df['volume'] > vol_sma * threshold
 
 if __name__ == "__main__":
     print("GP Blocks library loaded.")
-
-# Example usage:
-# buy_signal = and_op(
-#     is_trending_up(df, 50),
-#     cross_up(get_rsi(df, 14), 30)
-# )
+    print("Registered Blocks:", BLOCK_REGISTRY)
