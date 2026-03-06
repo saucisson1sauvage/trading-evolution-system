@@ -462,7 +462,8 @@
       "validation_tier": -1,
       "debuffed_fitness": 8.099,
       "role": "mutant",
-      "generation_age": 0
+      "generation_age": 0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -520,15 +521,12 @@
                   {
                     "primitive": "LESS_THAN",
                     "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 24
-                      }
+                      "constant": 100
                     },
                     "right": {
                       "primitive": "SMA",
                       "parameters": {
-                        "window": 33
+                        "window": 24
                       }
                     }
                   }
@@ -540,13 +538,10 @@
                   {
                     "primitive": "CROSS_DOWN",
                     "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 46
-                      }
+                      "constant": 31.72
                     },
                     "right": {
-                      "constant": 31.72
+                      "constant": 57.31
                     }
                   },
                   {
@@ -563,7 +558,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {

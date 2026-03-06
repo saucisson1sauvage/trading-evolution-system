@@ -1,32 +1,109 @@
 {
   "entry_tree": {
-    "primitive": "VOLATILE",
-    "parameters": {
-      "window": 28,
-      "threshold": 1.62
-    }
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 19,
+                  "threshold": 2.1
+                }
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 16
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 48.0
+                },
+                "right": {
+                  "constant": 63.73
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   "exit_tree": {
     "operator": "AND",
     "children": [
       {
-        "primitive": "GREATER_THAN",
+        "primitive": "CROSS_UP",
         "left": {
-          "constant": 68.42
+          "primitive": "SMA",
+          "parameters": {
+            "window": 11
+          }
         },
         "right": {
-          "constant": 49.7
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 21,
+            "std": 2.0
+          }
         }
       },
       {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 48
-        }
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 30.67
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 32
+              }
+            }
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 11
+                  }
+                },
+                "right": {
+                  "constant": 45.55
+                }
+              },
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 9
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "ai_fixed": true
 }
