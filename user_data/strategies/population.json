@@ -1003,13 +1003,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 18
+            "window": 20
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 19
+            "window": 21
           }
         }
       },
@@ -1018,17 +1018,17 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 18
+            "window": 20
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 19
+            "window": 21
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1151,7 +1151,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1178,7 +1178,7 @@
           "threshold": 30.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1305,7 +1305,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
