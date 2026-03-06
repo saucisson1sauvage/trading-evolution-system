@@ -1,33 +1,66 @@
 {
   "entry_tree": {
-    "primitive": "OR",
-    "left": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
-      }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
-      }
+    "primitive": "EMA",
+    "parameters": {
+      "window": 21
     }
   },
   "exit_tree": {
-    "primitive": "OR",
-    "left": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 31,
+                "std": 3.0
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 17,
+                "std": 1.8
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 45
+            }
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 16000.0
+            },
+            "right": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 42,
+                "std": 2.4
+              }
+            }
+          }
+        ]
       }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
-      }
-    }
+    ]
   },
   "fitness": -1.0,
   "ai_fixed": true
