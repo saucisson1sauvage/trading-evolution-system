@@ -114,6 +114,40 @@
     "generation_age": 0
   },
   {
+    "lineage_id": "1bab7ca3-8f71-41f2-b2aa-9da82a9e32a0",
+    "entry_tree": {
+      "operator": "NOT",
+      "children": [
+        {
+          "primitive": "GREATER_THAN",
+          "left": {
+            "primitive": "EMA",
+            "parameters": {
+              "window": 37
+            }
+          },
+          "right": {
+            "primitive": "CLOSE",
+            "parameters": {
+              "window": 35
+            }
+          }
+        }
+      ]
+    },
+    "exit_tree": {
+      "primitive": "VOLATILE",
+      "parameters": {
+        "window": 22,
+        "threshold": 1.41
+      }
+    },
+    "fitness": 7.156306566972354,
+    "generation_age": 1,
+    "debuff_active_gens": 0,
+    "status": "king"
+  },
+  {
     "entry_tree": {
       "primitive": "VOLUME_SPIKE",
       "parameters": {
@@ -130,26 +164,5 @@
     "generation_age": 0,
     "fitness": 6.254432448897558,
     "debuffed_fitness": 6.254432448897558
-  },
-  {
-    "entry_tree": {
-      "primitive": "VOLUME_SPIKE",
-      "parameters": {
-        "window": 15
-      }
-    },
-    "exit_tree": {
-      "primitive": "VOLUME_SPIKE",
-      "parameters": {
-        "window": 17
-      }
-    },
-    "role": "king",
-    "generation_age": 1,
-    "fitness": 6.254432448897558,
-    "debuffed_fitness": 6.254432448897558,
-    "lineage_id": "7cd604e6-289f-40e4-ba21-2ce9d0eadcb9",
-    "status": "king",
-    "debuff_active_gens": 0
   }
 ]

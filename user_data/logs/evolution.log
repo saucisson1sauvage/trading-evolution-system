@@ -1110,3 +1110,20 @@
 2026-03-06 22:50:01,078 | INFO |   > FAIL: Aggregated Trades: 28, Profit: -1.01% -> Fitness: 0.0000
 2026-03-06 22:50:01,079 | INFO |   > VAULT UPDATED. Top strategy fitness: 8.0990
 2026-03-06 22:50:01,079 | INFO | KING FITNESS: 6.2544 | Lineage: 7cd604e6 | Age: 1
+--- TEST START 1772840939 ---
+2026-03-07 00:48:59,941 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-07 00:48:59,941 | INFO | --- Generation 345 ---
+2026-03-07 00:48:59,944 | INFO | Evaluating Individual 1/6 (king)...
+2026-03-07 00:49:22,607 | INFO |   > SUCCESS: Aggregated Trades: 83, Profit: 0.5599999999999995%, Avg Sharpe: 1.31, Max DD: 2.5% -> Fitness: 0.9273
+2026-03-07 00:49:22,607 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-07 00:49:44,219 | INFO |   > SUCCESS: Aggregated Trades: 52, Profit: 3.280000000000001%, Avg Sharpe: 1.39, Max DD: 1.89% -> Fitness: 6.2544
+2026-03-07 00:49:44,219 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-07 00:50:06,961 | INFO |   > SUCCESS: Aggregated Trades: 52, Profit: 3.280000000000001%, Avg Sharpe: 1.39, Max DD: 1.89% -> Fitness: 6.2544
+2026-03-07 00:50:06,962 | INFO | Evaluating Individual 4/6 (outsider)...
+2026-03-07 00:50:29,381 | INFO |   > FAIL: Aggregated Trades: 560, Profit: -7.719999999999999% -> Fitness: 0.0000
+2026-03-07 00:50:29,381 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-07 00:50:52,258 | INFO |   > SUCCESS: Aggregated Trades: 32, Profit: 4.14%, Avg Sharpe: 1.14, Max DD: 1.31% -> Fitness: 7.1563
+2026-03-07 00:50:52,258 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-07 00:51:12,627 | INFO |   > FAIL: Aggregated Trades: 3, Profit: -0.1% -> Fitness: 0.0000
+2026-03-07 00:51:12,631 | INFO |   > VAULT UPDATED. Top strategy fitness: 8.0990
+2026-03-07 00:51:12,631 | INFO | KING FITNESS: 7.1563 | Lineage: 1bab7ca3 | Age: 1

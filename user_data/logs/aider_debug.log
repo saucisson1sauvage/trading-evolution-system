@@ -32,3 +32,20 @@
 [2026-03-06 22:49:18] Slot 4 (outsider) evaluated with fitness 0.0000
 [2026-03-06 22:49:39] Slot 5 (outsider) evaluated with fitness 0.0000
 [2026-03-06 22:50:01] Slot 6 (outsider) evaluated with fitness 0.0000
+[2026-03-07 00:48:59] --- STARTING GENERATION 345 ---
+[2026-03-07 00:48:59] Vault loaded with 3 lineages
+[2026-03-07 00:48:59] Slot 1: Mutated King from lineage f2affd61, Age incremented to 1
+[2026-03-07 00:48:59] Slot 2: Mutated Candidate from lineage 20367923, debuff_active_gens=1
+[2026-03-07 00:48:59] Slot 3: Mutated Candidate from lineage 7cd604e6, debuff_active_gens=1
+[2026-03-07 00:48:59] Generated guided outsider with lineage a55d00ee
+[2026-03-07 00:48:59] Slot 4: Guided AI Outsider lineage a55d00ee
+[2026-03-07 00:48:59] Generated alien outsider with lineage 1bab7ca3
+[2026-03-07 00:48:59] Slot 5: Alien AI Outsider lineage 1bab7ca3
+[2026-03-07 00:48:59] Generated alien outsider with lineage 4167121d
+[2026-03-07 00:48:59] Slot 6: Alien AI Outsider lineage 4167121d
+[2026-03-07 00:49:22] Slot 1 (king) evaluated with fitness 0.9273
+[2026-03-07 00:49:44] Slot 2 (candidate) evaluated with fitness 6.2544
+[2026-03-07 00:50:06] Slot 3 (candidate) evaluated with fitness 6.2544
+[2026-03-07 00:50:29] Slot 4 (outsider) evaluated with fitness 0.0000
+[2026-03-07 00:50:52] Slot 5 (outsider) evaluated with fitness 7.1563
+[2026-03-07 00:51:12] Slot 6 (outsider) evaluated with fitness 0.0000
