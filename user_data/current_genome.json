@@ -1,52 +1,73 @@
 {
   "entry_tree": {
+    "operator": "NOT",
+    "children": [
+      {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "constant": 68.15
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 22
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
     "operator": "AND",
     "children": [
       {
         "operator": "OR",
         "children": [
           {
-            "primitive": "VOLUME_SPIKE",
+            "primitive": "TRENDING_UP",
             "parameters": {
-              "window": 29
+              "window": 31
             }
           },
           {
-            "primitive": "CROSS_UP",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 31,
-                "std": 2.8
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 23.36
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 49,
+                    "std": 1.9
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 12
+                }
               }
-            },
-            "right": {
-              "constant": 51.97
-            }
+            ]
           }
         ]
       },
       {
-        "primitive": "TRENDING_UP",
-        "parameters": {
-          "window": 30
-        }
-      }
-    ]
-  },
-  "exit_tree": {
-    "operator": "NOT",
-    "children": [
-      {
         "operator": "NOT",
         "children": [
           {
-            "primitive": "LESS_THAN",
+            "primitive": "GREATER_THAN",
             "left": {
-              "constant": 48.77
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 15,
+                "std": 2.5
+              }
             },
             "right": {
-              "constant": 23.09
+              "constant": 47.83
             }
           }
         ]

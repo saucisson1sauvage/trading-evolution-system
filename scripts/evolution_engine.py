@@ -6,6 +6,7 @@ import logging
 import subprocess
 import re
 import math
+import datetime
 from typing import Dict, Any, List, Tuple
 from pathlib import Path
 import sys
@@ -136,6 +137,11 @@ def apply_structural_mutation(tree: Dict[str, Any]):
             target.update(new_sub)
             break
 
+def get_similarity_hash(genome: dict) -> str:
+    """Creates a structural hash of the genome by rounding all floats to integers, preventing 99% identical clones."""
+    raw_str = json.dumps({"entry": genome["entry_tree"], "exit": genome["exit_tree"]})
+    return re.sub(r'(\d+\.\d+)', lambda m: str(round(float(m.group(1)))), raw_str)
+
 def save_to_vault(king: dict):
     vault = []
     if VAULT_FILE.exists():
@@ -145,12 +151,18 @@ def save_to_vault(king: dict):
         except Exception:
             pass
     
-    # Check if king is already in vault by exact structure (using json dumps)
-    king_str = json.dumps({"entry": king["entry_tree"], "exit": king["exit_tree"]})
-    for v in vault:
-        v_str = json.dumps({"entry": v["entry_tree"], "exit": v["exit_tree"]})
-        if v_str == king_str:
-            return # Already in vault
+    king_hash = get_similarity_hash(king)
+    for i, v in enumerate(vault):
+        v_hash = get_similarity_hash(v)
+        if v_hash == king_hash:
+            # Overwrite clone if new king is strictly better
+            if king.get("fitness", 0.0) > v.get("fitness", 0.0):
+                vault[i] = copy.deepcopy(king)
+                vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
+                with open(VAULT_FILE, 'w') as f:
+                    json.dump(vault, f, indent=2)
+                logging.info(f"  > VAULT UPDATED (Overwrote clone). Top fitness: {vault[0].get('fitness', 0.0):.4f}")
+            return # Already in vault as clone
 
     vault.append(copy.deepcopy(king))
     vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
@@ -163,7 +175,12 @@ def save_to_vault(king: dict):
         json.dump(vault, f, indent=2)
     logging.info(f"  > VAULT UPDATED. Top strategy fitness: {vault[0].get('fitness', 0.0):.4f}")
 
-def run_evolution_round(genome: dict, timerange: str = "20240801-20250201") -> float:
+def run_evolution_round(genome: dict, timerange: str = None) -> float:
+    if not timerange:
+        end_date = datetime.datetime.now()
+        start_date = end_date - datetime.timedelta(days=180)
+        timerange = f"{start_date.strftime('%Y%m%d')}-{end_date.strftime('%Y%m%d')}"
+
     CURRENT_GENOME_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(CURRENT_GENOME_FILE, 'w') as f:
         json.dump(genome, f, indent=2)
@@ -260,7 +277,7 @@ def run_loop(gens=50):
         for i, ind in enumerate(population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('role', 'unknown')})...")
-                fit = run_evolution_round(ind, timerange="20240801-20250201")
+                fit = run_evolution_round(ind)
                 ind["fitness"] = fit
                 
         # Calculate debuffed fitness

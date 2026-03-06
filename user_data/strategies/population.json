@@ -342,55 +342,50 @@
                 "operator": "AND",
                 "children": [
                   {
-                    "operator": "AND",
-                    "children": [
-                      {
-                        "primitive": "GREATER_THAN",
-                        "left": {
-                          "primitive": "EMA",
-                          "parameters": {
-                            "window": 9
-                          }
-                        },
-                        "right": {
-                          "primitive": "RSI",
-                          "parameters": {
-                            "window": 31
-                          }
-                        }
-                      },
-                      {
-                        "primitive": "CROSS_DOWN",
-                        "left": {
-                          "primitive": "RSI",
-                          "parameters": {
-                            "window": 19
-                          }
-                        },
-                        "right": {
-                          "constant": 36.12
-                        }
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 40.0
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 30
                       }
-                    ]
+                    }
                   },
                   {
-                    "operator": "NOT",
-                    "children": [
-                      {
-                        "primitive": "TRENDING_DOWN",
-                        "parameters": {
-                          "window": 35
-                        }
-                      }
-                    ]
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "constant": 36.12
+                    },
+                    "right": {
+                      "constant": 79.78
+                    }
                   }
                 ]
               },
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 45
-                }
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "constant": 26.46
+                    },
+                    "right": {
+                      "constant": 68.28
+                    }
+                  },
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 45.0
+                    },
+                    "right": {
+                      "constant": 34.14
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -421,10 +416,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 10
-                      }
+                      "constant": 40.0
                     },
                     "right": {
                       "constant": 34.14
@@ -456,75 +448,180 @@
       "validation_tier": -1,
       "debuffed_fitness": 8.099,
       "role": "mutant",
-      "generation_age": 0
+      "generation_age": 0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
-        "operator": "NOT",
+        "operator": "AND",
+        "left": {
+          "primitive": "VOLUME_SPIKE",
+          "parameters": {
+            "window": 48
+          }
+        },
+        "right": {
+          "operator": "OR",
+          "children": [
+            {
+              "operator": "NOT",
+              "children": [
+                {
+                  "primitive": "CROSS_UP",
+                  "left": {
+                    "primitive": "BB_MIDDLE",
+                    "parameters": {
+                      "window": 22,
+                      "std": 1.6
+                    }
+                  },
+                  "right": {
+                    "primitive": "RSI",
+                    "parameters": {
+                      "window": 12
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "operator": "AND",
+              "children": [
+                {
+                  "primitive": "GREATER_THAN",
+                  "left": {
+                    "constant": 50.0
+                  },
+                  "right": {
+                    "primitive": "BB_LOWER",
+                    "parameters": {
+                      "window": 19,
+                      "std": 1.6
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "exit_tree": {
+        "primitive": "OR",
         "children": [
           {
-            "operator": "NOT",
+            "operator": "AND",
             "children": [
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 28,
-                  "threshold": 1.87
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 37.1
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 29,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 55.18
+                },
+                "right": {
+                  "constant": 27.0
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 69.75
+                },
+                "right": {
+                  "constant": 25.92
                 }
               }
             ]
           }
         ]
       },
-      "exit_tree": {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 9
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 15
-          }
-        }
-      },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
-            "primitive": "LESS_THAN",
+            "primitive": "GREATER_THAN",
             "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 27
-              }
+              "constant": 60.96
             },
             "right": {
-              "primitive": "BB_LOWER",
-              "parameters": {
-                "window": 46,
-                "std": 2.6
-              }
+              "constant": 62.12
             }
           },
           {
-            "operator": "NOT",
+            "operator": "OR",
             "children": [
               {
-                "primitive": "LESS_THAN",
+                "primitive": "AND",
+                "children": [
+                  {
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 27
+                      }
+                    },
+                    "right": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 46,
+                        "std": 2.6
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 60.96
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 32
+                  }
                 },
                 "right": {
-                  "constant": 62.12
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 41
+                  }
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 38,
+                    "std": 2.7
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 31
+                  }
                 }
               }
             ]
@@ -580,7 +677,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
