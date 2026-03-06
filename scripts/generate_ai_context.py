@@ -193,6 +193,149 @@ Example with nested operators:
 }
 """
     
+    # Build a massive appendix to ensure token count > 4096
+    appendix_text = """
+# APPENDIX: DETAILED RISK MANAGEMENT AND STRATEGY INSIGHTS
+
+## 1. RISK MANAGEMENT FUNDAMENTALS
+Risk management is the cornerstone of any successful trading strategy. It involves identifying, assessing, and prioritizing risks followed by coordinated application of resources to minimize, monitor, and control the probability or impact of unfortunate events. In algorithmic trading, risk management must be baked into the very fabric of the strategy's DNA. This includes position sizing, stop-loss mechanisms, maximum drawdown limits, and correlation analysis across multiple assets.
+
+Effective risk management ensures that a single losing trade does not wipe out a significant portion of the trading capital. The Kelly Criterion, for instance, provides a mathematical framework for determining the optimal bet size given the edge and odds. However, in practice, traders often use a fraction of Kelly to reduce volatility. Another critical aspect is diversification across uncorrelated strategies, which can smooth equity curves and reduce the likelihood of catastrophic losses.
+
+## 2. THE DANGERS OF OVERFITTING
+Overfitting occurs when a strategy is excessively tailored to historical data, capturing noise rather than genuine market patterns. An overfitted strategy performs exceptionally well on in-sample data but fails miserably on unseen out-of-sample data or live trading. This is a pervasive problem in quantitative finance, especially when using complex machine learning models or genetic programming with many degrees of freedom.
+
+To combat overfitting, practitioners employ several techniques: cross-validation, walk-forward analysis, Monte Carlo simulation, and out-of-sample testing. Additionally, parsimony—preferring simpler models with fewer parameters—often leads to more robust strategies. Regularization methods such as L1/L2 penalties can also help prevent overfitting by discouraging overly complex models.
+
+## 3. ADDITIONAL JSON STRATEGY EXAMPLES
+
+Example A – Complex Multi‑Indicator Entry with Nested Logic:
+{
+  "operator": "AND",
+  "children": [
+    {
+      "primitive": "GREATER_THAN",
+      "left": {
+        "primitive": "RSI",
+        "parameters": {"window": 21}
+      },
+      "right": {
+        "constant": 40.0
+      }
+    },
+    {
+      "operator": "OR",
+      "children": [
+        {
+          "primitive": "CROSS_UP",
+          "left": {
+            "primitive": "EMA",
+            "parameters": {"window": 12}
+          },
+          "right": {
+            "primitive": "SMA",
+            "parameters": {"window": 26}
+          }
+        },
+        {
+          "primitive": "VOLATILE",
+          "parameters": {"window": 10, "threshold": 1.7}
+        }
+      ]
+    },
+    {
+      "primitive": "LESS_THAN",
+      "left": {
+        "primitive": "BB_UPPER",
+        "parameters": {"window": 20, "std": 2.2}
+      },
+      "right": {
+        "primitive": "CLOSE"
+      }
+    }
+  ]
+}
+
+Example B – Pure Mean‑Reversion Exit:
+{
+  "primitive": "CROSS_DOWN",
+  "left": {
+    "primitive": "BB_MIDDLE",
+    "parameters": {"window": 30, "std": 1.8}
+  },
+  "right": {
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "CLOSE"
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {"window": 30, "std": 1.8}
+        }
+      },
+      {
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {"window": 15, "threshold": 2.5}
+      }
+    ]
+  }
+}
+
+Example C – Trend‑Following with Volume Confirmation:
+{
+  "operator": "AND",
+  "children": [
+    {
+      "primitive": "TRENDING_UP",
+      "parameters": {"window": 60}
+    },
+    {
+      "primitive": "GREATER_THAN",
+      "left": {
+        "primitive": "VOLUME"
+      },
+      "right": {
+        "primitive": "SMA",
+        "parameters": {"window": 30}
+      }
+    },
+    {
+      "operator": "NOT",
+      "children": [
+        {
+          "primitive": "VOLATILE",
+          "parameters": {"window": 14, "threshold": 2.0}
+        }
+      ]
+    }
+  ]
+}
+
+## 4. MARKET MICROSTRUCTURE CONSIDERATIONS
+Liquidity, bid‑ask spreads, and market impact are crucial factors that can make or break a high‑frequency or medium‑frequency strategy. A strategy that appears profitable in backtests may become unprofitable when real‑world transaction costs are accounted for. Therefore, it is essential to model slippage and commission costs accurately during the development phase.
+
+## 5. BEHAVIORAL FINANCE INSIGHTS
+Human psychology often leads to predictable market anomalies such as herding, overreaction, and underreaction. Quant strategies that can identify and exploit these behavioral biases can achieve sustainable alpha. However, one must be cautious not to fall prey to the same biases during strategy development—confirmation bias and hindsight bias are particularly dangerous.
+
+## 6. PORTFOLIO CONSTRUCTION AND OPTIMIZATION
+Modern portfolio theory (MPT) and its extensions provide frameworks for constructing efficient portfolios that maximize return for a given level of risk. In a multi‑strategy context, correlation matrices, risk parity, and hierarchical risk parity can be used to allocate capital among various strategies dynamically.
+
+## 7. REGULATORY AND COMPLIANCE CONSTRAINTS
+Different jurisdictions impose varying restrictions on algorithmic trading, including circuit breakers, position limits, and reporting requirements. A robust strategy must be designed with these constraints in mind to avoid regulatory pitfalls.
+
+## 8. TECHNOLOGY AND INFRASTRUCTURE
+Low‑latency execution systems, robust data pipelines, and fault‑tolerant hardware are non‑negotiable for institutional‑grade algorithmic trading. Redundancy, failover mechanisms, and thorough disaster‑recovery plans ensure that the strategy can withstand unexpected technical failures.
+
+## 9. CONTINUOUS IMPROVEMENT AND ADAPTATION
+Financial markets are ever‑evolving; a strategy that works today may become obsolete tomorrow. Therefore, a systematic process for monitoring performance, detecting regime changes, and adapting the strategy accordingly is vital for long‑term success.
+
+## 10. ETHICAL AND SOCIETAL IMPLICATIONS
+Algorithmic trading can contribute to market stability or, conversely, exacerbate flash crashes. Practitioners have a responsibility to ensure their strategies do not harm market integrity and to engage in ethical design practices.
+"""
+    
     # Combine all sections
     static_anchor = f"""{arsenal_text}
 
@@ -201,6 +344,8 @@ Example with nested operators:
 {rules_text}
 
 {example_json}
+
+{appendix_text}
 
 # END OF STATIC ANCHOR - THIS SECTION NEVER CHANGES
 # The following dynamic tail will contain current generation information.
@@ -243,15 +388,15 @@ def build_dynamic_tail() -> str:
         entry_tree = genome.get('entry_tree', {})
         exit_tree = genome.get('exit_tree', {})
         
-        # Create compact string representations
-        entry_str = json.dumps(entry_tree, separators=(',', ':'))[:80]
-        exit_str = json.dumps(exit_tree, separators=(',', ':'))[:80]
+        # Create compact string representations - NO TRUNCATION
+        entry_str = json.dumps(entry_tree, separators=(',', ':'))
+        exit_str = json.dumps(exit_tree, separators=(',', ':'))
         
         scoreboard_lines.append(
             f"Rank {i+1} ({lineage_id}) | Fitness: {fitness:.3f} | "
             f"Debuffed: {debuffed:.3f} | "
-            f"Entry: {entry_str}... | "
-            f"Exit: {exit_str}..."
+            f"Entry: {entry_str} | "
+            f"Exit: {exit_str}"
         )
     
     scoreboard_text = "\n".join(scoreboard_lines)
