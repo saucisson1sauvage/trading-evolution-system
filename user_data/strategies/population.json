@@ -1212,7 +1212,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1227,7 +1227,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1364,7 +1364,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
