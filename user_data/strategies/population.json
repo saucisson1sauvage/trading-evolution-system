@@ -1241,7 +1241,7 @@
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1250,14 +1250,14 @@
         "left": {
           "primitive": "BB_LOWER",
           "parameters": {
-            "window": 25,
+            "window": 26,
             "std": 2.1
           }
         },
         "right": {
           "primitive": "BB_LOWER",
           "parameters": {
-            "window": 26,
+            "window": 27,
             "std": 2.2
           }
         }
@@ -1289,7 +1289,7 @@
                     "right": {
                       "primitive": "BB_MIDDLE",
                       "parameters": {
-                        "window": 12,
+                        "window": 13,
                         "std": 2.9
                       }
                     }
@@ -1331,7 +1331,7 @@
                     "right": {
                       "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 26,
+                        "window": 27,
                         "std": 2.2
                       }
                     }
@@ -1349,7 +1349,7 @@
                 "left": {
                   "primitive": "SMA",
                   "parameters": {
-                    "window": 26
+                    "window": 27
                   }
                 },
                 "right": {
@@ -1421,7 +1421,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     }
   ]
