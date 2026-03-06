@@ -1096,13 +1096,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 30
+            "window": 34
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 34
+            "window": 30
           }
         }
       },
@@ -1111,17 +1111,17 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 30
+            "window": 34
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 34
+            "window": 30
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1354,7 +1354,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 2200.0
+                  "constant": 2500.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1368,7 +1368,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
