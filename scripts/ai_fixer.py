@@ -69,6 +69,11 @@ class AIGenomeFixer:
 
         prompt = f"""You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades or is failing.
 The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+### CRITICAL GOAL: INCREASE TRADE FREQUENCY
+We want strategies that trigger MANY trades across the 6-month period. A strategy with only 1-2 "lucky" trades is considered a failure. 
+Adjust constants and operators to ensure the strategy finds consistent entry points. 
+
 {hof_context}
 ### CURRENT FAILED GENOME TO FIX:
 {json.dumps(genome, indent=2)}
@@ -76,9 +81,10 @@ The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inc
 ### RULES:
 1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
 2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
-3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
-4. Use the provided EXAMPLES to see what profitable logic looks like.
-5. Output nothing but raw JSON.
+3. Common fix: Change LESS_THAN constant to a higher value, change GREATER_THAN to a lower value, or change AND to OR.
+4. Aim for logic that triggers at least 20-50 trades in 6 months.
+5. Use the provided EXAMPLES to see what profitable, active logic looks like.
+6. Output nothing but raw JSON.
 """
 
         payload = {

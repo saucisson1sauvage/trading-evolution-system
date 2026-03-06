@@ -23,6 +23,5 @@ while true; do
     git commit -m "Auto-Update: Gen Complete + AI Fix Applied"
     git push origin main
     
-    echo "✅ Cycle Complete. Waiting 10 seconds before next generation..."
-    sleep 10
+    echo "✅ Cycle Complete. Starting next generation immediately..."
 done
