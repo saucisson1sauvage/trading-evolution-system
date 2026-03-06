@@ -288,39 +288,17 @@ def run_loop(gens=50, pop_size=20):
         
         # Evaluate & Validate
         for i, ind in enumerate(population):
-            # 1. Base Evaluation (Bull)
+            # 1. Base Evaluation (All Data - 6 Months)
             if ind.get("fitness", -1.0) < 0:
-                logging.info(f"Evaluating Individual {i+1}/{pop_size} (BULL)...")
-                ind["fitness"] = run_evolution_round(ind, timerange="20241105-20241205", is_validation=False)
-                # If profitable in Bull, push to validation queue
-                ind["validation_tier"] = 1 if ind["fitness"] > 0 else 0
-            
-            # 2. Tiered Validation (Gauntlet)
-            while ind.get("validation_tier", 0) > 0 and ind.get("validation_tier", 0) < 4:
-                tier = ind["validation_tier"]
-                if tier == 1:
-                    logging.info(f"  > GAUNTLET: Testing Bear Market...")
-                    val_fit = run_evolution_round(ind, timerange="20250110-20250125", is_validation=True)
-                elif tier == 2:
-                    logging.info(f"  > GAUNTLET: Testing Crash Market...")
-                    val_fit = run_evolution_round(ind, timerange="20240804-20240808", is_validation=True)
-                elif tier == 3:
-                    logging.info(f"  > GAUNTLET: Testing Sideways Market...")
-                    val_fit = run_evolution_round(ind, timerange="20241215-20250105", is_validation=True)
+                logging.info(f"Evaluating Individual {i+1}/{pop_size} (ALL DATA: 20240801-20250201)...")
+                ind["fitness"] = run_evolution_round(ind, timerange="20240801-20250201", is_validation=False)
                 
-                if val_fit > 0:
-                    ind["validation_tier"] += 1
-                    if ind["validation_tier"] == 4:
-                        logging.info(f"  > 🏆 SURVIVED THE GAUNTLET! All-Weather Strategy Found.")
-                        # Save to Hall of Fame
-                        hof_file = "ai_success_hall_of_fame.log" if ind.get("ai_fixed") else "hall_of_fame.log"
-                        with open(PROJECT_ROOT / f"user_data/logs/{hof_file}", "a") as f:
-                             f.write(json.dumps({"fitness": ind["fitness"], "genome": ind, "note": "All-Weather Survivor"}) + "\n")
-                        break
-                else:
-                    logging.warning(f"  > Gauntlet Failed at tier {tier}. Returning to base pool.")
-                    ind["validation_tier"] = -1 # Failed validation, but keep its Bull fitness for reproduction
-                    break
+                # If profitable over 6 months, it's a huge win
+                if ind["fitness"] > 0:
+                    logging.info(f"  > 🏆 PROFITABLE 6-MONTH STRATEGY FOUND! Saving to Hall of Fame.")
+                    hof_file = "ai_success_hall_of_fame.log" if ind.get("ai_fixed") else "hall_of_fame.log"
+                    with open(PROJECT_ROOT / f"user_data/logs/{hof_file}", "a") as f:
+                         f.write(json.dumps({"fitness": ind["fitness"], "genome": ind, "note": "6-Month All-Data Survivor"}) + "\n")
         
         population.sort(key=lambda x: x.get("fitness", -999.0), reverse=True)
         best = population[0]
