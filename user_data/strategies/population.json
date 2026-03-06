@@ -250,57 +250,133 @@
     },
     {
       "entry_tree": {
-        "primitive": "TRENDING_DOWN",
+        "primitive": "VOLUME_SPIKE",
         "parameters": {
-          "window": 14
+          "window": 48
         }
       },
       "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 35
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "primitive": "BB_MIDDLE",
+                      "parameters": {
+                        "window": 22,
+                        "std": 1.6
+                      }
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 12
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "CROSS_UP",
+                "left": {
+                  "constant": 75.71
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 19,
+                    "std": 1.6
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 37.1
+                    },
+                    "right": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 29,
+                        "std": 2.3
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 55.18
+                    },
+                    "right": {
+                      "constant": 27.0
+                    }
+                  },
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "constant": 69.75
+                    },
+                    "right": {
+                      "constant": 25.92
+                    }
+                  }
+                ]
+              }
+            ]
           }
-        },
-        "right": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 44,
-            "std": 2.6
-          }
-        }
+        ]
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 33,
-            "std": 2.6
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 9
-          }
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {
+          "window": 12
         }
       },
       "exit_tree": {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 45
+        "primitive": "AND",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 34,
+            "std": 1.9
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 36
+          }
         }
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
