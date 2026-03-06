@@ -944,7 +944,7 @@
           }
         },
         "right": {
-          "constant": 70.0
+          "constant": 80.0
         }
       },
       "exit_tree": {
@@ -1082,7 +1082,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1109,7 +1109,7 @@
           "threshold": 2.5
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1135,7 +1135,7 @@
           "window": 12
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1459,7 +1459,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
