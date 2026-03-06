@@ -1179,11 +1179,11 @@
       "entry_tree": {
         "primitive": "EMA",
         "parameters": {
-          "window": 60
+          "window": 80
         }
       },
       "exit_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "parameters": {
           "window": 12
         },
@@ -1202,7 +1202,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1564,7 +1564,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
