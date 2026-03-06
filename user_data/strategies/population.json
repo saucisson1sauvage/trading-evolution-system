@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1189,7 +1189,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "parameters": {
           "window": 12
         },
@@ -1416,7 +1416,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
