@@ -25,8 +25,8 @@ The system is divided into two distinct halves:
 - **Regex Parsing**: `evolution_engine.py` extracts backtest results by parsing the `STDOUT` terminal table via Regex, rather than relying on Freqtrade's fragile JSON export paths.
 
 ## 4. Recent Progress & Immediate Mission
-- **Recently Completed**: Restored Deep Genetic Programming Logic. The `evolution_engine.py` now supports recursive tree generation, Crossover (sub-branch swapping), Point/Subtree Mutation, and Population Persistence (`population.json`). The pipeline is fully verified with a 2-individual test run and successful Git synchronization.
-- **Current Mission**: Expand the Primitive Library and Tune the Fitness Function. We must integrate all functions from `gp_blocks.py` (e.g., `is_trending_up`, `is_volatile`, `volume_spike`) into the `GPTreeStrategy.py` evaluation loop. Additionally, we need to improve the fitness function to penalize Drawdown and reward high Sharpe/Sortino ratios, rather than just raw profit and trade count. Finally, start a 100-generation evolution run on `ETH/USDT` 5m data.
+- **Recently Completed**: Transitioned to "All-Weather" testing logic. Strategies are now evaluated on a full 6-month dataset (2024-08 to 2025-02) covering Bull, Bear, and Crash regimes. Fixed Freqtrade caching bugs by adding `--cache none`. Integrated local AI support via **Ollama (qwen2.5-coder:1.5b)** for 0-cost, private logic fixing.
+- **Current Mission**: Implement the "Reinforcement Learning" feedback loop. The `ai_fixer.py` must ingest the `ai_success_hall_of_fame.log` to provide "few-shot" examples of profitable strategies to the local LLM. This ensures the AI learns which "Lego" combinations actually work in the real market. Goal is 1,000 generations of stable, autonomous local evolution.
 
 ## 5. Constraints & Protocols
 - **Trading Target**: Currently optimized for `ETH/USDT` on Binance Spot.

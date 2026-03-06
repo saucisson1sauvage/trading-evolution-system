@@ -10,6 +10,7 @@ from typing import Dict, List, Optional
 # Setup absolute paths
 PROJECT_ROOT = Path("/home/saus/crypto-crew-4.0")
 POPULATION_FILE = PROJECT_ROOT / "user_data/strategies/population.json"
+HOF_FILE = PROJECT_ROOT / "user_data/logs/ai_success_hall_of_fame.log"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/ai_fixer.log"
 DEEP_LOG_FILE = PROJECT_ROOT / "user_data/logs/ai_fixer_detailed.log"
 
@@ -28,32 +29,62 @@ def deep_log(tag: str, data: str):
 
 class AIGenomeFixer:
     def __init__(self):
-        # Using local Ollama instead of OpenRouter
         self.active = True
         self.api_url = "http://localhost:11434/v1/chat/completions"
         self.model = "qwen2.5-coder:1.5b"
-        logging.info(f"AI Fixer initialized with local Ollama ({self.model}).")
+        self.hall_of_fame_examples = self._load_hall_of_fame()
+        logging.info(f"AI Fixer initialized with local Ollama ({self.model}). Loaded {len(self.hall_of_fame_examples)} HOF examples.")
+
+    def _load_hall_of_fame(self) -> List[str]:
+        """Load the best performing AI-fixed genomes to use as examples."""
+        examples = []
+        if HOF_FILE.exists():
+            try:
+                with open(HOF_FILE, 'r') as f:
+                    lines = f.readlines()
+                    # Take up to 3 random high-performing examples
+                    if lines:
+                        selected_lines = random.sample(lines, min(len(lines), 3))
+                        for line in selected_lines:
+                            data = json.loads(line)
+                            # Just keep the entry/exit logic to save context
+                            logic_only = {
+                                "entry_tree": data["genome"]["entry_tree"],
+                                "exit_tree": data["genome"]["exit_tree"],
+                                "profit": data.get("profit", "N/A")
+                            }
+                            examples.append(json.dumps(logic_only, indent=2))
+            except Exception as e:
+                logging.error(f"Failed to load Hall of Fame: {e}")
+        return examples
 
     def fix_genome(self, genome: Dict) -> Optional[Dict]:
         if not self.active: return None
         
-        prompt = f"""You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
-The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+        hof_context = ""
+        if self.hall_of_fame_examples:
+            hof_context = "\n### EXAMPLES OF PREVIOUS SUCCESSFUL GENOMES (THAT MADE PROFIT):\n"
+            hof_context += "\n---\n".join(self.hall_of_fame_examples)
+            hof_context += "\n\n"
 
-Current Genome:
+        prompt = f"""You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades or is failing.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+{hof_context}
+### CURRENT FAILED GENOME TO FIX:
 {json.dumps(genome, indent=2)}
 
-Rules for fixing:
+### RULES:
 1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
 2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
 3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
-4. Output nothing but raw JSON.
+4. Use the provided EXAMPLES to see what profitable logic looks like.
+5. Output nothing but raw JSON.
 """
 
         payload = {
             "model": self.model,
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.5
+            "temperature": 0.4 # Slightly lower temp for more precision
         }
 
         deep_log("AI_PROMPT", prompt)
@@ -65,7 +96,6 @@ Rules for fixing:
             
             deep_log("AI_RAW_RESPONSE", content)
             
-            # Extract JSON if LLM added markdown despite instructions
             if "```json" in content:
                 content = content.split("```json")[1].split("```")[0]
             elif "```" in content:
@@ -91,17 +121,16 @@ Rules for fixing:
         population = data.get("individuals", [])
         fixed_count = 0
         
-        # Only fix the worst performers (fitness <= 0.0)
         for ind in population:
-            # We check if fitness is exactly 0.0 or the default -0.007 we were seeing
-            if (ind.get("fitness", 0) <= 0.0) and random.random() < 0.3: # Fix 30% of zero-performers
+            # Fix if fitness is 0 (no trades) or very low/negative
+            if (ind.get("fitness", 0) <= 0.0) and random.random() < 0.4:
                 logging.info("Attempting AI fix for zero-performing individual...")
                 fixed = self.fix_genome(ind)
                 if fixed and isinstance(fixed, dict) and "entry_tree" in fixed:
                     ind["entry_tree"] = fixed.get("entry_tree", ind["entry_tree"])
                     ind["exit_tree"] = fixed.get("exit_tree", ind["exit_tree"])
-                    ind["fitness"] = -1.0 # Force re-evaluation
-                    ind["ai_fixed"] = True # Flag to track LLM success
+                    ind["fitness"] = -1.0 
+                    ind["ai_fixed"] = True
                     fixed_count += 1
         
         if fixed_count > 0:
