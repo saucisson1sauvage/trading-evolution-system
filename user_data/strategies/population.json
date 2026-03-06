@@ -305,7 +305,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "GREATER_THAN",
+        "primitive": "AND",
         "left": {
           "primitive": "BB_MIDDLE",
           "parameters": {
@@ -322,7 +322,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
