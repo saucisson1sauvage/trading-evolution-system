@@ -1007,7 +1007,7 @@
           }
         },
         "right": {
-          "constant": 130.0
+          "constant": 140.0
         }
       },
       "exit_tree": {
@@ -1019,10 +1019,10 @@
           }
         },
         "right": {
-          "constant": 130.0
+          "constant": 140.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1172,7 +1172,7 @@
           "threshold": 2.5
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1339,7 +1339,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
