@@ -11,11 +11,11 @@ echo "This loop will run forever (or until you stop it)."
 while true; do
     # 0. Sync Latest Market Data (Sliding Window: Last 6 Months)
     echo "--- [DATA SYNC PHASE] ---"
-    /home/saus/freqtrade/.venv/bin/freqtrade download-data -p ETH/USDT BTC/USDT -t 1m 5m --days 180 --config "$PROJECT_ROOT/config.json" --userdir "$PROJECT_ROOT/user_data"
+    /home/saus/freqtrade/.venv/bin/freqtrade download-data -p ETH/USDT -t 1m 5m --days 180 --config "$PROJECT_ROOT/config.json" --userdir "$PROJECT_ROOT/user_data"
 
     # 1. Run Evolution Engine
     echo "--- [EVOLUTION PHASE] ---"
-    python3 -c "import sys; sys.path.append('scripts'); from evolution_engine import run_loop; run_loop(gens=$GENS_PER_RUN, pop_size=$POP_SIZE)"
+    python3 -c "import sys; sys.path.append('scripts'); from evolution_engine import run_loop; run_loop(gens=$GENS_PER_RUN)"
     
     # 2. Run AI Fixer (Fixes zero-trade genomes using LLM)
     echo "--- [AI FIX PHASE] ---"
