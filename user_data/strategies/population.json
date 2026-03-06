@@ -1109,14 +1109,14 @@
           "threshold": 2.5
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
         "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "BB_UPPER",
+          "primitive": "BB_LOWER",
           "parameters": {
             "window": 41,
             "std": 2.4
@@ -1135,7 +1135,7 @@
           "window": 12
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
