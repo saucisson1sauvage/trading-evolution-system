@@ -342,7 +342,7 @@
                 "operator": "AND",
                 "children": [
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "CROSS_UP",
                     "left": {
                       "primitive": "BB_UPPER",
                       "parameters": {
@@ -374,10 +374,35 @@
                 ]
               },
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 45
-                }
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 21,
+                        "std": 1.7
+                      }
+                    },
+                    "right": {
+                      "constant": 62.8
+                    }
+                  },
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 21,
+                        "std": 1.7
+                      }
+                    },
+                    "right": {
+                      "constant": 62.8
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -443,7 +468,8 @@
       "validation_tier": -1,
       "debuffed_fitness": 8.099,
       "role": "mutant",
-      "generation_age": 0
+      "generation_age": 0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
