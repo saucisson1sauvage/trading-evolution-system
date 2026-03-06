@@ -435,9 +435,24 @@ def run_loop(gens=50):
                 best_individual = copy.deepcopy(ind)
                 break
         
+        # Get king's age for debuff calculations
+        king_age = best_individual.get("generation_age", 0)
+        
+        # Calculate debuffed fitness for all individuals
+        for ind in next_population:
+            ind["debuffed_fitness"] = calculate_debuffed_fitness(ind, king_age)
+        
+        # Find maximum fitness among outsiders
+        outsiders = [ind for ind in next_population if ind.get("status") == "outsider"]
+        outsiders_max_fitness = max([ind.get("fitness", 0.0) for ind in outsiders]) if outsiders else 0.0
+        
+        # Check retirement for candidates and mutants
+        for ind in next_population:
+            check_retirement(ind, outsiders_max_fitness)
+        
         # Save best individual to Vault
         save_to_vault(best_individual)
-        logging.info(f"KING FITNESS: {best_individual['fitness']:.4f} | Lineage: {best_individual['lineage_id'][:8]} | Age: {best_individual.get('generation_age', 0)}")
+        logging.info(f"KING FITNESS: {best_individual['fitness']:.4f} | Lineage: {best_individual['lineage_id'][:8]} | Age: {king_age}")
         
         # Save population for next generation
         with open(POPULATION_FILE, 'w') as f:
