@@ -3,87 +3,43 @@
     "operator": "AND",
     "children": [
       {
-        "operator": "OR",
+        "operator": "NOT",
         "children": [
           {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "primitive": "EMA",
-                  "parameters": {
-                    "window": 12
-                  }
-                },
-                "right": {
-                  "constant": 38.36
-                }
-              },
-              {
-                "primitive": "LESS_THAN",
-                "left": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 13,
-                    "std": 1.8
-                  }
-                },
-                "right": {
-                  "constant": 30.38
-                }
-              }
-            ]
-          },
-          {
-            "primitive": "CROSS_DOWN",
-            "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 38
-              }
-            },
-            "right": {
-              "constant": 60.06
+            "primitive": "VOLATILE",
+            "parameters": {
+              "window": 13,
+              "threshold": 2.4
             }
           }
         ]
       },
       {
-        "primitive": "CROSS_UP",
+        "primitive": "LESS_THAN",
         "left": {
-          "primitive": "EMA",
+          "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 22
+            "window": 20,
+            "std": 2.0
           }
         },
         "right": {
-          "primitive": "BB_UPPER",
+          "primitive": "RSI",
           "parameters": {
-            "window": 34,
-            "std": 2.3
+            "window": 36
           }
         }
       }
     ]
   },
   "exit_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 30,
-        "std": 1.7
-      }
-    },
-    "right": {
-      "primitive": "SMA",
-      "parameters": {
-        "window": 40
-      }
+    "primitive": "TRENDING_UP",
+    "parameters": {
+      "window": 11
     }
   },
-  "role": "outsider",
+  "role": "mutant",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "debuffed_fitness": 6.254432448897558
 }
