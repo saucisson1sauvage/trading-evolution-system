@@ -1216,13 +1216,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 80
+            "window": 100
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 80
+            "window": 100
           }
         }
       },
@@ -1231,17 +1231,17 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 80
+            "window": 100
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 80
+            "window": 100
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
