@@ -4141,3 +4141,7 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 10:33:19,769 | INFO |   > SUCCESS: Trades: 1, Profit: 0.3%, Sharpe: -100.0, DD: 0.0% -> Fitness: 0.0300
 2026-03-06 10:33:19,769 | INFO |   > 🏆 PROFITABLE 6-MONTH STRATEGY FOUND! Saving to Hall of Fame.
 2026-03-06 10:33:19,769 | INFO | BEST FITNESS: 8.0990
+2026-03-06 11:10:23,179 | INFO | STARTING 6-SLOT ROLE-BASED GP LOOP
+2026-03-06 11:10:23,180 | INFO | --- Generation 293 ---
+2026-03-06 11:10:23,180 | INFO | KING FITNESS: 8.0990
+2026-03-06 11:10:23,180 | INFO |   > VAULT UPDATED. Top strategy fitness: 8.0990

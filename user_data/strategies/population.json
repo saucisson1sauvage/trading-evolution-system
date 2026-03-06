@@ -109,7 +109,10 @@
         }
       },
       "fitness": 8.099,
-      "validation_tier": -1
+      "validation_tier": -1,
+      "debuffed_fitness": 8.099,
+      "role": "king",
+      "generation_age": 0
     },
     {
       "entry_tree": {
@@ -132,7 +135,7 @@
                 "right": {
                   "primitive": "RSI",
                   "parameters": {
-                    "window": 19
+                    "window": 20
                   }
                 }
               },
@@ -228,9 +231,12 @@
           }
         ]
       },
-      "fitness": 6.281,
+      "fitness": -1.0,
       "ai_fixed": true,
-      "validation_tier": -1
+      "validation_tier": -1,
+      "debuffed_fitness": 6.281,
+      "role": "candidate",
+      "generation_age": 1
     },
     {
       "entry_tree": {
@@ -245,7 +251,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 25.13
+                      "constant": 22.68
                     },
                     "right": {
                       "primitive": "EMA",
@@ -320,661 +326,158 @@
           "window": 45
         }
       },
-      "fitness": 4.1579999999999995
+      "fitness": -1.0,
+      "debuffed_fitness": 4.1579999999999995,
+      "role": "candidate",
+      "generation_age": 1
     },
     {
       "entry_tree": {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 14
-        }
-      },
-      "exit_tree": {
-        "operator": "NOT",
+        "operator": "OR",
         "children": [
           {
-            "operator": "NOT",
+            "operator": "OR",
             "children": [
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 28,
-                  "threshold": 1.35
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 4.0120000000000005
-    },
-    {
-      "entry_tree": {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "operator": "OR",
+                "operator": "AND",
                 "children": [
                   {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 14,
-                      "threshold": 1.35
+                    "primitive": "LESS_THAN",
+                    "left": {
+                      "primitive": "BB_MIDDLE",
+                      "parameters": {
+                        "window": 11,
+                        "std": 2.9
+                      }
+                    },
+                    "right": {
+                      "constant": 62.8
                     }
                   },
                   {
-                    "primitive": "CROSS_DOWN",
+                    "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 43.0
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 21,
+                        "std": 1.7
+                      }
                     },
                     "right": {
-                      "constant": 64.53
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 9,
+                        "std": 2.3
+                      }
                     }
                   }
                 ]
               },
               {
-                "primitive": "LESS_THAN",
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 45
+                }
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
                 "left": {
-                  "constant": 49.07
+                  "constant": 36.23
                 },
                 "right": {
-                  "primitive": "EMA",
-                  "parameters": {
-                    "window": 21
-                  }
+                  "constant": 79.78
                 }
+              },
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "constant": 26.46
+                    },
+                    "right": {
+                      "constant": 68.28
+                    }
+                  },
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "EMA",
+                      "parameters": {
+                        "window": 10
+                      }
+                    },
+                    "right": {
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 14,
+                        "std": 2.2
+                      }
+                    }
+                  }
+                ]
               }
             ]
           }
         ]
       },
       "exit_tree": {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 31
-        }
-      },
-      "fitness": 3.4519999999999995
-    },
-    {
-      "entry_tree": {
-        "primitive": "GREATER_THAN",
+        "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 48
-          }
+          "constant": 20.12
         },
         "right": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 28,
-            "std": 2.5
+            "window": 14,
+            "std": 1.8
           }
         }
       },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 40
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 29,
-                        "std": 2.8
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 12,
-                      "threshold": 1.45
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 43
-                      }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 27
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "primitive": "VOLUME_SPIKE",
-            "parameters": {
-              "window": 18
-            }
-          }
-        ]
-      },
-      "fitness": 1.932,
-      "ai_fixed": true
+      "fitness": -1.0,
+      "validation_tier": -1,
+      "debuffed_fitness": 8.099,
+      "role": "mutant",
+      "generation_age": 0
     },
     {
       "entry_tree": {
-        "primitive": "VOLUME_SPIKE",
-        "parameters": {
-          "window": 48
-        }
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 22,
-                        "std": 1.6
-                      }
-                    },
-                    "right": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 12
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 75.71
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 19,
-                    "std": 1.6
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "constant": 37.1
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 29,
-                        "std": 2.3
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "constant": 55.18
-                    },
-                    "right": {
-                      "constant": 27.0
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "constant": 69.75
-                    },
-                    "right": {
-                      "constant": 25.92
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.217,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 43
-                }
-              },
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 8
-                }
-              }
-            ]
-          },
-          {
-            "operator": "CROSS_DOWN",
-            "left": {
-              "constant": 62.08
-            },
-            "right": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 13,
-                "std": 1.9
-              }
-            }
-          }
-        ]
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 12,
-                      "threshold": 2.41
-                    }
-                  },
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 8
-                    }
-                  }
-                ]
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 35.0
-                },
-                "right": {
-                  "constant": "RSI",
-                  "parameters": {
-                    "window": 19
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 28.1
-                },
-                "right": {
-                  "constant": 24.06
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.21600000000000003,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 25,
-                  "threshold": 1.59
-                }
-              },
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 22,
-                        "std": 2.3
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 28,
-                        "std": 1.9
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "exit_tree": {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 69.15
-                },
-                "right": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 12
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.21000000000000002
-    },
-    {
-      "entry_tree": {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "primitive": "EMA",
-                  "parameters": {
-                    "window": 39
-                  }
-                },
-                "right": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 38
-                  }
-                }
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 43,
-                    "std": 1.7
-                  }
-                },
-                "right": {
-                  "constant": 23.15
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "exit_tree": {
         "operator": "AND",
         "children": [
           {
             "operator": "OR",
             "children": [
               {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "constant": 40.04
-                    },
-                    "right": {
-                      "constant": 49.54
-                    }
-                  }
-                ]
-              },
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 12,
-                        "std": 2.5
-                      }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 29
-                      }
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 8
-                      }
-                    },
-                    "right": {
-                      "constant": 69.24
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "TRENDING_UP",
-                    "parameters": {
-                      "window": 9
-                    }
-                  }
-                ]
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 62.48
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 42,
-                    "std": 2.0
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.21000000000000002
-    },
-    {
-      "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "CROSS_DOWN",
-                "left": {
-                  "constant": 50.91
-                },
-                "right": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 26,
-                    "std": 3.0
-                  }
-                }
-              },
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 14,
-                      "threshold": 1.64
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "CROSS_DOWN",
-                "left": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 7,
-                    "std": 2.0
-                  }
-                },
-                "right": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 13
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 26
-              }
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 38
-              }
-            }
-          },
-          {
-            "operator": "AND",
-            "children": [
-              {
                 "operator": "AND",
                 "children": [
                   {
                     "primitive": "LESS_THAN",
                     "left": {
-                      "constant": 68.93
+                      "constant": 38.68
                     },
                     "right": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 19,
-                        "std": 3.0
-                      }
+                      "constant": 61.33
                     }
                   },
                   {
-                    "primitive": "GREATER_THAN",
+                    "primitive": "CROSS_DOWN",
                     "left": {
-                      "primitive": "SMA",
+                      "primitive": "EMA",
                       "parameters": {
-                        "window": 14
+                        "window": 12
                       }
                     },
                     "right": {
-                      "primitive": "BB_MIDDLE",
+                      "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 29,
-                        "std": 2.9
+                        "window": 11,
+                        "std": 1.7
                       }
                     }
                   }
@@ -983,185 +486,96 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "primitive": "SMA",
+                  "primitive": "RSI",
                   "parameters": {
-                    "window": 26
+                    "window": 29
                   }
                 },
                 "right": {
-                  "primitive": "EMA",
+                  "primitive": "RSI",
                   "parameters": {
-                    "window": 41
+                    "window": 40
                   }
                 }
               }
             ]
-          }
-        ]
-      },
-      "fitness": 0.21000000000000002
-    },
-    {
-      "entry_tree": {
-        "primitive": "GREATER_THAN",
-        "left": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 28,
-            "std": 1.8
-          }
-        },
-        "right": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 13,
-            "std": 2.9
-          }
-        }
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "TRENDING_UP",
-            "parameters": {
-              "window": 43
-            }
           },
           {
             "operator": "AND",
             "children": [
               {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "VOLATILE",
-                    "parameters": {
-                      "window": 38,
-                      "threshold": 2.38
-                    }
-                  }
-                ]
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 33
+                }
               },
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 25,
-                  "threshold": 1.13
+                "primitive": "LESS_THAN",
+                "left": {
+                  "constant": 68.17
+                },
+                "right": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 23
+                  }
                 }
               }
             ]
           }
         ]
       },
-      "fitness": 0.21000000000000002,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "operator": "NOT",
-                "children": [
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 24,
-                        "std": 2.9
-                      }
-                    },
-                    "right": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 20
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 18,
-                "std": 2.4
-              }
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 17
-              }
-            }
-          }
-        ]
-      },
       "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 45
-          }
-        },
-        "right": {
-          "constant": 100
-        }
-      },
-      "fitness": 0.21000000000000002,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "primitive": "VOLUME_SPIKE",
-        "parameters": {
-          "window": 12
-        }
-      },
-      "exit_tree": {
-        "primitive": "AND",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 34,
-            "std": 1.9
-          }
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 36
-          }
-        }
-      },
-      "fitness": 0.20600000000000002,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
         "primitive": "CROSS_UP",
         "left": {
           "primitive": "EMA",
           "parameters": {
-            "window": 32
+            "window": 49
           }
         },
         "right": {
-          "primitive": "BB_LOWER",
-          "parameters": {
-            "window": 25,
-            "std": 1.9
-          }
+          "constant": 47.69
         }
+      },
+      "role": "outsider",
+      "generation_age": 0,
+      "fitness": -1.0
+    },
+    {
+      "entry_tree": {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 29
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 31,
+                    "std": 2.8
+                  }
+                },
+                "right": {
+                  "constant": 51.97
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 30
+            }
+          }
+        ]
       },
       "exit_tree": {
         "operator": "NOT",
@@ -1170,356 +584,21 @@
             "operator": "NOT",
             "children": [
               {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 10,
-                        "std": 1.7
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 49,
-                        "std": 2.1
-                      }
-                    }
-                  },
-                  {
-                    "primitive": "LESS_THAN",
-                    "left": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 10
-                      }
-                    },
-                    "right": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 37
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.17800000000000002
-    },
-    {
-      "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "CROSS_UP",
-            "left": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 24,
-                "std": 2.9
-              }
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 20
-              }
-            }
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 18,
-                "std": 2.4
-              }
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 17
-              }
-            }
-          }
-        ]
-      },
-      "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 45
-          }
-        },
-        "right": {
-          "constant": 100
-        }
-      },
-      "fitness": 0.03,
-      "ai_fixed": true,
-      "validation_tier": 0
-    },
-    {
-      "entry_tree": {
-        "primitive": "AND",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 200
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 200
-          }
-        }
-      },
-      "exit_tree": {
-        "primitive": "AND",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 200
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 200
-          }
-        }
-      },
-      "fitness": 0.0,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "BB_LOWER",
-          "parameters": {
-            "window": 26,
-            "std": 2.1
-          }
-        },
-        "right": {
-          "primitive": "BB_LOWER",
-          "parameters": {
-            "window": 27,
-            "std": 2.2
-          }
-        }
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 8
-                }
-              },
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 20,
-                        "std": 3.9
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 13,
-                        "std": 2.9
-                      }
-                    }
-                  },
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 45
-                      }
-                    },
-                    "right": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 30
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "CROSS_DOWN",
-                    "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 12,
-                        "std": 2.3
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 27,
-                        "std": 2.2
-                      }
-                    }
-                  },
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 16
-                    }
-                  }
-                ]
-              },
-              {
-                "primitive": "CROSS_DOWN",
+                "primitive": "LESS_THAN",
                 "left": {
-                  "primitive": "SMA",
-                  "parameters": {
-                    "window": 27
-                  }
+                  "constant": 48.77
                 },
                 "right": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 45,
-                    "std": 2.7
-                  }
+                  "constant": 23.09
                 }
               }
             ]
           }
         ]
       },
-      "fitness": 0.0,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "primitive": "EMA",
-        "parameters": {
-          "window": 2500
-        }
-      },
-      "exit_tree": {
-        "primitive": "AND",
-        "parameters": {
-          "window": 12
-        },
-        "children": [
-          {
-            "primitive": "TRENDING_UP",
-            "parameters": {
-              "window": 12
-            }
-          },
-          {
-            "primitive": "TRENDING_DOWN",
-            "parameters": {
-              "window": 12
-            }
-          }
-        ]
-      },
-      "fitness": 0.0,
-      "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "primitive": "EMA",
-        "parameters": {
-          "window": 21
-        }
-      },
-      "exit_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 12
-                }
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 31,
-                    "std": 3.0
-                  }
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 17,
-                    "std": 1.8
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 45
-                }
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 1000000.0
-                },
-                "right": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 42,
-                    "std": 2.4
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fitness": 0.0,
-      "ai_fixed": true,
-      "validation_tier": 0
+      "role": "outsider",
+      "generation_age": 0,
+      "fitness": -1.0
     }
   ]
 }
