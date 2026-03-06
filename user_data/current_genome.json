@@ -1,26 +1,29 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 49,
-        "std": 2.1
-      }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 28
-      }
+    "primitive": "EMA",
+    "parameters": {
+      "window": 2500
     }
   },
   "exit_tree": {
-    "primitive": "VOLATILE",
+    "primitive": "OR",
     "parameters": {
-      "window": 15,
-      "threshold": 200.0
-    }
+      "window": 12
+    },
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 12
+        }
+      },
+      {
+        "primitive": "TRENDING_DOWN",
+        "parameters": {
+          "window": 12
+        }
+      }
+    ]
   },
   "fitness": -1.0,
   "ai_fixed": true
