@@ -1198,7 +1198,7 @@
           "window": 12
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1246,7 +1246,7 @@
                     }
                   },
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "GREATER_THAN",
                     "left": {
                       "primitive": "BB_UPPER",
                       "parameters": {
@@ -1318,7 +1318,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
