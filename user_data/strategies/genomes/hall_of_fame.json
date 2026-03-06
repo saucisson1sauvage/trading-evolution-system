@@ -130,5 +130,26 @@
     "generation_age": 0,
     "fitness": 6.254432448897558,
     "debuffed_fitness": 6.254432448897558
+  },
+  {
+    "entry_tree": {
+      "primitive": "VOLUME_SPIKE",
+      "parameters": {
+        "window": 15
+      }
+    },
+    "exit_tree": {
+      "primitive": "VOLUME_SPIKE",
+      "parameters": {
+        "window": 17
+      }
+    },
+    "role": "king",
+    "generation_age": 1,
+    "fitness": 6.254432448897558,
+    "debuffed_fitness": 6.254432448897558,
+    "lineage_id": "7cd604e6-289f-40e4-ba21-2ce9d0eadcb9",
+    "status": "king",
+    "debuff_active_gens": 0
   }
 ]

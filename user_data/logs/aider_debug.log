@@ -14,3 +14,21 @@
 [2026-03-06 18:29:15] Best raw fitness found in Gen 344: 6.2544
 [2026-03-06 18:30:45] AI FIX applied to 2 individuals.
 [2026-03-06 18:30:46] --- STARTING GENERATION 344 ---
+[2026-03-06 22:47:46] --- STARTING GENERATION 344 ---
+[2026-03-06 22:47:46] Vault loaded with 2 lineages
+[2026-03-06 22:47:46] Slot 1: Mutated King from lineage d0fa6f72, Age incremented to 1
+[2026-03-06 22:47:46] Slot 2: Mutated Candidate from lineage 7cd604e6, debuff_active_gens=1
+[2026-03-06 22:47:46] Generated alien outsider with lineage fc23a05a
+[2026-03-06 22:47:46] Slot 3: Fallback to Alien Outsider (Vault insufficient)
+[2026-03-06 22:47:46] Generated guided outsider with lineage eac3b8e3
+[2026-03-06 22:47:46] Slot 4: Guided AI Outsider lineage eac3b8e3
+[2026-03-06 22:47:46] Generated alien outsider with lineage e20d7d27
+[2026-03-06 22:47:46] Slot 5: Alien AI Outsider lineage e20d7d27
+[2026-03-06 22:47:46] Generated alien outsider with lineage 2f19b106
+[2026-03-06 22:47:46] Slot 6: Alien AI Outsider lineage 2f19b106
+[2026-03-06 22:48:10] Slot 1 (king) evaluated with fitness 2.0113
+[2026-03-06 22:48:33] Slot 2 (candidate) evaluated with fitness 6.2544
+[2026-03-06 22:48:55] Slot 3 (candidate) evaluated with fitness 0.0000
+[2026-03-06 22:49:18] Slot 4 (outsider) evaluated with fitness 0.0000
+[2026-03-06 22:49:39] Slot 5 (outsider) evaluated with fitness 0.0000
+[2026-03-06 22:50:01] Slot 6 (outsider) evaluated with fitness 0.0000
