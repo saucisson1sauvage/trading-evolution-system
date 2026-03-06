@@ -31,7 +31,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "constant": 69.75
+                      "constant": 76.24
                     },
                     "right": {
                       "constant": 25.92
@@ -123,15 +123,15 @@
         "right": {
           "primitive": "SMA",
           "parameters": {
-            "window": 20
+            "window": 21
           }
         }
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 2.3873720675916825,
+      "debuffed_fitness": 1.0401008233962725,
       "role": "candidate",
-      "generation_age": 2,
+      "generation_age": 3,
       "ai_fixed": true
     },
     {
@@ -162,7 +162,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 69.75
+                  "constant": 66.02
                 },
                 "right": {
                   "constant": 25.92
@@ -214,7 +214,7 @@
         "left": {
           "primitive": "SMA",
           "parameters": {
-            "window": 45
+            "window": 48
           }
         },
         "right": {
@@ -223,94 +223,30 @@
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 0.7881891387126386,
+      "debuffed_fitness": 0.0,
       "role": "candidate",
-      "generation_age": 2,
+      "generation_age": 3,
       "ai_fixed": true
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 23,
-            "std": 1.8
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 49
-          }
-        }
-      },
-      "exit_tree": {
         "operator": "NOT",
         "children": [
           {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 45
-                }
+            "primitive": "LESS_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 10,
+                "std": 2.6
               }
-            ]
-          }
-        ]
-      },
-      "role": "mutant",
-      "generation_age": 0,
-      "fitness": -1.0,
-      "debuffed_fitness": 6.254432448897558
-    },
-    {
-      "entry_tree": {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "LESS_THAN",
-                    "left": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 41,
-                        "std": 1.6
-                      }
-                    },
-                    "right": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 38
-                      }
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "primitive": "RSI",
-                      "parameters": {
-                        "window": 41
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 36,
-                        "std": 2.5
-                      }
-                    }
-                  }
-                ]
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 48
               }
-            ]
+            }
           }
         ]
       },
@@ -325,39 +261,152 @@
                 "left": {
                   "primitive": "BB_MIDDLE",
                   "parameters": {
-                    "window": 37,
+                    "window": 42,
                     "std": 2.3
                   }
                 },
                 "right": {
-                  "constant": 60.44
+                  "constant": 52.95
                 }
               },
               {
-                "primitive": "VOLATILE",
+                "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 9,
-                  "threshold": 1.17
+                  "window": 50
                 }
               }
             ]
           },
           {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 7
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 33.23
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 43
+                  }
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 17,
+                    "std": 2.0
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 19,
+                    "std": 2.6
+                  }
+                }
               }
-            },
-            "right": {
-              "primitive": "SMA",
-              "parameters": {
-                "window": 40
-              }
-            }
+            ]
           }
         ]
+      },
+      "role": "mutant",
+      "generation_age": 0,
+      "fitness": -1.0,
+      "debuffed_fitness": 6.254432448897558
+    },
+    {
+      "entry_tree": {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 8
+                      }
+                    },
+                    "right": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 22
+                      }
+                    }
+                  },
+                  {
+                    "primitive": "TRENDING_UP",
+                    "parameters": {
+                      "window": 16
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 49
+                      }
+                    },
+                    "right": {
+                      "constant": 50.9
+                    }
+                  },
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 35
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 12
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "constant": 22.8
+                },
+                "right": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 25
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "exit_tree": {
+        "primitive": "VOLATILE",
+        "parameters": {
+          "window": 28,
+          "threshold": 1.89
+        }
       },
       "role": "outsider",
       "generation_age": 0,
@@ -365,35 +414,53 @@
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 35
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 7
+                }
+              },
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 20
+                    }
+                  },
+                  {
+                    "primitive": "VOLUME_SPIKE",
+                    "parameters": {
+                      "window": 47
+                    }
+                  }
+                ]
+              }
+            ]
           }
-        },
-        "right": {
-          "primitive": "BB_LOWER",
-          "parameters": {
-            "window": 34,
-            "std": 2.0
-          }
-        }
+        ]
       },
       "exit_tree": {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 9
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 25
+                }
+              }
+            ]
           }
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 35
-          }
-        }
+        ]
       },
       "role": "outsider",
       "generation_age": 0,
