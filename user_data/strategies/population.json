@@ -1198,7 +1198,7 @@
           "window": 12
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1404,7 +1404,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 60.0
+                      "constant": 70.0
                     },
                     "right": {
                       "primitive": "BB_UPPER",
@@ -1433,7 +1433,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 65.0
+                      "constant": 75.0
                     },
                     "right": {
                       "primitive": "BB_UPPER",
@@ -1449,7 +1449,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
