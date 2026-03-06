@@ -1,94 +1,49 @@
 {
   "entry_tree": {
-    "operator": "AND",
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 21
+      }
+    },
+    "right": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 50
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
     "children": [
-      {
-        "primitive": "VOLUME_SPIKE",
-        "parameters": {
-          "window": 12
-        }
-      },
       {
         "operator": "AND",
         "children": [
           {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "constant": 30.0
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 19
-              }
-            }
-          },
-          {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 12
+                }
+              },
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "primitive": "SMA",
+                  "primitive": "BB_MIDDLE",
                   "parameters": {
-                    "window": 18
+                    "window": 31,
+                    "std": 3.0
                   }
                 },
                 "right": {
-                  "primitive": "BB_UPPER",
+                  "primitive": "BB_LOWER",
                   "parameters": {
-                    "window": 9,
-                    "std": 1.6
+                    "window": 17,
+                    "std": 1.8
                   }
-                }
-              },
-              {
-                "primitive": "LESS_THAN",
-                "left": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 25,
-                    "std": 2.5
-                  }
-                },
-                "right": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 18
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "exit_tree": {
-    "operator": "AND",
-    "children": [
-      {
-        "primitive": "TRENDING_UP",
-        "parameters": {
-          "window": 47
-        }
-      },
-      {
-        "operator": "OR",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 27
-                }
-              },
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 38
                 }
               }
             ]
@@ -97,16 +52,51 @@
             "operator": "OR",
             "children": [
               {
-                "primitive": "TRENDING_DOWN",
+                "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 41
+                  "window": 45
                 }
               },
               {
-                "primitive": "VOLATILE",
+                "primitive": "CROSS_UP",
+                "left": {
+                  "constant": 52.26
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 42,
+                    "std": 2.4
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 50,
-                  "threshold": 1.88
+                  "window": 30
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "constant": 57.08
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 42,
+                    "std": 2.4
+                  }
                 }
               }
             ]
