@@ -25,8 +25,8 @@ The system is divided into two distinct halves:
 - **Regex Parsing**: `evolution_engine.py` extracts backtest results by parsing the `STDOUT` terminal table via Regex, rather than relying on Freqtrade's fragile JSON export paths.
 
 ## 4. Recent Progress & Immediate Mission
-- **Recently Completed**: The pipeline was unblocked. Freqtrade was failing to register trades due to indicator latency and JSON parsing issues. We fixed this by introducing a `startup_candle_count=30`, fixing absolute import paths, and using Regex to parse the Freqtrade terminal output directly. We also verified the pipeline with a 300-trade dummy strategy.
-- **Current Mission**: Restore the Deep Genetic Programming Logic. The `evolution_engine.py` was temporarily lobotomized (restricted to Depth-1 trees without crossover) to debug the pipeline. We must restore recursive tree generation, Crossover (swapping sub-branches), Point Mutation, and Population Persistence (saving the whole array of individuals so we can resume if the script crashes).
+- **Recently Completed**: Restored Deep Genetic Programming Logic. The `evolution_engine.py` now supports recursive tree generation, Crossover (sub-branch swapping), Point/Subtree Mutation, and Population Persistence (`population.json`). The pipeline is fully verified with a 2-individual test run and successful Git synchronization.
+- **Current Mission**: Expand the Primitive Library and Tune the Fitness Function. We must integrate all functions from `gp_blocks.py` (e.g., `is_trending_up`, `is_volatile`, `volume_spike`) into the `GPTreeStrategy.py` evaluation loop. Additionally, we need to improve the fitness function to penalize Drawdown and reward high Sharpe/Sortino ratios, rather than just raw profit and trade count. Finally, start a 100-generation evolution run on `ETH/USDT` 5m data.
 
 ## 5. Constraints & Protocols
 - **Trading Target**: Currently optimized for `ETH/USDT` on Binance Spot.

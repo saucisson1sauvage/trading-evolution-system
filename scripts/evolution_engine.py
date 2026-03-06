@@ -24,6 +24,7 @@ sys.path.append(str(PROJECT_ROOT))
 # Grammar Definitions
 BOOL_PRIMITIVES = ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]
 BOOL_OPERATORS = ["AND", "OR", "NOT"]
+BOOL_HELPERS = ["TRENDING_UP", "TRENDING_DOWN", "VOLATILE", "VOLUME_SPIKE"]
 NUM_INDICATORS = ["RSI", "EMA", "SMA", "BB_UPPER", "BB_MIDDLE", "BB_LOWER"]
 
 logging.basicConfig(
@@ -59,6 +60,13 @@ def generate_bool_node(depth: int, max_depth: int) -> Dict[str, Any]:
             return {"operator": "NOT", "children": [generate_bool_node(depth + 1, max_depth)]}
         else:
             return {"operator": op, "children": [generate_bool_node(depth + 1, max_depth), generate_bool_node(depth + 1, max_depth)]}
+    elif random.random() < 0.4:
+        # Boolean Helpers (TRENDING_UP, etc.)
+        name = random.choice(BOOL_HELPERS)
+        params = {"window": random.randint(7, 50)}
+        if name == "VOLATILE":
+             params["threshold"] = round(random.uniform(1.1, 2.5), 2)
+        return {"primitive": name, "parameters": params}
     else:
         # Comparator
         return {
@@ -176,18 +184,39 @@ def run_evolution_round(genome: dict) -> float:
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
         
-        # Regex matches: | GPTreeStrategy | 26 | 0.41 | 10.663 | 1.07 |
-        match = re.search(r"GPTreeStrategy\s+\|\s+(\d+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)", output)
-        if match:
-            trades = int(match.group(1))
-            profit_pct = float(match.group(4))
-            # Fitness: prioritize profit but reward trades to avoid luck
-            # Penalize low trade count
+        # Regex parsing for multiple metrics
+        profit_pct = 0.0
+        trades = 0
+        sharpe = -5.0
+        drawdown = 100.0
+        
+        # 1. Strategy Summary Table (Profit & Trades)
+        # Matches: | GPTreeStrategy | 91 | -0.02 | -2.206 | -0.22 |
+        sum_match = re.search(r"GPTreeStrategy\s+\|\s+(\d+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)\s+\|\s+([\d\.-]+)", output)
+        if sum_match:
+            trades = int(sum_match.group(1))
+            profit_pct = float(sum_match.group(4))
+            
+        # 2. Sharpe Ratio (Summary Metrics)
+        sharpe_match = re.search(r"Sharpe\s+│\s+([\d\.-]+)", output)
+        if sharpe_match:
+            sharpe = float(sharpe_match.group(1))
+            
+        # 3. Drawdown % (Summary Metrics)
+        # Matches: | Absolute drawdown | 8.721 USDT (0.87%) |
+        dd_match = re.search(r"Absolute drawdown\s+│\s+[\d\.-]+\s+USDT\s+\(([\d\.-]+)%\)", output)
+        if dd_match:
+            drawdown = float(dd_match.group(1))
+            
+        if trades > 0:
+            # TUNE FITNESS: Profit + (Sharpe * 0.5) - (Drawdown * 0.1)
+            # If no trades or very low, penalize
             if trades < 5:
                 fitness = profit_pct * 0.1
             else:
-                fitness = (trades * 0.005) + profit_pct
-            logging.info(f"  > SUCCESS: Trades: {trades}, Profit: {profit_pct}% -> Fitness: {fitness:.4f}")
+                fitness = profit_pct + (max(0, sharpe) * 0.5) - (drawdown * 0.1)
+                
+            logging.info(f"  > SUCCESS: Trades: {trades}, Profit: {profit_pct}%, Sharpe: {sharpe}, DD: {drawdown}% -> Fitness: {fitness:.4f}")
             return fitness
         
         logging.warning("  > No trades found or parsing failed.")

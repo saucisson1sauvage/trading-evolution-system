@@ -51,6 +51,12 @@ class GPTreeStrategy(IStrategy):
                 u, m, l = get_bollinger(dataframe, **params)
                 return u if name == "BB_UPPER" else (m if name == "BB_MIDDLE" else l)
             
+            # Additional Blocks from gp_blocks.py
+            if name == "TRENDING_UP": return is_trending_up(dataframe, **params)
+            if name == "TRENDING_DOWN": return is_trending_down(dataframe, **params)
+            if name == "VOLATILE": return is_volatile(dataframe, **params)
+            if name == "VOLUME_SPIKE": return volume_spike(dataframe, **params)
+            
             # Comparators
             if name in ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]:
                 l = self.evaluate_node(node["left"], dataframe)
