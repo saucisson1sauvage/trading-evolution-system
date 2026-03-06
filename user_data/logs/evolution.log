@@ -1167,3 +1167,14 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 03:00:16,767 | INFO |   > SUCCESS: Trades: 2, Profit: -0.12%, Sharpe: -2.93, DD: 0.12% -> Fitness: -0.0120
 2026-03-06 03:00:16,767 | INFO | BEST FITNESS: 4.2850
 2026-03-06 03:00:16,790 | WARNING | Git Sync Failed: name 'g' is not defined
+2026-03-06 03:00:37,622 | INFO | STARTING GP LOOP: 1 gens, 20 individuals
+2026-03-06 03:00:37,623 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 03:00:37,623 | INFO | --- Generation 27 ---
+2026-03-06 03:00:37,623 | INFO | Evaluating Individual 16/20...
+2026-03-06 03:00:37,623 | INFO |   > Launching Freqtrade Backtest...
+2026-03-06 03:00:41,631 | WARNING |   > No trades found or parsing failed.
+2026-03-06 03:00:41,631 | INFO | Evaluating Individual 20/20...
+2026-03-06 03:00:41,632 | INFO |   > Launching Freqtrade Backtest...
+2026-03-06 03:00:46,141 | INFO |   > SUCCESS: Trades: 2, Profit: -0.12%, Sharpe: -2.93, DD: 0.12% -> Fitness: -0.0120
+2026-03-06 03:00:46,141 | INFO | BEST FITNESS: 4.2850
+2026-03-06 03:00:46,166 | WARNING | Git Sync Failed: name 'g' is not defined
