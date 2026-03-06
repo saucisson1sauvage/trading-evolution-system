@@ -1178,14 +1178,14 @@
           "threshold": 30.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
         "primitive": "EMA",
         "parameters": {
-          "window": 140
+          "window": 280
         }
       },
       "exit_tree": {
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
