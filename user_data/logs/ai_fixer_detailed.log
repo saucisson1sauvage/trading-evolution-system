@@ -122035,3 +122035,48 @@ Rules for fixing:
 [AI_ERROR] =========================================
 HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=60)
 ==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 49,
+        "std": 2.1
+      }
+    },
+    "right": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 28
+      }
+    }
+  },
+  "exit_tree": {
+    "primitive": "VOLATILE",
+    "parameters": {
+      "window": 15,
+      "threshold": 1000.0
+    }
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_ERROR] =========================================
+HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=60)
+==================================================

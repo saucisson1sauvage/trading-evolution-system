@@ -1117,3 +1117,7 @@
 2026-03-06 08:03:28,722 | INFO | Attempting AI fix for zero-performing individual...
 2026-03-06 08:04:28,731 | ERROR | AI Fix failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=60)
 2026-03-06 08:04:28,731 | INFO | No AI fixes applied this round.
+2026-03-06 08:04:39,125 | INFO | AI Fixer initialized with local Ollama (qwen2.5-coder:1.5b).
+2026-03-06 08:04:39,126 | INFO | Attempting AI fix for zero-performing individual...
+2026-03-06 08:05:39,133 | ERROR | AI Fix failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=60)
+2026-03-06 08:05:39,133 | INFO | No AI fixes applied this round.
