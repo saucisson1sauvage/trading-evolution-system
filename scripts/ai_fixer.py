@@ -13,6 +13,21 @@ POPULATION_FILE = PROJECT_ROOT / "user_data/strategies/population.json"
 HOF_FILE = PROJECT_ROOT / "user_data/logs/ai_success_hall_of_fame.log"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/ai_fixer.log"
 DEEP_LOG_FILE = PROJECT_ROOT / "user_data/logs/ai_fixer_detailed.log"
+AIDER_LOG_FILE = PROJECT_ROOT / "user_data/logs/aider_debug.log"
+
+def log_aider(message: str):
+    """Log high-signal events for Aider context."""
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(AIDER_LOG_FILE, 'a') as f:
+        f.write(f"[{timestamp}] {message}\n")
+    # Keep it light: only last 500 lines
+    if AIDER_LOG_FILE.exists():
+        with open(AIDER_LOG_FILE, 'r') as f:
+            lines = f.readlines()
+        if len(lines) > 500:
+            with open(AIDER_LOG_FILE, 'w') as f:
+                f.writelines(lines[-500:])
 
 logging.basicConfig(
     level=logging.INFO,
@@ -143,6 +158,7 @@ Adjust constants and operators to ensure the strategy finds consistent entry poi
             with open(POPULATION_FILE, 'w') as f:
                 json.dump({"individuals": population}, f, indent=2)
             logging.info(f"Successfully fixed {fixed_count} individuals using AI.")
+            log_aider(f"AI FIX applied to {fixed_count} individuals.")
         else:
             logging.info("No AI fixes applied this round.")
 

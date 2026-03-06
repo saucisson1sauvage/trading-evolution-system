@@ -20,8 +20,23 @@ STATE_FILE = STRATEGY_DIR / "state.json"
 CURRENT_GENOME_FILE = PROJECT_ROOT / "user_data/current_genome.json"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/evolution.log"
 VAULT_FILE = GENOME_DIR / "hall_of_fame.json"
+AIDER_LOG_FILE = PROJECT_ROOT / "user_data/logs/aider_debug.log"
 
 sys.path.append(str(PROJECT_ROOT))
+
+def log_aider(message: str):
+    """Log high-signal events for Aider context."""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(AIDER_LOG_FILE, 'a') as f:
+        f.write(f"[{timestamp}] {message}\n")
+    # Keep it light: only last 500 lines
+    lines = []
+    if AIDER_LOG_FILE.exists():
+        with open(AIDER_LOG_FILE, 'r') as f:
+            lines = f.readlines()
+        if len(lines) > 500:
+            with open(AIDER_LOG_FILE, 'w') as f:
+                f.writelines(lines[-500:])
 
 # Load .env
 if (PROJECT_ROOT / ".env").exists():
@@ -278,6 +293,7 @@ def run_loop(gens=50):
 
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
+        log_aider(f"--- STARTING GENERATION {current_gen} ---")
         # Evaluate
         for i, ind in enumerate(population):
             if ind.get("fitness", -1.0) < 0:
@@ -301,6 +317,7 @@ def run_loop(gens=50):
         king["debuffed_fitness"] = king["fitness"]
         
         logging.info(f"KING FITNESS: {king['fitness']:.4f}")
+        log_aider(f"Best raw fitness found in Gen {current_gen}: {king['fitness']:.4f}")
         save_to_vault(king)
 
         remaining = population[1:]

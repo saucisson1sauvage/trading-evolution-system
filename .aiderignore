@@ -1,0 +1,9 @@
+# Ignore heavy logs to save Aider context window
+user_data/logs/freqtrade_runs.log
+user_data/logs/ai_fixer_detailed.log
+user_data/logs/evolution.log
+user_data/logs/system.log
+user_data/logs/backtest_debug.log
+
+# But allow a lightweight debug log for context
+!user_data/logs/aider_debug.log
