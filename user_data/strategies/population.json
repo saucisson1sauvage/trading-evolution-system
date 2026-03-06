@@ -1241,7 +1241,7 @@
           }
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1391,7 +1391,7 @@
           "threshold": 200.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1432,10 +1432,10 @@
         }
       },
       "exit_tree": {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
               {
                 "primitive": "TRENDING_DOWN",
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
