@@ -101,6 +101,7 @@ Rules for fixing:
                     ind["entry_tree"] = fixed.get("entry_tree", ind["entry_tree"])
                     ind["exit_tree"] = fixed.get("exit_tree", ind["exit_tree"])
                     ind["fitness"] = -1.0 # Force re-evaluation
+                    ind["ai_fixed"] = True # Flag to track LLM success
                     fixed_count += 1
         
         if fixed_count > 0:

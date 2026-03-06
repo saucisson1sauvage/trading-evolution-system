@@ -16,6 +16,7 @@ PROJECT_ROOT = Path("/home/saus/crypto-crew-4.0")
 STRATEGY_DIR = PROJECT_ROOT / "user_data/strategies"
 GENOME_DIR = STRATEGY_DIR / "genomes"
 POPULATION_FILE = STRATEGY_DIR / "population.json"
+STATE_FILE = STRATEGY_DIR / "state.json"
 CURRENT_GENOME_FILE = PROJECT_ROOT / "user_data/current_genome.json"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/evolution.log"
 
@@ -201,6 +202,11 @@ def run_evolution_round(genome: dict) -> float:
         with open(PROJECT_ROOT / "user_data/logs/freqtrade_runs.log", "a") as flog:
             flog.write(f"\n--- NEW RUN ---\n{output}\n")
         
+        # Print the cool table for the user
+        strat_summary_idx = output.find("STRATEGY SUMMARY")
+        if strat_summary_idx != -1:
+            print("\n" + output[strat_summary_idx:].strip() + "\n")
+        
         # Regex parsing for multiple metrics (handling both | and │)
         profit_pct = 0.0
         trades = 0
@@ -232,6 +238,12 @@ def run_evolution_round(genome: dict) -> float:
                 fitness = profit_pct + (max(0, sharpe) * 0.5) - (drawdown * 0.1)
                 
             logging.info(f"  > SUCCESS: Trades: {trades}, Profit: {profit_pct}%, Sharpe: {sharpe}, DD: {drawdown}% -> Fitness: {fitness:.4f}")
+            
+            # REWARD TRACKING: If AI fixed this and it made profit, log it for future LLM context
+            if genome.get("ai_fixed") and profit_pct > 0:
+                with open(PROJECT_ROOT / "user_data/logs/ai_success_hall_of_fame.log", "a") as f:
+                    f.write(json.dumps({"fitness": fitness, "profit": profit_pct, "genome": genome}) + "\n")
+            
             return fitness
         
         logging.warning("  > No trades found or parsing failed.")
@@ -246,6 +258,16 @@ def run_evolution_round(genome: dict) -> float:
 def run_loop(gens=50, pop_size=20):
     logging.info(f"STARTING GP LOOP: {gens} gens, {pop_size} individuals")
     
+    # Load generation state
+    current_gen = 0
+    if STATE_FILE.exists():
+        try:
+            with open(STATE_FILE, 'r') as f:
+                state = json.load(f)
+                current_gen = state.get("current_generation", 0)
+        except Exception:
+            pass
+
     # Load population
     population = []
     if POPULATION_FILE.exists():
@@ -265,8 +287,8 @@ def run_loop(gens=50, pop_size=20):
             "fitness": -1.0
         })
 
-    for g in range(gens):
-        logging.info(f"--- Generation {g} ---")
+    for _ in range(gens):
+        logging.info(f"--- Generation {current_gen} ---")
         
         # Evaluate
         for i, ind in enumerate(population):
@@ -280,12 +302,17 @@ def run_loop(gens=50, pop_size=20):
         
         # Save best
         GENOME_DIR.mkdir(parents=True, exist_ok=True)
-        with open(GENOME_DIR / f"gen_{g}_best.json", 'w') as f:
+        with open(GENOME_DIR / f"gen_{current_gen}_best.json", 'w') as f:
             json.dump(best, f, indent=2)
 
         # Save population
         with open(POPULATION_FILE, 'w') as f:
             json.dump({"individuals": population}, f, indent=2)
+
+        # Update state
+        current_gen += 1
+        with open(STATE_FILE, 'w') as f:
+            json.dump({"current_generation": current_gen}, f, indent=2)
 
         # Selection & Reproduction
         new_population = population[:2] # Elitism (top 2)
