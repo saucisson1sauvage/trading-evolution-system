@@ -1,20 +1,34 @@
 {
   "entry_tree": {
-    "primitive": "TRENDING_DOWN",
-    "parameters": {
-      "window": 15
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 35
+      }
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 34,
+        "std": 2.0
+      }
     }
   },
   "exit_tree": {
-    "operator": "NOT",
-    "children": [
-      {
-        "primitive": "VOLUME_SPIKE",
-        "parameters": {
-          "window": 12
-        }
+    "primitive": "LESS_THAN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 9
       }
-    ]
+    },
+    "right": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 35
+      }
+    }
   },
   "role": "outsider",
   "generation_age": 0,

@@ -31,7 +31,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "constant": 76.24
+                      "constant": 80.0
                     },
                     "right": {
                       "constant": 25.92
@@ -230,28 +230,36 @@
     },
     {
       "entry_tree": {
-        "operator": "NOT",
+        "operator": "OR",
         "children": [
           {
-            "primitive": "LESS_THAN",
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 12
+                }
+              }
+            ]
+          },
+          {
+            "operator": "CROSS_UP",
             "left": {
               "primitive": "BB_MIDDLE",
               "parameters": {
-                "window": 10,
-                "std": 2.6
+                "window": 42,
+                "std": 2.3
               }
             },
             "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 48
-              }
+              "constant": 52.95
             }
           }
         ]
       },
       "exit_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
             "operator": "OR",
@@ -295,17 +303,12 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 17,
-                    "std": 2.0
-                  }
+                  "constant": 35.0
                 },
                 "right": {
-                  "primitive": "BB_LOWER",
+                  "constant": "RSI",
                   "parameters": {
-                    "window": 19,
-                    "std": 2.6
+                    "window": 19
                   }
                 }
               }
@@ -316,7 +319,8 @@
       "role": "mutant",
       "generation_age": 0,
       "fitness": -1.0,
-      "debuffed_fitness": 6.254432448897558
+      "debuffed_fitness": 6.254432448897558,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -333,7 +337,7 @@
                     "left": {
                       "primitive": "RSI",
                       "parameters": {
-                        "window": 8
+                        "window": 12
                       }
                     },
                     "right": {
@@ -410,37 +414,37 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
-        "operator": "NOT",
+        "operator": "AND",
         "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 12
+            }
+          },
           {
             "operator": "OR",
             "children": [
               {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 7
-                }
-              },
-              {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 20
-                    }
-                  },
-                  {
-                    "primitive": "VOLUME_SPIKE",
-                    "parameters": {
-                      "window": 47
-                    }
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 22,
+                    "std": 1.6
                   }
-                ]
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 12
+                  }
+                }
               }
             ]
           }
@@ -450,12 +454,18 @@
         "operator": "NOT",
         "children": [
           {
-            "operator": "NOT",
+            "operator": "AND",
             "children": [
               {
                 "primitive": "TRENDING_DOWN",
                 "parameters": {
-                  "window": 25
+                  "window": 20
+                }
+              },
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 47
                 }
               }
             ]
@@ -464,7 +474,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
