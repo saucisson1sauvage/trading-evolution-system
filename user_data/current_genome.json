@@ -48,7 +48,7 @@
           {
             "primitive": "CROSS_UP",
             "left": {
-              "constant": 10000.0
+              "constant": 15000.0
             },
             "right": {
               "primitive": "BB_UPPER",
