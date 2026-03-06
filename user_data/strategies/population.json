@@ -1212,7 +1212,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1227,7 +1227,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1241,7 +1241,7 @@
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1364,7 +1364,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1388,10 +1388,10 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 15,
-          "threshold": 120.0
+          "threshold": 180.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
