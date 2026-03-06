@@ -999,7 +999,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1178,7 +1178,7 @@
           "threshold": 30.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1440,7 +1440,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 300.0
+                  "constant": 350.0
                 },
                 "right": {
                   "primitive": "RSI",
