@@ -273,12 +273,14 @@ def run_loop(gens=50):
 
     for _ in range(gens):
         logging.info(f"--- Generation {current_gen} ---")
-        
+        # Evaluate
         for i, ind in enumerate(population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('role', 'unknown')})...")
                 fit = run_evolution_round(ind)
                 ind["fitness"] = fit
+            else:
+                logging.info(f"Skipping Individual {i+1}/6 ({ind.get('role', 'unknown')}) - already evaluated with fitness {ind['fitness']:.4f}")
                 
         for ind in population:
             age = ind.get("generation_age", 0)
