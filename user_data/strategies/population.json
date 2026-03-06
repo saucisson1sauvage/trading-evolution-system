@@ -96,7 +96,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "constant": 24000.0
+                      "constant": 20000.0
                     },
                     "right": {
                       "primitive": "RSI",
@@ -111,32 +111,25 @@
                       {
                         "primitive": "GREATER_THAN",
                         "left": {
+                          "constant": 15000.0
+                        },
+                        "right": {
                           "primitive": "SMA",
                           "parameters": {
                             "window": 18
-                          }
-                        },
-                        "right": {
-                          "primitive": "BB_UPPER",
-                          "parameters": {
-                            "window": 10,
-                            "std": 1.68
                           }
                         }
                       },
                       {
                         "primitive": "GREATER_THAN",
                         "left": {
-                          "primitive": "BB_UPPER",
-                          "parameters": {
-                            "window": 25,
-                            "std": 2.5
-                          }
+                          "constant": 20000.0
                         },
                         "right": {
-                          "primitive": "RSI",
+                          "primitive": "BB_UPPER",
                           "parameters": {
-                            "window": 18
+                            "window": 10,
+                            "std": 1.68
                           }
                         }
                       }
@@ -353,22 +346,24 @@
             "operator": "AND",
             "children": [
               {
-                "operator": "NOT",
+                "operator": "AND",
                 "children": [
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "GREATER_THAN",
                     "left": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 17
-                      }
+                      "constant": 51.23
                     },
                     "right": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 10,
-                        "std": 2.9
-                      }
+                      "constant": 52.01
+                    }
+                  },
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 51.23
+                    },
+                    "right": {
+                      "constant": 52.01
                     }
                   }
                 ]
@@ -379,20 +374,19 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 45,
-                        "std": 1.9
-                      }
+                      "constant": 51.23
                     },
                     "right": {
-                      "constant": 27.25
+                      "constant": 52.01
                     }
                   },
                   {
-                    "primitive": "TRENDING_UP",
-                    "parameters": {
-                      "window": 34
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 51.23
+                    },
+                    "right": {
+                      "constant": 52.01
                     }
                   }
                 ]
@@ -403,43 +397,103 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 13
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 43
+                }
+              },
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "operator": "CROSS_DOWN",
+            "left": {
+              "constant": 62.08
+            },
+            "right": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 13,
+                "std": 1.9
+              }
+            }
           }
-        },
-        "right": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 21
-          }
-        }
+        ]
       },
       "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 49,
-            "std": 2.5
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "VOLATILE",
+                    "parameters": {
+                      "window": 12,
+                      "threshold": 2.41
+                    }
+                  },
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 8
+                    }
+                  }
+                ]
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 35.0
+                },
+                "right": {
+                  "constant": "RSI",
+                  "parameters": {
+                    "window": 19
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 28.1
+                },
+                "right": {
+                  "constant": 24.06
+                }
+              }
+            ]
           }
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 41
-          }
-        }
+        ]
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
