@@ -1121,7 +1121,7 @@
           }
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1244,7 +1244,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1343,7 +1343,7 @@
             ]
           },
           {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
               {
                 "primitive": "VOLUME_SPIKE",
