@@ -71,15 +71,12 @@
                 ]
               },
               {
-                "primitive": "LESS_THAN",
+                "primitive": "GREATER_THAN",
                 "left": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 40
-                  }
+                  "constant": 87.02
                 },
                 "right": {
-                  "constant": 87.02
+                  "constant": 86.02
                 }
               }
             ]
@@ -95,7 +92,8 @@
       "role": "candidate",
       "generation_age": 3,
       "fitness": -1.0,
-      "debuffed_fitness": 0.0
+      "debuffed_fitness": 0.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
