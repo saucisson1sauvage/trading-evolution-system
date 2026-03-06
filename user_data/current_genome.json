@@ -1,45 +1,9 @@
 {
   "entry_tree": {
-    "operator": "AND",
-    "children": [
-      {
-        "operator": "NOT",
-        "children": [
-          {
-            "primitive": "VOLATILE",
-            "parameters": {
-              "window": 13,
-              "threshold": 2.4
-            }
-          }
-        ]
-      },
-      {
-        "primitive": "LESS_THAN",
-        "left": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 20,
-            "std": 2.0
-          }
-        },
-        "right": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 36
-          }
-        }
-      }
-    ]
+    "primitive": "HALLUCINATED_INDICATOR",
+    "parameters": {"window": 14}
   },
   "exit_tree": {
-    "primitive": "TRENDING_UP",
-    "parameters": {
-      "window": 11
-    }
-  },
-  "role": "mutant",
-  "generation_age": 0,
-  "fitness": -1.0,
-  "debuffed_fitness": 6.254432448897558
+    "constant": 50.0
+  }
 }
