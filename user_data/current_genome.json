@@ -1,28 +1,42 @@
 {
   "entry_tree": {
-    "primitive": "VOLUME_SPIKE",
-    "parameters": {
-      "window": 45
-    }
-  },
-  "exit_tree": {
-    "operator": "NOT",
+    "operator": "AND",
     "children": [
       {
         "operator": "NOT",
         "children": [
           {
-            "primitive": "CROSS_UP",
-            "left": {
-              "constant": 34.28
-            },
-            "right": {
-              "constant": 26.67
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 20
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 21
             }
           }
         ]
       }
     ]
+  },
+  "exit_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 36
+    }
   },
   "role": "outsider",
   "generation_age": 0,
