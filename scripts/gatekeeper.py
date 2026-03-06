@@ -1,72 +1,62 @@
 import subprocess
+import shutil
 import sys
-import py_compile
 from pathlib import Path
-from scripts.paths import PathResolver
-from scripts.logger_utils import get_logger
 
-logger = get_logger("gatekeeper")
-FREQTRADE_BIN = "freqtrade"
+# Setup absolute paths
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CURRENT_GENOME_FILE = PROJECT_ROOT / "user_data" / "current_genome.json"
+TEST_SCRIPT = PROJECT_ROOT / "tests" / "test_omniscience.py"
 
-def check_syntax():
-    logger.info("Starting syntax check...")
-    project_root = PathResolver.get_project_root()
-    success = True
-    for py_file in project_root.rglob("*.py"):
-        try:
-            py_compile.compile(str(py_file), doraise=True)
-            logger.info(f"Syntax OK: {py_file.relative_to(project_root)}")
-        except py_compile.PyCompileError as e:
-            logger.error(f"Syntax ERROR in {py_file}: {e}")
-            success = False
-    return success
-
-def check_freqtrade():
-    logger.info("Checking freqtrade installation...")
-    try:
-        subprocess.run([FREQTRADE_BIN, "list-strategies"], capture_output=True, text=True, check=True)
-        logger.info("Freqtrade check successful.")
-        return True
-    except Exception as e:
-        logger.error(f"Freqtrade check FAILED: {e}")
+def is_tungsten_safe(genome_path: Path) -> bool:
+    """
+    Vets a candidate genome against the Omniscience test suite.
+    1. Copies genome to current_genome.json
+    2. Runs pytest on tests/test_omniscience.py
+    3. Returns True if all tests pass, False otherwise.
+    """
+    if not genome_path.exists():
+        print(f"Gatekeeper Error: {genome_path} does not exist.")
         return False
 
-def smoke_test():
-    logger.info("Starting ETH/USDT smoke test...")
-    # Test both strategies
-    strategies = ["GeneticAssembler", "V2Assembler"]
-    all_success = True
+    # Ensure current_genome.json exists or create parent
+    CURRENT_GENOME_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    # Backup existing current_genome.json if necessary? 
+    # Usually it's a transient workspace file, so we just overwrite.
+    shutil.copy(genome_path, CURRENT_GENOME_FILE)
+
+    print(f"🛡️ Gatekeeper: Vetting {genome_path.name} against Omniscience Gauntlet...")
     
-    for strategy in strategies:
-        logger.info(f"Testing strategy: {strategy}")
-        try:
-            # Use a very small timerange to make the test quick
-            result = subprocess.run(
-                [FREQTRADE_BIN, "backtesting", "--strategy", strategy, "--timerange", "20260201-20260202"],
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            if result.returncode == 0:
-                logger.info(f"Strategy {strategy} smoke test SUCCESSFUL.")
-            else:
-                logger.error(f"Strategy {strategy} smoke test FAILED: {result.stderr[:500]}")
-                all_success = False
-        except subprocess.TimeoutExpired:
-            logger.warning(f"Strategy {strategy} test timed out (may be okay if data is downloading)")
-            # Don't fail on timeout
-        except Exception as e:
-            logger.error(f"Strategy {strategy} smoke test ERROR: {e}")
-            all_success = False
+    # Run pytest
+    # We use the local venv python if available
+    python_bin = sys.executable
     
-    if all_success:
-        logger.info("All smoke tests SUCCESSFUL.")
-    else:
-        logger.warning("Some smoke tests had issues.")
-    return all_success
+    try:
+        # We only run the specific JSON integrity test to save time, 
+        # but the prompt says "passes the 417+ tests", so we run the whole suite.
+        result = subprocess.run(
+            [python_bin, "-m", "pytest", str(TEST_SCRIPT), "-v"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT)
+        )
+        
+        if result.returncode == 0:
+            return True
+        else:
+            print("Gatekeeper: Test Failure Output:")
+            print(result.stdout)
+            return False
+    except Exception as e:
+        print(f"Gatekeeper: Execution Error: {e}")
+        return False
 
 if __name__ == "__main__":
-    s1 = check_syntax()
-    s2 = check_freqtrade()
-    s3 = smoke_test()
-    sys.exit(0 if all([s1, s2, s3]) else 1)
+    # Simple CLI for testing
+    if len(sys.argv) > 1:
+        path = Path(sys.argv[1])
+        if is_tungsten_safe(path):
+            print("✅ VERIFIED TUNGSTEN SOLID")
+        else:
+            print("❌ REJECTED BY OMNISCIENCE")
