@@ -14,20 +14,15 @@ sys.path.append(str(PROJECT_ROOT))
 # --- 1. GLOBAL REPOSITORY CRAWL (IMPORT VALIDATION) ---
 def discover_modules():
     modules = []
-    # Core directories to scan
-    dirs_to_scan = [PROJECT_ROOT / "scripts", PROJECT_ROOT / "user_data"]
     
-    for d in dirs_to_scan:
-        if not d.exists():
+    for py_file in PROJECT_ROOT.rglob('*.py'):
+        if any(skip in py_file.parts for skip in ['.venv', '__pycache__', '.git', 'tests']):
             continue
-        for py_file in d.rglob('*.py'):
-            if '__pycache__' in py_file.parts or '.venv' in py_file.parts:
-                continue
-            
-            # Construct module name relative to project root
-            rel_path = py_file.relative_to(PROJECT_ROOT)
-            module_name = ".".join(rel_path.with_suffix('').parts)
-            modules.append(module_name)
+        
+        # Construct module name relative to project root
+        rel_path = py_file.relative_to(PROJECT_ROOT)
+        module_name = ".".join(rel_path.with_suffix('').parts)
+        modules.append(module_name)
             
     return modules
 
@@ -66,6 +61,70 @@ def get_all_functions():
 
 all_functions = get_all_functions()
 all_functions_ids = [f"{m}.{n}" for m, n, _ in all_functions]
+
+# --- 3. JSON DATA-GUARD ---
+import json
+from user_data.strategies.gp_blocks import BLOCK_REGISTRY
+
+def discover_genomes():
+    genomes = []
+    # Find all genomes in the genomes directory
+    genome_dir = PROJECT_ROOT / "user_data/strategies/genomes"
+    if genome_dir.exists():
+        for json_file in genome_dir.rglob('*.json'):
+            genomes.append(json_file)
+            
+    # Include current_genome if it exists
+    current_genome = PROJECT_ROOT / "user_data/current_genome.json"
+    if current_genome.exists():
+        genomes.append(current_genome)
+        
+    return genomes
+
+discovered_genomes = discover_genomes()
+
+@pytest.mark.parametrize("genome_file", discovered_genomes, ids=lambda x: x.name)
+def test_json_genome_integrity(genome_file):
+    """Verifies that all JSON genomes are structurally sound and use valid registry primitives."""
+    with open(genome_file, 'r') as f:
+        data = json.load(f)
+        
+    # Handle hall_of_fame array vs single genome dict
+    if isinstance(data, list):
+        for item in data:
+            _validate_genome_structure(item)
+    else:
+        _validate_genome_structure(data)
+
+def _validate_genome_structure(genome_data):
+    # Some files wrap the trees in a "genome" key (like hall of fame entries)
+    if "genome" in genome_data:
+        genome_data = genome_data["genome"]
+        
+    assert "entry_tree" in genome_data, "Missing entry_tree in genome"
+    assert "exit_tree" in genome_data, "Missing exit_tree in genome"
+    
+    _scan_tree_primitives(genome_data["entry_tree"])
+    _scan_tree_primitives(genome_data["exit_tree"])
+
+def _scan_tree_primitives(node):
+    if not isinstance(node, dict):
+        return
+        
+    if "primitive" in node:
+        prim = node["primitive"]
+        valid_primitives = list(BLOCK_REGISTRY['num'].keys()) + list(BLOCK_REGISTRY['bool_helper'].keys()) + list(BLOCK_REGISTRY['comparator'].keys())
+        assert prim in valid_primitives, f"Primitive '{prim}' not found in BLOCK_REGISTRY!"
+        
+    if "children" in node:
+        for child in node["children"]:
+            _scan_tree_primitives(child)
+            
+    if "left" in node:
+        _scan_tree_primitives(node["left"])
+        
+    if "right" in node:
+        _scan_tree_primitives(node["right"])
 
 @pytest.fixture(scope="module")
 def mock_df():
