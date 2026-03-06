@@ -2,108 +2,24 @@
   "entry_tree": {
     "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "EMA",
+      "primitive": "BB_LOWER",
       "parameters": {
-        "window": 21
+        "window": 41,
+        "std": 2.4
       }
     },
     "right": {
-      "primitive": "RSI",
+      "primitive": "EMA",
       "parameters": {
-        "window": 50
+        "window": 46
       }
     }
   },
   "exit_tree": {
-    "operator": "OR",
-    "children": [
-      {
-        "operator": "AND",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 12
-                }
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 31,
-                    "std": 3.0
-                  }
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 17,
-                    "std": 1.8
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 45
-                }
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 52.26
-                },
-                "right": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 42,
-                    "std": 2.4
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 30
-                }
-              },
-              {
-                "primitive": "CROSS_UP",
-                "left": {
-                  "constant": 57.08
-                },
-                "right": {
-                  "primitive": "BB_UPPER",
-                  "parameters": {
-                    "window": 42,
-                    "std": 2.4
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "primitive": "TRENDING_UP",
+    "parameters": {
+      "window": 12
+    }
   },
   "fitness": -1.0,
   "ai_fixed": true
