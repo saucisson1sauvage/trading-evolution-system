@@ -999,7 +999,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1014,7 +1014,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -1178,14 +1178,14 @@
           "threshold": 30.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
         "primitive": "EMA",
         "parameters": {
-          "window": 120
+          "window": 140
         }
       },
       "exit_tree": {
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1440,7 +1440,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 350.0
+                  "constant": 400.0
                 },
                 "right": {
                   "primitive": "RSI",
