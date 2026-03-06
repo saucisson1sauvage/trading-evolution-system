@@ -2567,3 +2567,1019 @@ Rules for fixing:
   "fitness": 0.0
 }
 ==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "LESS_THAN",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 5.0
+    }
+  },
+  "exit_tree": {
+    "primitive": "GREATER_THAN",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 95.0
+    }
+  },
+  "fitness": 0.0
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "primitive": "AND",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 5.0
+    }
+  },
+  "exit_tree": {
+    "primitive": "AND",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 95.0
+    }
+  },
+  "fitness": 0.0
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "primitive": "AND",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 5.0
+    }
+  },
+  "exit_tree": {
+    "primitive": "AND",
+    "left": {
+      "primitive": "RSI",
+      "parameters": {
+        "window": 14
+      }
+    },
+    "right": {
+      "constant": 95.0
+    }
+  },
+  "fitness": 0.0
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 26,
+        "std": 2.0
+      }
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 27,
+        "std": 2.1
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 18,
+                    "std": 2.8
+                  }
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 1.9
+                  }
+                }
+              },
+              {
+                "primitive": "LESS_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 45
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 30
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 10,
+                    "std": 2.3
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 27,
+                    "std": 2.2
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 16
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "SMA",
+              "parameters": {
+                "window": 26
+              }
+            },
+            "right": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 45,
+                "std": 2.7
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 26,
+        "std": 2.0
+      }
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 27,
+        "std": 2.1
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 18,
+                    "std": 2.8
+                  }
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 1.9
+                  }
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 45
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 30
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 10,
+                    "std": 2.3
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 27,
+                    "std": 2.2
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 16
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "SMA",
+              "parameters": {
+                "window": 26
+              }
+            },
+            "right": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 45,
+                "std": 2.7
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "primitive": "CROSS_UP",
+    "left": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 26,
+        "std": 2.0
+      }
+    },
+    "right": {
+      "primitive": "BB_LOWER",
+      "parameters": {
+        "window": 27,
+        "std": 2.1
+      }
+    }
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 18,
+                    "std": 2.8
+                  }
+                },
+                "right": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 1.9
+                  }
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 45
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 30
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 10,
+                    "std": 2.3
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 27,
+                    "std": 2.2
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 16
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "primitive": "SMA",
+              "parameters": {
+                "window": 26
+              }
+            },
+            "right": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 45,
+                "std": 2.7
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 48
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 22,
+                    "std": 1.6
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 12
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 73.71
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 19,
+                "std": 1.6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 35.1
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 29,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 54.18
+                },
+                "right": {
+                  "constant": 27.0
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 69.75
+                },
+                "right": {
+                  "constant": 25.92
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 48
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 22,
+                    "std": 1.6
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 12
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 75.71
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 19,
+                "std": 1.6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 37.1
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 29,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 55.18
+                },
+                "right": {
+                  "constant": 27.0
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 69.75
+                },
+                "right": {
+                  "constant": 25.92
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 48
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 22,
+                    "std": 1.6
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 12
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 75.71
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 19,
+                "std": 1.6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 37.1
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 29,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 55.18
+                },
+                "right": {
+                  "constant": 27.0
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 69.75
+                },
+                "right": {
+                  "constant": 25.92
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 24,
+                    "std": 2.9
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 20
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 18,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 45
+      }
+    },
+    "right": {
+      "constant": 68.5
+    }
+  },
+  "fitness": 0.0
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+{
+  "entry_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 24,
+                    "std": 2.9
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 20
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 18,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 45
+      }
+    },
+    "right": {
+      "constant": 70
+    }
+  },
+  "fitness": 0.0
+}
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 24,
+                    "std": 2.9
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 20
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 18,
+            "std": 2.4
+          }
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 17
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "SMA",
+      "parameters": {
+        "window": 45
+      }
+    },
+    "right": {
+      "constant": 70
+    }
+  },
+  "fitness": 0.0
+}
+==================================================

@@ -726,7 +726,7 @@
     },
     {
       "entry_tree": {
-        "primitive": "LESS_THAN",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -738,7 +738,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "GREATER_THAN",
+        "primitive": "AND",
         "left": {
           "primitive": "RSI",
           "parameters": {
@@ -749,7 +749,8 @@
           "constant": 95.0
         }
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -802,7 +803,7 @@
                     }
                   },
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "GREATER_THAN",
                     "left": {
                       "primitive": "RSI",
                       "parameters": {
@@ -871,7 +872,8 @@
           }
         ]
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -962,7 +964,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 73.71
+                  "constant": 75.71
                 },
                 "right": {
                   "primitive": "BB_LOWER",
@@ -975,7 +977,7 @@
             ]
           },
           {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
               {
                 "operator": "NOT",
@@ -983,7 +985,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "constant": 35.1
+                      "constant": 37.1
                     },
                     "right": {
                       "primitive": "BB_LOWER",
@@ -1001,7 +1003,7 @@
                   {
                     "primitive": "GREATER_THAN",
                     "left": {
-                      "constant": 54.18
+                      "constant": 55.18
                     },
                     "right": {
                       "constant": 27.0
@@ -1022,7 +1024,8 @@
           }
         ]
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -1200,10 +1203,11 @@
           }
         },
         "right": {
-          "constant": 68.5
+          "constant": 70
         }
       },
-      "fitness": 0.0
+      "fitness": -1.0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
