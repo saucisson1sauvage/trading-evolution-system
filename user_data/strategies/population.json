@@ -1009,7 +1009,7 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 31
+            "window": 32
           }
         }
       },
@@ -1024,11 +1024,11 @@
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 31
+            "window": 32
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1178,18 +1178,18 @@
           "threshold": 30.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
         "primitive": "EMA",
         "parameters": {
-          "window": 280
+          "window": 1200
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "parameters": {
           "window": 12
         },
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1274,7 +1274,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 30.1
+                  "constant": 30.2
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1291,7 +1291,7 @@
               {
                 "primitive": "LESS_THAN",
                 "left": {
-                  "constant": 25.0
+                  "constant": 25.1
                 },
                 "right": {
                   "constant": 24.06
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
