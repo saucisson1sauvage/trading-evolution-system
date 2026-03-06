@@ -2,23 +2,24 @@
   "entry_tree": {
     "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "BB_LOWER",
+      "primitive": "BB_MIDDLE",
       "parameters": {
-        "window": 41,
-        "std": 2.4
+        "window": 49,
+        "std": 2.1
       }
     },
     "right": {
-      "primitive": "EMA",
+      "primitive": "RSI",
       "parameters": {
-        "window": 46
+        "window": 28
       }
     }
   },
   "exit_tree": {
-    "primitive": "TRENDING_UP",
+    "primitive": "VOLATILE",
     "parameters": {
-      "window": 12
+      "window": 15,
+      "threshold": 2.5
     }
   },
   "fitness": -1.0,

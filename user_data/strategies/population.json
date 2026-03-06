@@ -1315,10 +1315,10 @@
           }
         },
         "right": {
-          "constant": 70
+          "constant": 80
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1459,7 +1459,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
