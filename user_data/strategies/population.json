@@ -1007,7 +1007,10 @@
           }
         },
         "right": {
-          "constant": 200.0
+          "primitive": "RSI",
+          "parameters": {
+            "window": 14
+          }
         }
       },
       "exit_tree": {
@@ -1019,10 +1022,13 @@
           }
         },
         "right": {
-          "constant": 200.0
+          "primitive": "RSI",
+          "parameters": {
+            "window": 14
+          }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1145,7 +1151,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1172,18 +1178,18 @@
           "threshold": 30.0
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
       "entry_tree": {
         "primitive": "EMA",
         "parameters": {
-          "window": 80
+          "window": 120
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "parameters": {
           "window": 12
         },
@@ -1202,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1343,7 +1349,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
