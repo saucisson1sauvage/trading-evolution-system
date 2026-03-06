@@ -1145,7 +1145,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1404,7 +1404,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 52.26
+                      "constant": 60.0
                     },
                     "right": {
                       "primitive": "BB_UPPER",
@@ -1433,7 +1433,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 57.08
+                      "constant": 65.0
                     },
                     "right": {
                       "primitive": "BB_UPPER",
@@ -1449,7 +1449,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1468,7 +1468,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 80.0
+                  "constant": 85.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1569,7 +1569,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
