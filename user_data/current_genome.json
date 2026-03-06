@@ -1,96 +1,80 @@
 {
   "entry_tree": {
-    "operator": "AND",
+    "operator": "NOT",
     "children": [
       {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "TRENDING_UP",
-            "parameters": {
-              "window": 43
-            }
-          },
-          {
-            "primitive": "VOLUME_SPIKE",
-            "parameters": {
-              "window": 8
-            }
-          }
-        ]
-      },
-      {
-        "operator": "OR",
+        "operator": "NOT",
         "children": [
           {
             "operator": "OR",
             "children": [
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 12,
-                  "threshold": 2.41
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "constant": 32.36
+                },
+                "right": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 11
+                  }
                 }
               },
               {
-                "primitive": "TRENDING_DOWN",
+                "primitive": "VOLATILE",
                 "parameters": {
-                  "window": 8
+                  "window": 38,
+                  "threshold": 1.63
                 }
               }
             ]
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "constant": 35.0
-            },
-            "right": {
-              "constant": "RSI",
-              "parameters": {
-                "window": 19
-              }
-            }
           }
         ]
       }
     ]
   },
   "exit_tree": {
-    "operator": "OR",
+    "operator": "NOT",
     "children": [
       {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
-            "operator": "OR",
+            "operator": "NOT",
             "children": [
               {
-                "primitive": "VOLATILE",
+                "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 12,
-                  "threshold": 2.41
-                }
-              },
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 8
+                  "window": 41
                 }
               }
             ]
           },
           {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "constant": 35.0
-            },
-            "right": {
-              "constant": "RSI",
-              "parameters": {
-                "window": 19
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 41
+                }
+              },
+              {
+                "primitive": "CROSS_DOWN",
+                "left": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 37
+                  }
+                },
+                "right": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 40
+                  }
+                }
               }
-            }
+            ]
           }
         ]
       }
@@ -98,6 +82,5 @@
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0,
-  "ai_fixed": true
+  "fitness": -1.0
 }
