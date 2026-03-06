@@ -1,36 +1,30 @@
 {
   "entry_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 46,
-        "std": 1.6
-      }
-    },
-    "right": {
-      "primitive": "SMA",
-      "parameters": {
-        "window": 34
-      }
+    "primitive": "VOLATILE",
+    "parameters": {
+      "window": 28,
+      "threshold": 1.62
     }
   },
   "exit_tree": {
-    "primitive": "GREATER_THAN",
-    "left": {
-      "primitive": "BB_LOWER",
-      "parameters": {
-        "window": 20,
-        "std": 2.7
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "GREATER_THAN",
+        "left": {
+          "constant": 68.42
+        },
+        "right": {
+          "constant": 49.7
+        }
+      },
+      {
+        "primitive": "TRENDING_DOWN",
+        "parameters": {
+          "window": 48
+        }
       }
-    },
-    "right": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 23,
-        "std": 1.7
-      }
-    }
+    ]
   },
   "role": "outsider",
   "generation_age": 0,

@@ -251,19 +251,17 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 22.68
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 28,
+                        "std": 1.8
+                      }
                     },
                     "right": {
-                      "primitive": "EMA",
+                      "primitive": "RSI",
                       "parameters": {
-                        "window": 43
+                        "window": 13
                       }
-                    }
-                  },
-                  {
-                    "primitive": "VOLUME_SPIKE",
-                    "parameters": {
-                      "window": 37
                     }
                   }
                 ]
@@ -272,15 +270,16 @@
                 "operator": "OR",
                 "children": [
                   {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 32
-                    }
-                  },
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 22
+                    "primitive": "CROSS_UP",
+                    "left": {
+                      "constant": 75.71
+                    },
+                    "right": {
+                      "primitive": "BB_LOWER",
+                      "parameters": {
+                        "window": 19,
+                        "std": 1.6
+                      }
                     }
                   }
                 ]
@@ -288,30 +287,45 @@
             ]
           },
           {
-            "operator": "NOT",
+            "operator": "OR",
             "children": [
               {
                 "operator": "AND",
                 "children": [
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "GREATER_THAN",
                     "left": {
-                      "primitive": "EMA",
-                      "parameters": {
-                        "window": 20
-                      }
+                      "constant": 37.1
                     },
                     "right": {
-                      "primitive": "EMA",
+                      "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 21
+                        "window": 29,
+                        "std": 2.3
                       }
+                    }
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "constant": 55.18
+                    },
+                    "right": {
+                      "constant": 27.0
                     }
                   },
                   {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 15
+                    "primitive": "CROSS_DOWN",
+                    "left": {
+                      "constant": 69.75
+                    },
+                    "right": {
+                      "constant": 25.92
                     }
                   }
                 ]
@@ -329,7 +343,8 @@
       "fitness": -1.0,
       "debuffed_fitness": 0.0,
       "role": "candidate",
-      "generation_age": 6
+      "generation_age": 6,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
@@ -548,7 +563,7 @@
     },
     {
       "entry_tree": {
-        "operator": "NOT",
+        "operator": "OR",
         "children": [
           {
             "operator": "AND",
@@ -575,7 +590,7 @@
                     }
                   },
                   {
-                    "primitive": "LESS_THAN",
+                    "primitive": "GREATER_THAN",
                     "left": {
                       "constant": 48.0
                     },
@@ -652,7 +667,8 @@
       },
       "role": "outsider",
       "generation_age": 0,
-      "fitness": -1.0
+      "fitness": -1.0,
+      "ai_fixed": true
     }
   ]
 }
