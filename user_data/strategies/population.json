@@ -348,26 +348,21 @@
     },
     {
       "entry_tree": {
-        "operator": "AND",
+        "operator": "OR",
         "children": [
           {
-            "operator": "NOT",
+            "operator": "AND",
             "children": [
               {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 12,
-                    "std": 1.8
-                  }
-                },
-                "right": {
-                  "primitive": "BB_LOWER",
-                  "parameters": {
-                    "window": 11,
-                    "std": 2.3
-                  }
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 45
+                }
+              },
+              {
+                "primitive": "VOLUME_SPIKE",
+                "parameters": {
+                  "window": 8
                 }
               }
             ]
@@ -376,22 +371,53 @@
             "operator": "AND",
             "children": [
               {
-                "primitive": "LESS_THAN",
+                "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 28.15
+                  "constant": 30.0
                 },
                 "right": {
-                  "primitive": "EMA",
+                  "constant": "RSI",
                   "parameters": {
-                    "window": 10
+                    "window": 19
                   }
                 }
               },
               {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 31
-                }
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "SMA",
+                      "parameters": {
+                        "window": 18
+                      }
+                    },
+                    "right": {
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 9,
+                        "std": 1.6
+                      }
+                    }
+                  },
+                  {
+                    "primitive": "GREATER_THAN",
+                    "left": {
+                      "primitive": "BB_UPPER",
+                      "parameters": {
+                        "window": 25,
+                        "std": 2.5
+                      }
+                    },
+                    "right": {
+                      "primitive": "RSI",
+                      "parameters": {
+                        "window": 18
+                      }
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -401,45 +427,42 @@
         "operator": "AND",
         "children": [
           {
-            "operator": "AND",
-            "children": [
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "RSI",
-                  "parameters": {
-                    "window": 13
-                  }
-                },
-                "right": {
-                  "constant": 53.07
-                }
-              },
-              {
-                "primitive": "CROSS_DOWN",
-                "left": {
-                  "constant": 22.52
-                },
-                "right": {
-                  "constant": 26.58
-                }
-              }
-            ]
-          },
-          {
             "operator": "OR",
             "children": [
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 17
-                }
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "VOLUME_SPIKE",
+                    "parameters": {
+                      "window": 27
+                    }
+                  },
+                  {
+                    "primitive": "VOLUME_SPIKE",
+                    "parameters": {
+                      "window": 38
+                    }
+                  }
+                ]
               },
               {
-                "primitive": "TRENDING_UP",
-                "parameters": {
-                  "window": 29
-                }
+                "operator": "OR",
+                "children": [
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 41
+                    }
+                  },
+                  {
+                    "primitive": "VOLATILE",
+                    "parameters": {
+                      "window": 50,
+                      "threshold": 2.0
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -449,7 +472,8 @@
       "validation_tier": -1,
       "debuffed_fitness": 8.099,
       "role": "mutant",
-      "generation_age": 0
+      "generation_age": 0,
+      "ai_fixed": true
     },
     {
       "entry_tree": {
