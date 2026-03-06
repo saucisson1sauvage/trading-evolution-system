@@ -1,35 +1,122 @@
 {
   "entry_tree": {
-    "operator": "NOT",
+    "operator": "AND",
     "children": [
       {
-        "primitive": "CROSS_UP",
-        "left": {
-          "constant": 23.17
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 8
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 30
+            }
           }
-        }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 25,
+                    "std": 2.7
+                  }
+                },
+                "right": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 18
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 44
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
   "exit_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 32
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 34,
+            "std": 1.5
+          }
+        },
+        "right": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 12,
+            "std": 1.9
+          }
+        }
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "constant": 70.85
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 26
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 28
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 39,
+                    "std": 2.0
+                  }
+                }
+              },
+              {
+                "primitive": "TRENDING_UP",
+                "parameters": {
+                  "window": 38
+                }
+              }
+            ]
+          }
+        ]
       }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 19
-      }
-    }
+    ]
   },
   "fitness": 0.0
 }
