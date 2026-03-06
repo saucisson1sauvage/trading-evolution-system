@@ -5,6 +5,11 @@ GENS_PER_RUN=1
 POP_SIZE=20
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
+# Auto-activate local virtual environment if it exists
+if [ -f "$PROJECT_ROOT/.venv/bin/activate" ]; then
+    source "$PROJECT_ROOT/.venv/bin/activate"
+fi
+
 echo "🚀 Starting Crypto-Crew 4.0 FINAL LOOP..."
 echo "This loop will run forever (or until you stop it)."
 

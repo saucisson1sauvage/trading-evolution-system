@@ -1,6 +1,11 @@
 #!/bin/bash
 # Integration Test Gauntlet for Crypto-Crew 4.0
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Auto-activate local virtual environment if it exists
+if [ -f "$PROJECT_ROOT/.venv/bin/activate" ]; then
+    source "$PROJECT_ROOT/.venv/bin/activate"
+fi
 LOG_DIR="$PROJECT_ROOT/user_data/logs"
 EVO_LOG="$LOG_DIR/evolution.log"
 DEBUG_LOG="$LOG_DIR/strategy_debug.log"
