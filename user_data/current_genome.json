@@ -1,45 +1,77 @@
 {
   "entry_tree": {
-    "operator": "OR",
+    "operator": "AND",
     "children": [
       {
-        "operator": "OR",
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {
+          "window": 12
+        }
+      },
+      {
+        "operator": "AND",
         "children": [
           {
             "primitive": "GREATER_THAN",
             "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 39
-              }
+              "constant": 30.0
             },
             "right": {
-              "primitive": "BB_LOWER",
+              "primitive": "RSI",
               "parameters": {
-                "window": 20,
-                "std": 1.9
+                "window": 19
               }
             }
           },
           {
-            "operator": "OR",
+            "operator": "AND",
             "children": [
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 22,
-                  "threshold": 1.98
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "SMA",
+                  "parameters": {
+                    "window": 18
+                  }
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 9,
+                    "std": 1.6
+                  }
                 }
               },
               {
-                "primitive": "VOLUME_SPIKE",
-                "parameters": {
-                  "window": 13
+                "primitive": "LESS_THAN",
+                "left": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 25,
+                    "std": 2.5
+                  }
+                },
+                "right": {
+                  "primitive": "RSI",
+                  "parameters": {
+                    "window": 18
+                  }
                 }
               }
             ]
           }
         ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "AND",
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 47
+        }
       },
       {
         "operator": "OR",
@@ -48,89 +80,36 @@
             "operator": "AND",
             "children": [
               {
-                "primitive": "TRENDING_UP",
+                "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 43
+                  "window": 27
                 }
               },
               {
                 "primitive": "VOLUME_SPIKE",
                 "parameters": {
-                  "window": 8
+                  "window": 38
                 }
               }
             ]
           },
-          {
-            "primitive": "CROSS_DOWN",
-            "left": {
-              "constant": 62.08
-            },
-            "right": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 13,
-                "std": 1.9
-              }
-            }
-          }
-        ]
-      }
-    ]
-  },
-  "exit_tree": {
-    "operator": "OR",
-    "children": [
-      {
-        "operator": "OR",
-        "children": [
           {
             "operator": "OR",
             "children": [
               {
-                "primitive": "VOLATILE",
+                "primitive": "TRENDING_DOWN",
                 "parameters": {
-                  "window": 12,
-                  "threshold": 2.41
+                  "window": 41
                 }
               },
               {
-                "primitive": "TRENDING_DOWN",
+                "primitive": "VOLATILE",
                 "parameters": {
-                  "window": 8
+                  "window": 50,
+                  "threshold": 1.88
                 }
               }
             ]
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "constant": 22.34
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 19
-              }
-            }
-          }
-        ]
-      },
-      {
-        "operator": "NOT",
-        "children": [
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 25,
-                "std": 2.9
-              }
-            },
-            "right": {
-              "constant": 24.06
-            }
           }
         ]
       }
