@@ -37,8 +37,16 @@ class GPTreeStrategy(IStrategy):
             self.genome = json.load(f)
 
     def evaluate_node(self, node: Dict[str, Any], dataframe: pd.DataFrame) -> pd.Series:
+        if not isinstance(node, dict):
+            return pd.Series(False, index=dataframe.index)
+
         if "constant" in node:
-            return pd.Series(node["constant"], index=dataframe.index)
+            try:
+                # Ensure constant is a float, catching LLM strings
+                val = float(node["constant"])
+                return pd.Series(val, index=dataframe.index)
+            except (ValueError, TypeError):
+                return pd.Series(0.0, index=dataframe.index)
         
         if "primitive" in node:
             name = node["primitive"]
@@ -59,8 +67,8 @@ class GPTreeStrategy(IStrategy):
             
             # Comparators
             if name in ["GREATER_THAN", "LESS_THAN", "CROSS_UP", "CROSS_DOWN"]:
-                l = self.evaluate_node(node["left"], dataframe)
-                r = self.evaluate_node(node["right"], dataframe)
+                l = self.evaluate_node(node.get("left", {}), dataframe)
+                r = self.evaluate_node(node.get("right", {}), dataframe)
                 if name == "GREATER_THAN": return greater_than(l, r)
                 if name == "LESS_THAN": return less_than(l, r)
                 if name == "CROSS_UP": return cross_up(l, r)
@@ -69,9 +77,16 @@ class GPTreeStrategy(IStrategy):
         if "operator" in node:
             op = node["operator"].upper()
             c = node.get("children", [])
-            if op == "AND": return and_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
-            if op == "OR": return or_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
-            if op == "NOT": return not_op(self.evaluate_node(c[0], dataframe))
+            if op == "AND": 
+                if len(c) >= 2: return and_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
+                return pd.Series(False, index=dataframe.index)
+            if op == "OR": 
+                if len(c) >= 2: return or_op(self.evaluate_node(c[0], dataframe), self.evaluate_node(c[1], dataframe))
+                if len(c) == 1: return self.evaluate_node(c[0], dataframe)
+                return pd.Series(False, index=dataframe.index)
+            if op == "NOT": 
+                if len(c) >= 1: return not_op(self.evaluate_node(c[0], dataframe))
+                return pd.Series(False, index=dataframe.index)
             
         return pd.Series(False, index=dataframe.index)
 

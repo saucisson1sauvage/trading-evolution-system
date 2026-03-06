@@ -346,7 +346,7 @@ def run_loop(gens=50, pop_size=20):
         # Sync
         try:
             subprocess.run(["git", "add", "."], cwd=PROJECT_ROOT)
-            subprocess.run(["git", "commit", "-m", f"GP Gen {g} | Fitness {best.get('fitness', 0.0):.4f}"], cwd=PROJECT_ROOT)
+            subprocess.run(["git", "commit", "-m", f"GP Gen {current_gen} | Fitness {best.get('fitness', 0.0):.4f}"], cwd=PROJECT_ROOT)
             subprocess.run(["git", "push", "origin", "main"], cwd=PROJECT_ROOT)
         except Exception as e:
             logging.warning(f"Git Sync Failed: {e}")
