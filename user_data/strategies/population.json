@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1189,7 +1189,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "OR",
+        "primitive": "AND",
         "parameters": {
           "window": 12
         },
@@ -1208,7 +1208,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1291,7 +1291,7 @@
               {
                 "primitive": "LESS_THAN",
                 "left": {
-                  "constant": 24.06
+                  "constant": 25.0
                 },
                 "right": {
                   "constant": 24.06
@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1354,7 +1354,7 @@
               {
                 "primitive": "CROSS_UP",
                 "left": {
-                  "constant": 300.0
+                  "constant": 500.0
                 },
                 "right": {
                   "primitive": "BB_UPPER",
@@ -1368,7 +1368,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]

@@ -78633,3 +78633,639 @@ Rules for fixing:
   "ai_fixed": true
 }
 ==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 280
+    }
+  },
+  "exit_tree": {
+    "primitive": "OR",
+    "parameters": {
+      "window": 12
+    },
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 12
+        }
+      },
+      {
+        "primitive": "TRENDING_DOWN",
+        "parameters": {
+          "window": 12
+        }
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 280
+    }
+  },
+  "exit_tree": {
+    "primitive": "AND",
+    "parameters": {
+      "window": 12
+    },
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 12
+        }
+      },
+      {
+        "primitive": "TRENDING_DOWN",
+        "parameters": {
+          "window": 12
+        }
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 280
+    }
+  },
+  "exit_tree": {
+    "primitive": "AND",
+    "parameters": {
+      "window": 12
+    },
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 12
+        }
+      },
+      {
+        "primitive": "TRENDING_DOWN",
+        "parameters": {
+          "window": 12
+        }
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 30.0
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 24.06
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 30.0
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 25.0
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
+          }
+        ]
+      },
+      {
+        "operator": "CROSS_DOWN",
+        "left": {
+          "constant": 62.08
+        },
+        "right": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 13,
+            "std": 1.9
+          }
+        }
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 30.0
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "constant": 25.0
+            },
+            "right": {
+              "constant": 24.06
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+==================================================
+
+[AI_PROMPT] =========================================
+You are an expert crypto quant. We have a Genetic Programming (GP) genome for Freqtrade that returns 0 trades.
+The genome is a JSON AST. Your task is to modify the 'entry_tree' to be more inclusive (easier to trigger) or more logical, while keeping the EXACT SAME structure.
+
+Current Genome:
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 21
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 31,
+                "std": 3.0
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 17,
+                "std": 1.8
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 45
+            }
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 300.0
+            },
+            "right": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 42,
+                "std": 2.4
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+
+Rules for fixing:
+1. Return ONLY the valid JSON of the fixed genome. No markdown, no explanations, no backticks.
+2. Keep "primitive", "parameters", "operator", "children", "left", "right" keys EXACTLY as they are.
+3. Common fix: Change LESS_THAN constant to a higher value, or change AND to OR.
+4. Output nothing but raw JSON.
+
+==================================================
+
+[AI_RAW_RESPONSE] =========================================
+```json
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 21
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 31,
+                "std": 3.0
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 17,
+                "std": 1.8
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 45
+            }
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 500.0
+            },
+            "right": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 42,
+                "std": 2.4
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+```
+==================================================
+
+[AI_PARSED_JSON] =========================================
+{
+  "entry_tree": {
+    "primitive": "EMA",
+    "parameters": {
+      "window": 21
+    }
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 12
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 31,
+                "std": 3.0
+              }
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 17,
+                "std": 1.8
+              }
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 45
+            }
+          },
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "constant": 500.0
+            },
+            "right": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 42,
+                "std": 2.4
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": 0.0,
+  "ai_fixed": true
+}
+==================================================
