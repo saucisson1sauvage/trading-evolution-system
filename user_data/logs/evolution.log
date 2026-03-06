@@ -4106,3 +4106,13 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 09:51:18,844 | INFO | Loaded 20 individuals from persistence.
 2026-03-06 09:51:18,845 | INFO | --- Generation 288 ---
 2026-03-06 09:51:18,845 | INFO | BEST FITNESS: 8.0990
+2026-03-06 09:52:12,747 | INFO | STARTING GP LOOP: 1 gens, 20 individuals
+2026-03-06 09:52:12,748 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 09:52:12,748 | INFO | --- Generation 289 ---
+2026-03-06 09:52:12,748 | INFO | Evaluating Individual 18/20 (BULL)...
+2026-03-06 09:52:12,748 | INFO |   > Launching Freqtrade Backtest [20241105-20241205]...
+2026-03-06 09:52:17,479 | WARNING |   > No trades found or parsing failed.
+2026-03-06 09:52:17,479 | INFO | Evaluating Individual 20/20 (BULL)...
+2026-03-06 09:52:17,480 | INFO |   > Launching Freqtrade Backtest [20241105-20241205]...
+2026-03-06 09:52:21,875 | WARNING |   > No trades found or parsing failed.
+2026-03-06 09:52:21,875 | INFO | BEST FITNESS: 8.0990

@@ -1393,8 +1393,9 @@
           "threshold": 1000.0
         }
       },
-      "fitness": -1.0,
-      "ai_fixed": true
+      "fitness": 0.0,
+      "ai_fixed": true,
+      "validation_tier": 0
     },
     {
       "entry_tree": {
@@ -1490,8 +1491,9 @@
           }
         ]
       },
-      "fitness": -1.0,
-      "ai_fixed": true
+      "fitness": 0.0,
+      "ai_fixed": true,
+      "validation_tier": 0
     }
   ]
 }
