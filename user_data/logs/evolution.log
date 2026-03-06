@@ -1129,3 +1129,8 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 02:57:45,644 | WARNING |   > No trades found or parsing failed.
 2026-03-06 02:57:45,644 | INFO | BEST FITNESS: 4.2850
 2026-03-06 02:57:45,668 | WARNING | Git Sync Failed: name 'g' is not defined
+2026-03-06 02:57:56,852 | INFO | STARTING GP LOOP: 1 gens, 20 individuals
+2026-03-06 02:57:56,853 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 02:57:56,853 | INFO | --- Generation 23 ---
+2026-03-06 02:57:56,853 | INFO | BEST FITNESS: 4.2850
+2026-03-06 02:57:56,867 | WARNING | Git Sync Failed: name 'g' is not defined
