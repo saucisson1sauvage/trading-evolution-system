@@ -1,27 +1,110 @@
 {
   "entry_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 8
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "LESS_THAN",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 11,
+                    "std": 2.9
+                  }
+                },
+                "right": {
+                  "constant": 62.8
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 21,
+                    "std": 1.7
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 9,
+                    "std": 2.3
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 45
+            }
+          }
+        ]
+      },
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "CROSS_DOWN",
+            "left": {
+              "constant": 36.23
+            },
+            "right": {
+              "constant": 79.78
+            }
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "constant": 26.46
+                },
+                "right": {
+                  "constant": 68.28
+                }
+              },
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 10
+                  }
+                },
+                "right": {
+                  "constant": 34.14
+                }
+              }
+            ]
+          }
+        ]
       }
-    },
-    "right": {
-      "constant": 69.505390526339
-    }
+    ]
   },
   "exit_tree": {
-    "primitive": "GREATER_THAN",
+    "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "RSI",
+      "primitive": "SMA",
       "parameters": {
-        "window": 14
+        "window": 46
       }
     },
     "right": {
-      "constant": 77.05850777319688
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 14,
+        "std": 1.8
+      }
     }
   },
-  "fitness": 0.0
+  "fitness": 4.285
 }
