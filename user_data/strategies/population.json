@@ -1301,7 +1301,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1387,7 +1387,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 7000.0
+                  "constant": 10000.0
                 },
                 "right": {
                   "primitive": "RSI",
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -0.019000000000000003,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
