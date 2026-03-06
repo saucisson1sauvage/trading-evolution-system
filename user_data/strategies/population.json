@@ -1216,13 +1216,13 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 200
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 200
           }
         }
       },
@@ -1231,17 +1231,17 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 200
           }
         },
         "right": {
           "primitive": "RSI",
           "parameters": {
-            "window": 100
+            "window": 200
           }
         }
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1402,7 +1402,7 @@
         }
       },
       "exit_tree": {
-        "primitive": "AND",
+        "primitive": "OR",
         "parameters": {
           "window": 12
         },
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     }
   ]
