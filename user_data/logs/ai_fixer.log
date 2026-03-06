@@ -1072,3 +1072,7 @@
 2026-03-06 07:51:04,904 | INFO | Successfully fixed 1 individuals using AI.
 2026-03-06 07:51:21,739 | INFO | AI Fixer initialized with local Ollama (qwen2.5-coder:1.5b).
 2026-03-06 07:51:21,739 | INFO | No AI fixes applied this round.
+2026-03-06 07:51:33,929 | INFO | AI Fixer initialized with local Ollama (qwen2.5-coder:1.5b).
+2026-03-06 07:51:33,929 | INFO | Attempting AI fix for zero-performing individual...
+2026-03-06 07:51:45,546 | INFO | Attempting AI fix for zero-performing individual...
+2026-03-06 07:51:56,447 | INFO | Successfully fixed 2 individuals using AI.
