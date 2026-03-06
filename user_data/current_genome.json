@@ -1,42 +1,103 @@
 {
   "entry_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 28,
-        "std": 2.0
-      }
-    },
-    "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 16
-      }
-    }
-  },
-  "exit_tree": {
-    "operator": "NOT",
+    "operator": "AND",
     "children": [
       {
-        "primitive": "CROSS_UP",
-        "left": {
-          "primitive": "RSI",
-          "parameters": {
-            "window": 43
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 43
+            }
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 8
+            }
           }
-        },
-        "right": {
-          "primitive": "BB_MIDDLE",
-          "parameters": {
-            "window": 36,
-            "std": 2.4
+        ]
+      },
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
           }
-        }
+        ]
+      }
+    ]
+  },
+  "exit_tree": {
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "OR",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 12,
+                  "threshold": 2.41
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 8
+                }
+              }
+            ]
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "constant": 35.0
+            },
+            "right": {
+              "constant": "RSI",
+              "parameters": {
+                "window": 19
+              }
+            }
+          }
+        ]
       }
     ]
   },
   "role": "outsider",
   "generation_age": 0,
-  "fitness": -1.0
+  "fitness": -1.0,
+  "ai_fixed": true
 }
