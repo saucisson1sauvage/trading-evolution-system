@@ -1,32 +1,25 @@
 {
   "entry_tree": {
-    "primitive": "AND",
+    "primitive": "CROSS_DOWN",
     "left": {
-      "primitive": "RSI",
+      "primitive": "BB_MIDDLE",
       "parameters": {
-        "window": 200
+        "window": 49,
+        "std": 2.1
       }
     },
     "right": {
       "primitive": "RSI",
       "parameters": {
-        "window": 200
+        "window": 28
       }
     }
   },
   "exit_tree": {
-    "primitive": "AND",
-    "left": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
-      }
-    },
-    "right": {
-      "primitive": "RSI",
-      "parameters": {
-        "window": 200
-      }
+    "primitive": "VOLATILE",
+    "parameters": {
+      "window": 15,
+      "threshold": 1000.0
     }
   },
   "fitness": -1.0,
