@@ -1202,7 +1202,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1343,7 +1343,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
@@ -1357,38 +1357,38 @@
         "operator": "OR",
         "children": [
           {
-            "operator": "AND",
+            "operator": "OR",
             "children": [
               {
-                "operator": "OR",
-                "children": [
-                  {
-                    "primitive": "TRENDING_DOWN",
-                    "parameters": {
-                      "window": 12
-                    }
-                  },
-                  {
-                    "primitive": "GREATER_THAN",
-                    "left": {
-                      "primitive": "BB_MIDDLE",
-                      "parameters": {
-                        "window": 31,
-                        "std": 3.0
-                      }
-                    },
-                    "right": {
-                      "primitive": "BB_LOWER",
-                      "parameters": {
-                        "window": 17,
-                        "std": 1.8
-                      }
-                    }
-                  }
-                ]
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 12
+                }
               },
               {
-                "operator": "OR",
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "BB_MIDDLE",
+                  "parameters": {
+                    "window": 31,
+                    "std": 3.0
+                  }
+                },
+                "right": {
+                  "primitive": "BB_LOWER",
+                  "parameters": {
+                    "window": 17,
+                    "std": 1.8
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "operator": "NOT",
+            "children": [
+              {
+                "operator": "AND",
                 "children": [
                   {
                     "primitive": "VOLUME_SPIKE",
@@ -1412,39 +1412,10 @@
                 ]
               }
             ]
-          },
-          {
-            "operator": "NOT",
-            "children": [
-              {
-                "operator": "AND",
-                "children": [
-                  {
-                    "primitive": "VOLUME_SPIKE",
-                    "parameters": {
-                      "window": 30
-                    }
-                  },
-                  {
-                    "primitive": "CROSS_UP",
-                    "left": {
-                      "constant": 95.0
-                    },
-                    "right": {
-                      "primitive": "BB_UPPER",
-                      "parameters": {
-                        "window": 42,
-                        "std": 2.4
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
