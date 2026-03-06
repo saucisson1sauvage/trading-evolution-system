@@ -149,8 +149,8 @@
                     "right": {
                       "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 8,
-                        "std": 2.48
+                        "window": 7,
+                        "std": 2.65
                       }
                     }
                   }
@@ -220,16 +220,16 @@
         "right": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 12,
-            "std": 1.53
+            "window": 11,
+            "std": 1.39
           }
         }
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 1.551686594961005,
+      "debuffed_fitness": 1.9705127646674157,
       "role": "candidate",
-      "generation_age": 4
+      "generation_age": 5
     },
     {
       "entry_tree": {
@@ -287,7 +287,7 @@
               {
                 "primitive": "CROSS_DOWN",
                 "left": {
-                  "constant": 36.23
+                  "constant": 33.05
                 },
                 "right": {
                   "constant": 79.78
@@ -338,15 +338,15 @@
         "right": {
           "primitive": "EMA",
           "parameters": {
-            "window": 21
+            "window": 20
           }
         }
       },
       "fitness": -1.0,
       "validation_tier": -1,
-      "debuffed_fitness": 1.51799238024433,
+      "debuffed_fitness": 1.3275732151505797,
       "role": "candidate",
-      "generation_age": 2
+      "generation_age": 3
     },
     {
       "entry_tree": {
@@ -381,10 +381,9 @@
                       }
                     },
                     "right": {
-                      "primitive": "BB_LOWER",
+                      "primitive": "RSI",
                       "parameters": {
-                        "window": 9,
-                        "std": 2.3
+                        "window": 34
                       }
                     }
                   }
@@ -419,10 +418,7 @@
                       "constant": 26.46
                     },
                     "right": {
-                      "primitive": "SMA",
-                      "parameters": {
-                        "window": 12
-                      }
+                      "constant": 68.28
                     }
                   },
                   {
@@ -446,11 +442,7 @@
       "exit_tree": {
         "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 30,
-            "std": 2.4
-          }
+          "constant": 74.38
         },
         "right": {
           "primitive": "BB_MIDDLE",
@@ -468,37 +460,20 @@
     },
     {
       "entry_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "BB_UPPER",
-          "parameters": {
-            "window": 21,
-            "std": 2.3
-          }
-        },
-        "right": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 48
-          }
-        }
-      },
-      "exit_tree": {
-        "operator": "OR",
+        "operator": "AND",
         "children": [
           {
-            "primitive": "CROSS_DOWN",
+            "primitive": "LESS_THAN",
             "left": {
-              "primitive": "BB_MIDDLE",
+              "primitive": "EMA",
               "parameters": {
-                "window": 10,
-                "std": 1.9
+                "window": 14
               }
             },
             "right": {
-              "primitive": "SMA",
+              "primitive": "EMA",
               "parameters": {
-                "window": 38
+                "window": 40
               }
             }
           },
@@ -506,15 +481,41 @@
             "operator": "NOT",
             "children": [
               {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 20,
-                  "threshold": 1.4
-                }
+                "operator": "AND",
+                "children": [
+                  {
+                    "primitive": "TRENDING_DOWN",
+                    "parameters": {
+                      "window": 34
+                    }
+                  },
+                  {
+                    "primitive": "VOLATILE",
+                    "parameters": {
+                      "window": 14,
+                      "threshold": 2.03
+                    }
+                  }
+                ]
               }
             ]
           }
         ]
+      },
+      "exit_tree": {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 9
+          }
+        },
+        "right": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 38
+          }
+        }
       },
       "role": "outsider",
       "generation_age": 0,
@@ -522,57 +523,39 @@
     },
     {
       "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "VOLUME_SPIKE",
-            "parameters": {
-              "window": 20
-            }
-          },
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "primitive": "BB_MIDDLE",
-                  "parameters": {
-                    "window": 50,
-                    "std": 2.3
-                  }
-                },
-                "right": {
-                  "constant": 43.21
-                }
-              },
-              {
-                "primitive": "GREATER_THAN",
-                "left": {
-                  "constant": 50.96
-                },
-                "right": {
-                  "constant": 46.95
-                }
-              }
-            ]
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_UPPER",
+          "parameters": {
+            "window": 28,
+            "std": 2.0
           }
-        ]
+        },
+        "right": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 16
+          }
+        }
       },
       "exit_tree": {
         "operator": "NOT",
         "children": [
           {
-            "operator": "NOT",
-            "children": [
-              {
-                "primitive": "VOLATILE",
-                "parameters": {
-                  "window": 12,
-                  "threshold": 2.21
-                }
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 43
               }
-            ]
+            },
+            "right": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 36,
+                "std": 2.4
+              }
+            }
           }
         ]
       },
