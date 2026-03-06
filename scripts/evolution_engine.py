@@ -207,14 +207,9 @@ def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
         return {"trades": 0, "profit": 0.0, "sharpe": -5.0, "drawdown": 100.0}
 
 def run_evolution_round(genome: dict) -> float:
-    # 1. Recent Market (Last 30 days)
-    end_date = datetime.datetime.now()
-    start_date = end_date - datetime.timedelta(days=30)
-    timerange_recent = f"{start_date.strftime('%Y%m%d')}-{end_date.strftime('%Y%m%d')}"
-    
-    # 2. Key Regimes
+    # Use 5 Fixed Regimes (No internet/download required)
     periods = [
-        timerange_recent,
+        "20250101-20250201", # Recent-ish
         "20241105-20241205", # Bull
         "20250110-20250125", # Bear
         "20240804-20240808", # Crash

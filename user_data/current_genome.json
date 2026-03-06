@@ -1,33 +1,48 @@
 {
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "SMA",
-      "parameters": {
-        "window": 36
+    "operator": "OR",
+    "children": [
+      {
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {
+          "window": 35
+        }
+      },
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 14
+        }
       }
-    },
-    "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 40
-      }
-    }
+    ]
   },
   "exit_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 21
+    "operator": "OR",
+    "children": [
+      {
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 7
+            }
+          },
+          {
+            "primitive": "TRENDING_UP",
+            "parameters": {
+              "window": 12
+            }
+          }
+        ]
+      },
+      {
+        "primitive": "VOLUME_SPIKE",
+        "parameters": {
+          "window": 49
+        }
       }
-    },
-    "right": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 49
-      }
-    }
+    ]
   },
   "role": "outsider",
   "generation_age": 0,
