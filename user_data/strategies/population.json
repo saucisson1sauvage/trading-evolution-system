@@ -1178,7 +1178,7 @@
           "threshold": 50.0
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1289,7 +1289,7 @@
             "operator": "NOT",
             "children": [
               {
-                "primitive": "LESS_THAN",
+                "primitive": "GREATER_THAN",
                 "left": {
                   "constant": 28.1
                 },
@@ -1488,7 +1488,7 @@
           }
         ]
       },
-      "fitness": -1.0,
+      "fitness": -0.019000000000000003,
       "ai_fixed": true
     }
   ]
