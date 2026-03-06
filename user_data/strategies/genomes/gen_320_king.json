@@ -1,0 +1,18 @@
+{
+  "entry_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 15
+    }
+  },
+  "exit_tree": {
+    "primitive": "VOLUME_SPIKE",
+    "parameters": {
+      "window": 17
+    }
+  },
+  "role": "king",
+  "generation_age": 0,
+  "fitness": 6.254432448897558,
+  "debuffed_fitness": 6.254432448897558
+}
