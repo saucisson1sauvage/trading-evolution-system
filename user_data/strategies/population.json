@@ -1064,7 +1064,7 @@
                       "primitive": "BB_UPPER",
                       "parameters": {
                         "window": 20,
-                        "std": 3.8
+                        "std": 3.9
                       }
                     },
                     "right": {
@@ -1198,7 +1198,7 @@
           "window": 12
         }
       },
-      "fitness": -1.0,
+      "fitness": 0.0,
       "ai_fixed": true
     },
     {
@@ -1449,7 +1449,7 @@
           }
         ]
       },
-      "fitness": 0.0,
+      "fitness": -1.0,
       "ai_fixed": true
     },
     {
