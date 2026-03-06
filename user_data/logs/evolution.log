@@ -4133,3 +4133,11 @@ ValueError: Genome JSON must contain keys 'entry_tree' and 'exit_tree'
 2026-03-06 10:32:29,697 | INFO | Loaded 20 individuals from persistence.
 2026-03-06 10:32:29,697 | INFO | --- Generation 291 ---
 2026-03-06 10:32:29,697 | INFO | BEST FITNESS: 8.0990
+2026-03-06 10:33:09,011 | INFO | STARTING GP LOOP: 1 gens, 20 individuals
+2026-03-06 10:33:09,012 | INFO | Loaded 20 individuals from persistence.
+2026-03-06 10:33:09,012 | INFO | --- Generation 292 ---
+2026-03-06 10:33:09,012 | INFO | Evaluating Individual 18/20 (ALL DATA: 20240801-20250201)...
+2026-03-06 10:33:09,013 | INFO |   > Launching Freqtrade Backtest [20240801-20250201]...
+2026-03-06 10:33:19,769 | INFO |   > SUCCESS: Trades: 1, Profit: 0.3%, Sharpe: -100.0, DD: 0.0% -> Fitness: 0.0300
+2026-03-06 10:33:19,769 | INFO |   > 🏆 PROFITABLE 6-MONTH STRATEGY FOUND! Saving to Hall of Fame.
+2026-03-06 10:33:19,769 | INFO | BEST FITNESS: 8.0990

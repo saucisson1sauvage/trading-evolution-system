@@ -1214,6 +1214,60 @@
     },
     {
       "entry_tree": {
+        "operator": "OR",
+        "children": [
+          {
+            "primitive": "CROSS_UP",
+            "left": {
+              "primitive": "BB_UPPER",
+              "parameters": {
+                "window": 24,
+                "std": 2.9
+              }
+            },
+            "right": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 20
+              }
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "BB_MIDDLE",
+              "parameters": {
+                "window": 18,
+                "std": 2.4
+              }
+            },
+            "right": {
+              "primitive": "EMA",
+              "parameters": {
+                "window": 17
+              }
+            }
+          }
+        ]
+      },
+      "exit_tree": {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "SMA",
+          "parameters": {
+            "window": 45
+          }
+        },
+        "right": {
+          "constant": 100
+        }
+      },
+      "fitness": 0.03,
+      "ai_fixed": true,
+      "validation_tier": 0
+    },
+    {
+      "entry_tree": {
         "primitive": "AND",
         "left": {
           "primitive": "RSI",
@@ -1368,60 +1422,6 @@
       },
       "fitness": 0.0,
       "ai_fixed": true
-    },
-    {
-      "entry_tree": {
-        "operator": "OR",
-        "children": [
-          {
-            "primitive": "CROSS_UP",
-            "left": {
-              "primitive": "BB_UPPER",
-              "parameters": {
-                "window": 24,
-                "std": 2.9
-              }
-            },
-            "right": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 20
-              }
-            }
-          },
-          {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 18,
-                "std": 2.4
-              }
-            },
-            "right": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 17
-              }
-            }
-          }
-        ]
-      },
-      "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 45
-          }
-        },
-        "right": {
-          "constant": 100
-        }
-      },
-      "fitness": -1.0,
-      "ai_fixed": true,
-      "validation_tier": 0
     },
     {
       "entry_tree": {
