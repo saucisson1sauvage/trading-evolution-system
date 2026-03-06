@@ -20,7 +20,7 @@
     },
     {
       "entry_tree": {
-        "operator": "OR",
+        "primitive": "OR",
         "children": [
           {
             "primitive": "CROSS_UP",
@@ -50,7 +50,7 @@
               {
                 "primitive": "GREATER_THAN",
                 "left": {
-                  "constant": 49.14
+                  "constant": 50
                 },
                 "right": {
                   "primitive": "BB_UPPER",
