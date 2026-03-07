@@ -2435,3 +2435,338 @@
 
 # 2026-03-07 02:49:38.604015
 +n
+
+# 2026-03-07 03:28:50.037782
++/clear
+
+# 2026-03-07 03:28:51.989459
++/clean
+
+# 2026-03-07 03:29:00.130973
++/drop
+
+# 2026-03-07 03:29:04.518763
++/tokens
+
+# 2026-03-07 03:34:50.644340
++### [ROLE: LEAD QA AUTOMATION ENGINEER] ###
++# GOAL: Phase 6 - Implement a 7-day Smoke Test pre-filter in `evolution_engine.py`.
++
++/create scripts/smoke_test.py
++
++# 1. THE SMOKE TEST SCRIPT:
++# - Build a script that takes a genome JSON as input.
++# - It must run a Freqtrade backtest over a tiny 7-day timerange (e.g., last 7 days of data).
++# - It must use a modified configuration where `max_open_trades` is 1 and `stake_amount` is fixed.
++# - KEY FEATURE: Temporarily force a buy signal on the first candle to verify the 
++#   execution path (populate_indicators -> populate_entry -> populate_exit).
++
++# 2. INTEGRATION INTO `evolution_engine.py`:
++# - Modify the loop where the 6 slots are evaluated.
++# - BEFORE running the full 6-month `run_evolution_round(ind)`:
++#   a) Call `scripts/smoke_test.py` for the individual.
++#   b) If the Smoke Test fails (throws error or 0 trades):
++#      - Log: "❌ Slot {i} failed Smoke Test. Discarding."
++#      - Set `ind["fitness"] = 0.0`.
++#      - Skip the full backtest for this individual.
++#   c) If it passes: Proceed to the expensive 6-month backtest.
++
++# 3. PERFORMANCE TARGET:
++# - A Smoke Test should take < 10 seconds. 
++# - This will save us hours by catching "Silent Failures" (strategies that never trade) 
++#   before they clog the evaluation queue.
++
++# 4. RELIABILITY:
++# - Ensure the `timerange` for smoke testing is dynamically calculated to use the 
++#   most recent 7 days of available data in `user_data/data/`.
++# - ON SUCCESS: `git add . && git commit -m "Engine V2.6: Implemented Flash-Test Gatekeeper"`
+
+# 2026-03-07 04:48:56.259099
++<
+
+# 2026-03-07 04:49:00.941429
++/run chmod +x scripts/smoke_test.py
+
+# 2026-03-07 04:49:00.941602
++/run chmod +x scripts/smoke_test.py
+
+# 2026-03-07 04:49:02.786487
++/run python scripts/smoke_test.py user_data/strategies/genomes/gen_11_best_0.0000.json
+
+# 2026-03-07 04:49:02.786682
++/run python scripts/smoke_test.py user_data/strategies/genomes/gen_11_best_0.0000.json
+
+# 2026-03-07 04:49:13.433169
++/run python scripts/evolution_engine.py
+
+# 2026-03-07 04:49:13.433389
++/run python scripts/evolution_engine.py
+
+# 2026-03-07 04:57:57.477390
++/run chmod +x scripts/smoke_test.py
+
+# 2026-03-07 04:57:57.477625
++/run chmod +x scripts/smoke_test.py
+
+# 2026-03-07 04:57:59.111904
++/run python scripts/smoke_test.py user_data/strategies/genomes/gen_11_best_0.0000.json
+
+# 2026-03-07 04:57:59.112060
++/run python scripts/smoke_test.py user_data/strategies/genomes/gen_11_best_0.0000.json
+
+# 2026-03-07 04:58:05.831078
++/run python scripts/evolution_engine.py
+
+# 2026-03-07 04:58:05.831324
++/run python scripts/evolution_engine.py
+
+# 2026-03-07 05:10:41.402213
++/tokens
+
+# 2026-03-07 05:11:00.513057
++### [ROLE: LEAD QA AUTOMATION ENGINEER] ###
++# GOAL: Phase 6.5 - Fix the missing "Force-Buy" logic in the Smoke Test.
++
++# 1. THE BUG:
++# `scripts/smoke_test.py` currently runs a standard 7-day backtest. 
++# It fails strategies that are simply "patient" and don't trigger naturally in 7 days.
++# We must force a buy on the first candle to purely test SYNTAX and EXECUTION, not market timing.
++
++# 2. MODIFY `scripts/smoke_test.py`:
++# - Find where `subprocess.run(command...)` is called.
++# - Create a custom environment dictionary: `env = os.environ.copy()`.
++# - Inject our flag: `env['FREQTRADE_SMOKE_TEST'] = '1'`.
++# - Pass this environment to the subprocess: `subprocess.run(command, ..., env=env)`.
++
++# 3. MODIFY `user_data/strategies/GPTreeStrategy.py` (or your active base strategy file):
++# - Open the strategy file that is actually being tested by Freqtrade.
++# - Inside the `populate_entry_trend(self, dataframe, metadata)` function, at the very end right BEFORE returning the dataframe:
++#   a) `import os` (if not already imported at the top).
++#   b) Add this injection block:
++#      ```python
++#      if os.environ.get('FREQTRADE_SMOKE_TEST') == '1':
++#          # Force a buy signal on the very first candle to test execution paths
++#          dataframe.loc[dataframe.index[0], 'enter_long'] = 1
++#          dataframe.loc[dataframe.index[0], 'enter_tag'] = 'smoke_test_injection'
++#      ```
++
++# 4. EXECUTION & RELIABILITY:
++# - Ensure these changes are cleanly applied.
++# - Run a quick manual test using a known working genome to ensure it now registers at least 1 trade during a smoke test.
++# - ON SUCCESS: `git add . && git commit -m "Engine V2.6.5: Implemented Force-Buy Environment Injection for Smoke Tests"`.
+
+# 2026-03-07 05:19:37.717537
++/run cat > test_genome.json << 'EOF'
+
+# 2026-03-07 05:19:37.717591
++/run cat > test_genome.json << 'EOF'
+
+# 2026-03-07 05:19:37.879146
++/run {
+
+# 2026-03-07 05:19:37.879340
++/run {
+
+# 2026-03-07 05:19:38.073320
++/run "entry_tree": {
+
+# 2026-03-07 05:19:38.073387
++/run "entry_tree": {
+
+# 2026-03-07 05:19:38.244000
++/run "primitive": "GREATER_THAN",
+
+# 2026-03-07 05:19:38.244176
++/run "primitive": "GREATER_THAN",
+
+# 2026-03-07 05:19:38.603176
++/run "left": {
+
+# 2026-03-07 05:19:38.603382
++/run "left": {
+
+# 2026-03-07 05:19:38.786133
++/run "primitive": "RSI",
+
+# 2026-03-07 05:19:38.786320
++/run "primitive": "RSI",
+
+# 2026-03-07 05:19:39.103850
++/run "parameters": {
+
+# 2026-03-07 05:19:39.103946
++/run "parameters": {
+
+# 2026-03-07 05:19:39.264809
++/run "window": 14
+
+# 2026-03-07 05:19:39.264976
++/run "window": 14
+
+# 2026-03-07 05:19:39.612976
++/run }
+
+# 2026-03-07 05:19:39.613145
++/run }
+
+# 2026-03-07 05:19:39.809420
++/run },
+
+# 2026-03-07 05:19:39.809589
++/run },
+
+# 2026-03-07 05:19:40.005443
++/run "right": {
+
+# 2026-03-07 05:19:40.005656
++/run "right": {
+
+# 2026-03-07 05:19:40.201784
++/run "constant": 30
+
+# 2026-03-07 05:19:40.201954
++/run "constant": 30
+
+# 2026-03-07 05:19:40.546977
++/run }
+
+# 2026-03-07 05:19:40.547143
++/run }
+
+# 2026-03-07 05:19:40.722696
++/run },
+
+# 2026-03-07 05:19:40.722872
++/run },
+
+# 2026-03-07 05:19:40.897641
++/run "exit_tree": {
+
+# 2026-03-07 05:19:40.897809
++/run "exit_tree": {
+
+# 2026-03-07 05:19:41.093762
++/run "primitive": "LESS_THAN",
+
+# 2026-03-07 05:19:41.093927
++/run "primitive": "LESS_THAN",
+
+# 2026-03-07 05:19:41.443657
++/run "left": {
+
+# 2026-03-07 05:19:41.443836
++/run "left": {
+
+# 2026-03-07 05:19:41.658958
++/run "primitive": "RSI",
+
+# 2026-03-07 05:19:41.659149
++/run "primitive": "RSI",
+
+# 2026-03-07 05:19:42.009362
++/run "parameters": {
+
+# 2026-03-07 05:19:42.009569
++/run "parameters": {
+
+# 2026-03-07 05:19:42.207625
++/run "window": 14
+
+# 2026-03-07 05:19:42.207797
++/run "window": 14
+
+# 2026-03-07 05:19:42.499659
++/run }
+
+# 2026-03-07 05:19:42.499828
++/run }
+
+# 2026-03-07 05:19:42.697342
++/run },
+
+# 2026-03-07 05:19:42.697539
++/run },
+
+# 2026-03-07 05:19:42.895559
++/run "right": {
+
+# 2026-03-07 05:19:42.895729
++/run "right": {
+
+# 2026-03-07 05:19:43.093635
++/run "constant": 70
+
+# 2026-03-07 05:19:43.093788
++/run "constant": 70
+
+# 2026-03-07 05:19:43.419793
++/run }
+
+# 2026-03-07 05:19:43.419969
++/run }
+
+# 2026-03-07 05:19:43.622506
++/run },
+
+# 2026-03-07 05:19:43.622681
++/run },
+
+# 2026-03-07 05:19:43.818316
++/run "fitness": -1.0,
+
+# 2026-03-07 05:19:43.818494
++/run "fitness": -1.0,
+
+# 2026-03-07 05:19:44.158431
++/run "generation_age": 0,
+
+# 2026-03-07 05:19:44.158604
++/run "generation_age": 0,
+
+# 2026-03-07 05:19:44.524217
++/run "debuff_active_gens": 0,
+
+# 2026-03-07 05:19:44.524456
++/run "debuff_active_gens": 0,
+
+# 2026-03-07 05:19:44.895891
++/run "status": "outsider",
+
+# 2026-03-07 05:19:44.897234
++/run "status": "outsider",
+
+# 2026-03-07 05:19:45.212942
++/run "lineage_id": "test-smoke-123"
+
+# 2026-03-07 05:19:45.213119
++/run "lineage_id": "test-smoke-123"
+
+# 2026-03-07 05:19:45.569915
++/run }
+
+# 2026-03-07 05:19:45.570114
++/run }
+
+# 2026-03-07 05:19:45.768874
++/run EOF
+
+# 2026-03-07 05:19:45.769109
++/run EOF
+
+# 2026-03-07 05:19:52.241931
++/run python scripts/smoke_test.py test_genome.json
+
+# 2026-03-07 05:19:52.241993
++/run python scripts/smoke_test.py test_genome.json
+
+# 2026-03-07 05:19:56.058614
++/run python scripts/smoke_test.py test_genome.json
+
+# 2026-03-07 05:19:56.058671
++/run python scripts/smoke_test.py test_genome.json
+
+# 2026-03-07 05:19:57.388976
++/run git add .
+
+# 2026-03-07 05:19:57.389035
++/run git add .

@@ -1,31 +1,52 @@
 {
   "entry_tree": {
-    "operator": "NOT",
+    "operator": "OR",
     "children": [
       {
         "primitive": "GREATER_THAN",
         "left": {
-          "primitive": "EMA",
+          "primitive": "RSI",
           "parameters": {
-            "window": 40
+            "window": 10
           }
         },
         "right": {
-          "primitive": "CLOSE"
+          "primitive": "VOLUME"
+        }
+      },
+      {
+        "primitive": "CROSS_UP",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 20,
+            "std": 2.0
+          }
+        },
+        "right": {
+          "primitive": "BB_LOWER",
+          "parameters": {
+            "window": 20,
+            "std": 2.0
+          }
         }
       }
     ]
   },
   "exit_tree": {
-    "primitive": "VOLATILE",
-    "parameters": {
-      "window": 25,
-      "threshold": 1.5
-    }
+    "primitive": "NOT",
+    "children": [
+      {
+        "primitive": "TRENDING_UP",
+        "parameters": {
+          "window": 10
+        }
+      }
+    ]
   },
   "fitness": -1.0,
   "generation_age": 0,
-  "debuff_active_gens": 1,
-  "status": "candidate",
-  "lineage_id": "1bab7ca3-8f71-41f2-b2aa-9da82a9e32a0"
+  "debuff_active_gens": 0,
+  "status": "outsider",
+  "lineage_id": "155841af-e37a-4c34-aa89-cead32c25b06"
 }
