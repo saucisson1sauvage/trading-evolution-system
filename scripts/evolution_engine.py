@@ -522,21 +522,73 @@ def run_loop(gens=50):
                 log_aider(f"Slot {slot_num}: Unknown AI type defaulting to outsider")
             next_population.append(individual)
         
-        # Evaluate
+        # Evaluate with smoke test pre-filter
         for i, ind in enumerate(next_population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('status', 'unknown')})...")
-                fit = run_evolution_round(ind)
-                ind["fitness"] = fit
                 
-                # Save only if it's potentially active DNA
-                if fit > 0:
-                    lineage_id = ind.get("lineage_id")
-                    prefix = lineage_id[:8]
-                    genome_file = GENOME_DIR / f"gen_{prefix}.json"
-                    with open(genome_file, 'w') as f:
-                        json.dump(ind, f, indent=2)
-                log_aider(f"Slot {i+1} ({ind['status']}) evaluated with fitness {fit:.4f}")
+                # Run smoke test first
+                smoke_test_script = PROJECT_ROOT / "scripts" / "smoke_test.py"
+                if smoke_test_script.exists():
+                    # Save the individual to a temporary file for smoke testing
+                    temp_genome_path = GENOME_DIR / f"temp_smoke_{i}.json"
+                    try:
+                        with open(temp_genome_path, 'w') as f:
+                            json.dump(ind, f, indent=2)
+                        
+                        # Run smoke test
+                        result = subprocess.run(
+                            [sys.executable, str(smoke_test_script), str(temp_genome_path)],
+                            capture_output=True,
+                            text=True,
+                            timeout=15  # Should be less than 10 seconds, but give some buffer
+                        )
+                        
+                        # Check result
+                        if result.returncode == 0:
+                            logging.info(f"  ✅ Slot {i+1} passed smoke test")
+                            log_aider(f"Slot {i+1} passed smoke test")
+                        else:
+                            logging.info(f"  ❌ Slot {i+1} failed smoke test. Discarding.")
+                            log_aider(f"Slot {i+1} failed smoke test")
+                            ind["fitness"] = 0.0
+                            # Clean up temp file
+                            if temp_genome_path.exists():
+                                temp_genome_path.unlink()
+                            continue
+                    except subprocess.TimeoutExpired:
+                        logging.warning(f"  ⚠️ Slot {i+1} smoke test timed out. Treating as failed.")
+                        log_aider(f"Slot {i+1} smoke test timed out")
+                        ind["fitness"] = 0.0
+                        continue
+                    except Exception as e:
+                        logging.error(f"  ⚠️ Smoke test error for slot {i+1}: {e}. Treating as failed.")
+                        log_aider(f"Slot {i+1} smoke test error: {e}")
+                        ind["fitness"] = 0.0
+                        continue
+                    finally:
+                        # Clean up temp file if it exists
+                        if temp_genome_path.exists():
+                            try:
+                                temp_genome_path.unlink()
+                            except:
+                                pass
+                else:
+                    logging.warning("Smoke test script not found, skipping smoke test")
+                
+                # If smoke test passed, run full evaluation
+                if ind.get("fitness", -1.0) < 0:
+                    fit = run_evolution_round(ind)
+                    ind["fitness"] = fit
+                    
+                    # Save only if it's potentially active DNA
+                    if fit > 0:
+                        lineage_id = ind.get("lineage_id")
+                        prefix = lineage_id[:8]
+                        genome_file = GENOME_DIR / f"gen_{prefix}.json"
+                        with open(genome_file, 'w') as f:
+                            json.dump(ind, f, indent=2)
+                    log_aider(f"Slot {i+1} ({ind['status']}) evaluated with fitness {fit:.4f}")
         
         # Update King
         next_population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
@@ -567,6 +619,16 @@ def run_loop(gens=50):
         current_gen += 1
         with open(STATE_FILE, 'w') as f:
             json.dump({"current_generation": current_gen}, f, indent=2)
+        
+        # Commit the changes if this is the first generation with smoke test
+        if current_gen == 0:
+            try:
+                subprocess.run(["git", "add", "."], cwd=PROJECT_ROOT, capture_output=True, text=True)
+                subprocess.run(["git", "commit", "-m", "Engine V2.6: Implemented Flash-Test Gatekeeper"], 
+                             cwd=PROJECT_ROOT, capture_output=True, text=True)
+                logging.info("✅ Committed smoke test implementation")
+            except Exception as e:
+                logging.warning(f"Git commit failed: {e}")
         
         try:
             subprocess.run(["bash", str(PROJECT_ROOT / "scripts" / "auto_sync.sh")], cwd=PROJECT_ROOT)
