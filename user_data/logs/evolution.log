@@ -1573,3 +1573,20 @@
 2026-03-07 04:52:08,395 | INFO |   > RUTHLESS SCRUBBING: Deleted legacy file gen_240_best.json
 2026-03-07 04:52:08,395 | INFO |   > RUTHLESS SCRUBBING: Deleted legacy file gen_222_best.json
 2026-03-07 04:52:08,395 | INFO |   > RUTHLESS SCRUBBING: Deleted legacy file gen_32_best.json
+2026-03-07 04:58:06,426 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-07 04:58:06,427 | INFO | --- Generation 350 ---
+2026-03-07 04:58:11,770 | INFO | Evaluating Individual 1/6 (king)...
+2026-03-07 04:58:16,501 | INFO |   ✅ Slot 1 passed smoke test
+2026-03-07 04:58:47,141 | INFO |   > FAIL: Aggregated Trades: 209, Profit: -6.74% -> Fitness: 0.0000
+2026-03-07 04:58:47,141 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-07 04:58:51,638 | INFO |   ✅ Slot 2 passed smoke test
+2026-03-07 04:59:20,439 | INFO |   > FAIL: Aggregated Trades: 201, Profit: -6.85% -> Fitness: 0.0000
+2026-03-07 04:59:20,440 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-07 04:59:25,083 | INFO |   ✅ Slot 3 passed smoke test
+2026-03-07 04:59:53,908 | INFO |   > FAIL: Aggregated Trades: 46, Profit: -3.7199999999999998% -> Fitness: 0.0000
+2026-03-07 04:59:53,908 | INFO | Evaluating Individual 4/6 (outsider)...
+2026-03-07 04:59:58,132 | INFO |   ❌ Slot 4 failed smoke test. Discarding.
+2026-03-07 04:59:58,133 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-07 05:00:02,165 | INFO |   ❌ Slot 5 failed smoke test. Discarding.
+2026-03-07 05:00:02,166 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-07 05:00:06,457 | INFO |   ❌ Slot 6 failed smoke test. Discarding.
