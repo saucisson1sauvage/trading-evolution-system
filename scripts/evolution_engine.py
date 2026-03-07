@@ -226,6 +226,17 @@ def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
         "--userdir", str(PROJECT_ROOT / "user_data"),
         "--cache", "none"
     ]
+    
+    # Add export arguments for detailed backtest results
+    lineage_id = genome.get('lineage_id', 'unknown')
+    export_dir = PROJECT_ROOT / "user_data" / "logs" / "backtest_results"
+    export_dir.mkdir(parents=True, exist_ok=True)
+    export_filename = export_dir / f"{lineage_id}.json"
+    
+    command.extend([
+        "--export", "trades",
+        "--export-filename", str(export_filename)
+    ])
     try:
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
@@ -401,8 +412,22 @@ def scrub_genomes_directory(active_vault: List[Dict[str, Any]]):
             except Exception as e:
                 logging.warning(f"Failed to delete legacy file {genome_file}: {e}")
 
+def ensure_directories():
+    """Ensure required directories exist."""
+    directories = [
+        PROJECT_ROOT / "user_data" / "logs" / "ai_transcripts",
+        PROJECT_ROOT / "user_data" / "strategies" / "graveyard",
+        PROJECT_ROOT / "user_data" / "logs" / "backtest_results",
+    ]
+    for directory in directories:
+        directory.mkdir(parents=True, exist_ok=True)
+        logging.debug(f"Ensured directory exists: {directory}")
+
 def run_loop(gens=50):
     logging.info(f"STARTING 6-SLOT ASSEMBLY LINE GP LOOP")
+    
+    # Ensure directories exist
+    ensure_directories()
     
     current_gen = 0
     if STATE_FILE.exists():

@@ -391,6 +391,23 @@ def main() -> None:
             print("3. Calling Gemini API...")
             response_text = call_gemini(api_key, model, system_prompt, user_prompt)
             
+            # Log AI transcript
+            try:
+                transcript_dir = project_root / "user_data" / "logs" / "ai_transcripts"
+                transcript_dir.mkdir(parents=True, exist_ok=True)
+                transcript_path = transcript_dir / f"gen_{current_generation}.json"
+                transcript_data = {
+                    "generation": current_generation,
+                    "system_prompt": system_prompt,
+                    "user_prompt": user_prompt,
+                    "raw_response": response_text
+                }
+                with open(transcript_path, 'w') as f:
+                    json.dump(transcript_data, f, indent=2)
+                print(f"   AI transcript saved to {transcript_path}")
+            except Exception as e:
+                print(f"   Failed to save AI transcript: {e}")
+            
             # Extract JSON
             print("4. Extracting JSON from response...")
             json_text = extract_json(response_text)
