@@ -1,9 +1,50 @@
 {
+  "lineage_id": "4167121d-1df5-412c-8e6e-09bdb116d226",
   "entry_tree": {
-    "primitive": "HALLUCINATED_INDICATOR",
-    "parameters": {"window": 14}
+    "primitive": "CROSS_DOWN",
+    "left": {
+      "primitive": "EMA",
+      "parameters": {
+        "window": 12
+      }
+    },
+    "right": {
+      "primitive": "BB_MIDDLE",
+      "parameters": {
+        "window": 41,
+        "std": 2.5
+      }
+    }
   },
   "exit_tree": {
-    "constant": 50.0
-  }
+    "operator": "NOT",
+    "children": [
+      {
+        "operator": "NOT",
+        "children": [
+          {
+            "operator": "OR",
+            "children": [
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 28
+                }
+              },
+              {
+                "primitive": "TRENDING_DOWN",
+                "parameters": {
+                  "window": 34
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fitness": -1.0,
+  "generation_age": 0,
+  "debuff_active_gens": 0,
+  "status": "outsider"
 }

@@ -2037,3 +2037,190 @@
 
 # 2026-03-06 17:34:23.698437
 +/run python3 scripts/verify_registry_integrity.py
+
+# 2026-03-06 22:27:33.435532
++/clear
+
+# 2026-03-06 22:27:41.085457
++/tokens
+
+# 2026-03-06 22:28:23.939109
++### [ROLE: LEAD QUANT EVOLUTION ENGINEER] ###
++# GOAL: Phase 2 - Implement the 6-Slot Generation Assembly Line in `evolution_engine.py`.
++
++# 1. ARCHITECTURAL CONTEXT & RULES:
++# - THE VAULT: `hall_of_fame.json` is the Source of Truth. It stores the best genome per lineage.
++# - LINEAGE PERSISTENCE: Mutations (`apply_point_mutation`, `apply_structural_mutation`) MUST operate in-place or return a copy that preserves the parent's `lineage_id`.
++# - DYNAMIC GRAMMAR: Do not hardcode indicator lists. Use `BLOCK_REGISTRY` from `user_data.strategies.gp_blocks`.
++# - FITNESS FLOOR: Any strategy with < 10 trades or profit <= 0 returns 0.0 fitness. Do not bypass this.
++# - LOGGING: Use `log_aider()` heavily to leave breadcrumbs (e.g., "Lineage X selected for Slot 2, Age incremented").
++
++# 2. HOW (THE 6-SLOT ALLOCATION LOGIC):
++# Re-engineer the generation builder loop to create exactly 6 candidates per generation:
++# - SLOT 1 (The Mutated King): Pull the #1 genome (The King) from the Vault. 
++#   DO NOT backtest the untouched King. Instead, apply a micro-mutation to it. 
++#   Keep its `lineage_id` and `status`="king". This ensures the King is always trying to beat its own high score.
++# - SLOTS 2 & 3 (The Mutated Candidates): Pull Ranks 2 & 3 from the Vault (ensure `status` != "retired").
++#   a) Apply micro-mutation.
++#   b) Keep `lineage_id`. 
++#   c) Increment their `debuff_active_gens` by +1. Ensure `status`="candidate".
++# - SLOTS 4, 5 & 6 (The AI Outsiders): 
++#   Create a placeholder function `generate_ai_outsider(type)`. 
++#   - Slot 4 calls `type="guided"`.
++#   - Slots 5 & 6 call `type="alien"`.
++#   For now, this function just generates a fresh random genome, but it MUST assign a brand new `lineage_id`, `status`="outsider", and `debuff_active_gens`=0.
++
++# 3. ROBUST FALLBACK (EMPTY VAULT PITFALL):
++# - On a fresh start or if candidates are retired, the Vault might have < 3 lineages. 
++# - If you cannot fill Slot 1, 2, or 3 from the Vault, you MUST fallback and fill that slot with a new Alien Outsider to maintain N=6.
++
++# 4. ERROR HANDLING & RELIABILITY PROTOCOL (STRICT TUNGSTEN GUARD):
++# - AFTER EDITING: You MUST run the Tungsten Guard: `python3 -m pytest tests/test_omniscience.py -v`.
++# - IF A TEST FAILS (Turns RED): You have broken the schema or introduced a null node. 
++#   Analyze the traceback, **ROLLBACK your changes (`git restore evolution_engine.py` or `git reset --hard HEAD`)**, rethink the logic, and RETRY. 
++# - You must loop this Rollback/Retry process autonomously until the test is 100% Green.
++# - DO NOT COMMIT until tests pass.
++# - ON SUCCESS: `git add . && git commit -m "Engine V2: Implemented 6-Slot Assembly Line and Fallback Logic"`.
+
+# 2026-03-06 22:30:38.378981
++/run python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-06 22:30:38.379169
++/run python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-06 22:40:46.304605
++### [ROLE: LEAD QUANT EVOLUTION ENGINEER] ###
++# GOAL: Fix critical missing logic in `evolution_engine.py` (Phase 2.5).
++
++# 1. THE ERROR:
++# In your previous edit, you completely failed to execute Step 3 of the prompt. 
++# You removed the calls to `calculate_debuffed_fitness` and `check_retirement` 
++# from the main loop. 
++
++# 2. THE SURGICAL FIX:
++# In `evolution_engine.py`, inside `run_loop()` right AFTER the individuals are evaluated 
++# (around the "Find the King" section) and BEFORE `save_to_vault` is called:
++#   a) Determine the current `king_age`. (You can find the King in `next_population` and get its `generation_age`).
++#   b) Loop through `next_population` and call `calculate_debuffed_fitness(ind, king_age)`. Ensure the result is saved to `ind["debuffed_fitness"]`.
++#   c) Determine `outsiders_max_fitness` (the highest raw fitness of any `status == "outsider"` in `next_population`).
++#   d) Loop through `next_population` and call `check_retirement(ind, outsiders_max_fitness)`.
++
++# 3. EXECUTION:
++# - Implement this logic.
++# - Run `python3 -m pytest tests/test_omniscience.py -v` to ensure you didn't break the schema.
++# - If tests pass, commit with: "Engine V2 Fix: Re-integrated Debuff and Retirement logic".
+
+# 2026-03-06 22:41:44.303601
++/run python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-06 22:41:44.303849
++/run python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-06 22:41:49.052613
++/run pip install pytest
+
+# 2026-03-06 22:41:49.052679
++/run pip install pytest
+
+# 2026-03-06 22:41:56.033656
++/run git add scripts/evolution_engine.py
+
+# 2026-03-06 22:41:56.033844
++/run git add scripts/evolution_engine.py
+
+# 2026-03-06 22:41:56.211599
++/run git commit -m "Engine V2 Fix: Re-integrated Debuff and Retirement logic"
+
+# 2026-03-06 22:41:56.211778
++/run git commit -m "Engine V2 Fix: Re-integrated Debuff and Retirement logic"
+
+# 2026-03-07 00:39:27.269026
++### [ROLE: LEAD QUANT STRATEGIST] ###
++# GOAL: Phase 3 - Implement `scripts/generate_ai_context.py` using Prefix Caching and UID-Decoupling.
++
++/create scripts/generate_ai_context.py
++
++# 1. WHY (THE ARCHITECTURE):
++# We must build a High-Density Briefing for the Gemini API. To exploit Implicit Caching 
++# and save the 1M token limit, the payload MUST be strictly split into a massive, 
++# unchanging "Static Anchor" (Prefix) and a small "Dynamic Tail" (The current DNA).
++
++# 2. THE STATIC ANCHOR (Must be > 4096 tokens and NEVER change):
++# Create `build_static_anchor()` returning a massive string containing:
++# - THE ARSENAL: A verbose list of every block in `BLOCK_REGISTRY` (categories: num, bool_helper, comparator, operator) with detailed descriptions of how they work.
++# - THE PERSONAS: 
++#   a) The "Guided Outsider": Focuses on Volatility and Trend breakouts.
++#   b) The "Alien Outsider": Purely creative. Do not follow traditional logic. Act like a beginner freely experimenting with Lego blocks. Combine indicators in chaotic, unexpected ways.
++#   c) The "Fine-Tuner": Looks at existing DNA and makes micro-adjustments to parameters or swaps a single block to improve performance.
++# - THE JSON RULES: "RULE 1: No Hallucinations. Use EXACT block names. RULE 2: Output EXACTLY a JSON array of 5 objects. DO NOT include lineage_ids or status keys. Only output 'type', 'entry_tree', and 'exit_tree'."
++# - STRICT SCHEMA EXAMPLE: Provide a massive, hardcoded JSON example of valid entry/exit trees to pad the token count and enforce syntax.
++
++# 3. THE DYNAMIC TAIL (Changes every generation):
++# Create `build_dynamic_tail()` that:
++# - Loads `hall_of_fame.json` and `state.json`.
++# - FORMATS THE SCOREBOARD: Token-optimize the top 3 lineages. Do NOT dump raw JSON.
++#   Format: `Rank X (Lineage ID) | Fitness: [fit] | Entry: [compact_json] | Exit: [compact_json]`
++# - THE MISSION: "Generate a JSON array with these exact 'type' tags:
++#   1. 'mutated_rank_1'
++#   2. 'mutated_rank_2' (or 'alien_outsider_fallback' if Vault is empty)
++#   3. 'guided_outsider'
++#   4. 'alien_outsider_A'
++#   5. 'alien_outsider_B'"
++
++# 4. EXECUTION & ROUTER PREP:
++# - Add a `main()` function.
++# - Combine the outputs into a dictionary: 
++#   `{"static_anchor": anchor_text, "dynamic_tail": tail_text, "current_generation": gen_num}`
++# - Write this dictionary as JSON to `user_data/logs/ai_payload_cache.json`. This format will allow Phase 4 to easily inject the payload into the LLM and alternate APIs based on the generation number.
++
++# 5. RELIABILITY PROTOCOL:
++# - Run `python3 scripts/generate_ai_context.py`.
++# - ON SUCCESS: `git add scripts/generate_ai_context.py user_data/logs/ai_payload_cache.json && git commit -m "Engine V2: Implemented Cache-Optimized Context Generator"`.
+
+# 2026-03-07 00:44:54.298984
++/run python3 scripts/generate_ai_context.py
+
+# 2026-03-07 00:44:54.299144
++/run python3 scripts/generate_ai_context.py
+
+# 2026-03-07 00:45:07.784760
++/run git add scripts/generate_ai_context.py user_data/logs/ai_payload_cache.json && git commit -m "Engine V2: Implemented Cache-Optimized Context Generator"
+
+# 2026-03-07 00:45:07.784833
++/run git add scripts/generate_ai_context.py user_data/logs/ai_payload_cache.json && git commit -m "Engine V2: Implemented Cache-Optimized Context Generator"
+
+# 2026-03-07 00:54:15.353095
++### [ROLE: LEAD QUANT STRATEGIST] ###
++# GOAL: Fix critical data-loss and token-cache bugs in `scripts/generate_ai_context.py`.
++
++# 1. THE LOBOTOMY BUG (CRITICAL):
++# In `build_dynamic_tail()`, you used string slicing `[:80]` on the JSON dumps.
++# This corrupts the DNA payload by chopping off the end of the JSON trees.
++# FIX: Find `entry_str = ...[:80]` and `exit_str = ...[:80]` and REMOVE the `[:80]`. 
++# The LLM must receive the full, intact compact JSON string.
++
++# 2. THE CACHE WHIFF (CRITICAL):
++# The `static_anchor` is currently only ~1350 tokens. Gemini Implicit Caching REQUIRES > 4096 tokens.
++# FIX: In `build_static_anchor()`, massively inflate the text. Add a massive, highly verbose 
++# "Appendix" at the end of the anchor. Include things like:
++# - Extremely detailed, multi-paragraph explanations of Risk Management.
++# - A verbose breakdown of why Overfitting is dangerous.
++# - 3 more massive, deeply nested JSON examples of valid strategies.
++# - The `len(static_anchor)` MUST exceed 18,000 characters to guarantee we clear the 4096 token threshold.
++
++# 3. EXECUTION:
++# - Apply these two fixes.
++# - Run `python3 scripts/generate_ai_context.py` to verify the warning disappears and the length > 18,000.
++# - ON SUCCESS: `git add scripts/generate_ai_context.py && git commit -m "Engine V2 Fix: Removed DNA truncation and inflated Cache Anchor"`.
+
+# 2026-03-07 00:56:11.901640
++/run python3 scripts/generate_ai_context.py
+
+# 2026-03-07 00:56:11.901693
++/run python3 scripts/generate_ai_context.py
+
+# 2026-03-07 00:56:16.269760
++/run git add scripts/generate_ai_context.py && git commit -m "Engine V2 Fix: Removed DNA truncation and inflated Cache Anchor"
+
+# 2026-03-07 00:56:16.269817
++/run git add scripts/generate_ai_context.py && git commit -m "Engine V2 Fix: Removed DNA truncation and inflated Cache Anchor"
