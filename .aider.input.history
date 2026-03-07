@@ -2770,3 +2770,72 @@
 
 # 2026-03-07 05:19:57.389035
 +/run git add .
+
+# 2026-03-07 05:19:57.580740
++/run git commit -m "Engine V2.6.5: Implemented Force-Buy Environment Injection for Smoke Tests"
+
+# 2026-03-07 05:19:57.580904
++/run git commit -m "Engine V2.6.5: Implemented Force-Buy Environment Injection for Smoke Tests"
+
+# 2026-03-07 05:20:01.198527
++n
+
+# 2026-03-07 16:06:12.335390
++### [ROLE: LEAD DATA ENGINEER] ###
++# GOAL: Phase 1 - Implement the Omni-Logger, Graveyard Protocol, and Detailed Backtest Exports.
++
++# 1. SETUP DIRECTORIES & IGNORES:
++# - Ensure these directories exist (create them if they don't): 
++#   `user_data/logs/ai_transcripts/`
++#   `user_data/strategies/graveyard/`
++#   `user_data/logs/backtest_results/`
++# - Add these exactly to `.gitignore`:
++#   user_data/logs/ai_transcripts/*
++#   user_data/strategies/graveyard/*
++#   user_data/logs/backtest_results/*
++# - Create an `.aiderignore` file in the root if it doesn't exist, and add the exact same 3 lines to it.
++
++# 2. THE AI TRANSCRIPT LOGGER (`scripts/ai_batch_generator.py`):
++# - In the `main()` function, right after receiving `response_text` from `call_gemini(...)`:
++# - Create a dictionary: `{"generation": current_generation, "system_prompt": system_prompt, "user_prompt": user_prompt, "raw_response": response_text}`
++# - Write this dictionary to `user_data/logs/ai_transcripts/gen_{current_generation}.json`.
++
++# 3. THE GRAVEYARD PROTOCOL (`scripts/evolution_engine.py`):
++# - Import `shutil`.
++# - Locate the ruthless scrubbing logic (e.g., `scrub_genomes_directory()` or where `file.unlink()` / `os.remove()` is called to delete old genomes).
++# - INSTEAD of deleting, MOVE the file: `shutil.move(str(file_path), str(PROJECT_ROOT / "user_data" / "strategies" / "graveyard" / file_path.name))`
++# - Wrap the move in a try/except block to pass gracefully if the file is already gone.
++
++# 4. DETAILED FREQTRADE REPORTS (`scripts/evolution_engine.py`):
++# - Locate `run_evolution_round()` (or wherever `subprocess.run([... "freqtrade", "backtesting" ...])` is executed for the main evaluation).
++# - Append these exact arguments to the Freqtrade command list:
++#   `"--export", "trades", "--export-filename", str(PROJECT_ROOT / "user_data" / "logs" / "backtest_results" / f"{ind.get('lineage_id', 'unknown')}.json")`
++# - (Note: Do not add these to the `smoke_test.py` backtest, ONLY the main evaluation backtest).
++
++# 5. RELIABILITY:
++# - Double-check that `.gitignore` prevents these new files from being tracked.
++# - ON SUCCESS: `git add . && git commit -m "Engine V2.7: Implemented Omni-Logger, Graveyard, and Backtest Exports"`.
+
+# 2026-03-07 16:12:05.942945
++/run mkdir -p user_data/logs/ai_transcripts
+
+# 2026-03-07 16:12:05.943114
++/run mkdir -p user_data/logs/ai_transcripts
+
+# 2026-03-07 16:12:06.114667
++/run mkdir -p user_data/strategies/graveyard
+
+# 2026-03-07 16:12:06.114943
++/run mkdir -p user_data/strategies/graveyard
+
+# 2026-03-07 16:12:06.291848
++/run mkdir -p user_data/logs/backtest_results
+
+# 2026-03-07 16:12:06.292126
++/run mkdir -p user_data/logs/backtest_results
+
+# 2026-03-07 16:12:06.486224
++/run git add .
+
+# 2026-03-07 16:12:06.486439
++/run git add .
