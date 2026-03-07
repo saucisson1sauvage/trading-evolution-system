@@ -8,6 +8,7 @@ import re
 import math
 import datetime
 import uuid
+import time
 from typing import Dict, Any, List, Tuple
 from pathlib import Path
 import sys
@@ -368,41 +369,103 @@ def run_loop(gens=50):
             log_aider(f"Slot 1: Fallback to Alien Outsider (Vault empty)")
         next_population.append(king)
         
-        # SLOT 2 & 3: Mutated Candidates (from Vault ranks 2 and 3)
-        for i in range(2):
-            slot_num = i + 2
-            if len(vault) > slot_num - 1:  # -1 because vault is 0-indexed
-                candidate_source = copy.deepcopy(vault[slot_num - 1])
-                # Ensure it has required fields
-                if "lineage_id" not in candidate_source:
-                    candidate_source["lineage_id"] = str(uuid.uuid4())
-                candidate = copy.deepcopy(candidate_source)
-                # Apply micro-mutation
-                apply_point_mutation(candidate["entry_tree"])
-                apply_point_mutation(candidate["exit_tree"])
-                candidate["status"] = "candidate"
-                candidate["debuff_active_gens"] = candidate.get("debuff_active_gens", 0) + 1
-                candidate["fitness"] = -1.0
-                log_aider(f"Slot {slot_num}: Mutated Candidate from lineage {candidate['lineage_id'][:8]}, debuff_active_gens={candidate['debuff_active_gens']}")
+        # STEP A: Generate AI context
+        try:
+            generate_context_script = PROJECT_ROOT / "scripts" / "generate_ai_context.py"
+            subprocess.run([sys.executable, str(generate_context_script)], 
+                          capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=30)
+            log_aider("AI context generated successfully")
+        except Exception as e:
+            logging.warning(f"Failed to generate AI context: {e}")
+        
+        # STEP B: Strict retry loop for AI batch generation
+        ai_batch_generator_script = PROJECT_ROOT / "scripts" / "ai_batch_generator.py"
+        while True:
+            try:
+                result = subprocess.run(
+                    [sys.executable, str(ai_batch_generator_script)],
+                    capture_output=True,
+                    text=True,
+                    cwd=PROJECT_ROOT,
+                    timeout=120
+                )
+                if result.returncode == 0:
+                    log_aider("AI batch generated successfully")
+                    break
+                else:
+                    logging.warning(f"AI batch generator failed with exit code {result.returncode}")
+                    logging.warning(f"Stderr: {result.stderr[:200]}")
+            except Exception as e:
+                logging.warning(f"AI batch generator exception: {e}")
+            
+            print("⚠️ Gemini API Failed - Waiting 60 seconds before retrying...")
+            log_aider("AI batch generation failed, waiting 60 seconds to retry")
+            time.sleep(60)
+        
+        # STEP C: Load AI batch
+        latest_batch_path = PROJECT_ROOT / "user_data" / "strategies" / "latest_ai_batch.json"
+        try:
+            with open(latest_batch_path, 'r') as f:
+                ai_batch = json.load(f)
+            log_aider(f"Loaded AI batch with {len(ai_batch)} strategies")
+        except Exception as e:
+            logging.error(f"Failed to load AI batch: {e}")
+            sys.exit(1)
+        
+        # STEP D: Slot injection for slots 2-6
+        # We need exactly 5 AI strategies for slots 2-6
+        if len(ai_batch) != 5:
+            logging.error(f"AI batch must contain exactly 5 strategies, got {len(ai_batch)}")
+            sys.exit(1)
+        
+        for i, ai_strategy in enumerate(ai_batch):
+            slot_num = i + 2  # Slots 2-6
+            
+            # Create a new individual based on AI strategy
+            individual = {
+                "entry_tree": ai_strategy.get("entry_tree"),
+                "exit_tree": ai_strategy.get("exit_tree"),
+                "fitness": -1.0,
+                "generation_age": 0,
+                "debuff_active_gens": 0,
+                "status": None,  # Will be set based on type
+                "lineage_id": None  # Will be set based on type
+            }
+            
+            strategy_type = ai_strategy.get("type", "")
+            
+            # Handle different strategy types
+            if strategy_type in ["mutated_rank_1", "mutated_rank_2"]:
+                # These should preserve lineage from Vault
+                rank_num = 1 if strategy_type == "mutated_rank_1" else 2
+                rank_index = rank_num - 1  # Convert to 0-based index
+                
+                if len(vault) > rank_index:
+                    # Use lineage from the corresponding vault entry
+                    vault_entry = vault[rank_index]
+                    individual["lineage_id"] = vault_entry.get("lineage_id", str(uuid.uuid4()))
+                    individual["status"] = "candidate"
+                    individual["debuff_active_gens"] = vault_entry.get("debuff_active_gens", 0) + 1
+                    log_aider(f"Slot {slot_num}: AI {strategy_type} using lineage {individual['lineage_id'][:8]} from Vault rank {rank_num}")
+                else:
+                    # Fallback: generate new lineage
+                    individual["lineage_id"] = str(uuid.uuid4())
+                    individual["status"] = "candidate"
+                    log_aider(f"Slot {slot_num}: AI {strategy_type} with new lineage (Vault insufficient)")
+            
+            elif strategy_type in ["guided_outsider", "alien_outsider_A", "alien_outsider_B"]:
+                # These are outsiders - generate new lineage
+                individual["lineage_id"] = str(uuid.uuid4())
+                individual["status"] = "outsider"
+                log_aider(f"Slot {slot_num}: AI {strategy_type} with new lineage {individual['lineage_id'][:8]}")
+            
             else:
-                # Fallback: generate alien outsider
-                candidate = generate_ai_outsider("alien")
-                candidate["status"] = "candidate"  # Override status for slots 2 and 3
-                log_aider(f"Slot {slot_num}: Fallback to Alien Outsider (Vault insufficient)")
-            next_population.append(candidate)
-        
-        # SLOT 4: AI Outsider (guided)
-        outsider_guided = generate_ai_outsider("guided")
-        outsider_guided["status"] = "outsider"
-        next_population.append(outsider_guided)
-        log_aider(f"Slot 4: Guided AI Outsider lineage {outsider_guided['lineage_id'][:8]}")
-        
-        # SLOTS 5 & 6: AI Outsider (alien)
-        for _ in range(2):
-            outsider_alien = generate_ai_outsider("alien")
-            outsider_alien["status"] = "outsider"
-            next_population.append(outsider_alien)
-            log_aider(f"Slot {len(next_population)}: Alien AI Outsider lineage {outsider_alien['lineage_id'][:8]}")
+                # Unknown type - default to outsider
+                individual["lineage_id"] = str(uuid.uuid4())
+                individual["status"] = "outsider"
+                log_aider(f"Slot {slot_num}: Unknown AI type '{strategy_type}', defaulting to outsider")
+            
+            next_population.append(individual)
         
         # Ensure we have exactly 6 individuals
         if len(next_population) != 6:
