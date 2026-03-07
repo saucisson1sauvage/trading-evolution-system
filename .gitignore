@@ -6,3 +6,5 @@ user_data/backtest_results/*
 .venv/user_data/api_keys.json
 user_data/api_keys.json
 user_data/logs/strikes.json
+user_data/api_keys.json
+user_data/logs/strikes.json
