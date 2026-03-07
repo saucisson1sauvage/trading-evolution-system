@@ -2839,3 +2839,119 @@
 
 # 2026-03-07 16:12:06.486439
 +/run git add .
+
+# 2026-03-07 16:12:06.709061
++/run git commit -m "Engine V2.7: Implemented Omni-Logger, Graveyard, and Backtest Exports"
+
+# 2026-03-07 16:12:06.709387
++/run git commit -m "Engine V2.7: Implemented Omni-Logger, Graveyard, and Backtest Exports"
+
+# 2026-03-07 16:20:16.164246
++### [ROLE: LEAD DATA ENGINEER] ###
++# GOAL: Audit Phase 1 implementation and fix missing files.
++
++# 1. DIAGNOSTIC CHECK (Run these commands and read the output):
++# - Run: `git show --stat` to see exactly which 2 files were modified in the last commit.
++# - Run: `grep -q "ai_transcripts" scripts/ai_batch_generator.py && echo "TRANSCRIPT_FOUND" || echo "TRANSCRIPT_MISSING"`
++# - Run: `grep -q "export-filename" scripts/evolution_engine.py && echo "EXPORT_FOUND" || echo "EXPORT_MISSING"`
++
++# 2. THE REPAIR PROTOCOL:
++# Based on the output of the diagnostics above, you must apply the MISSING logic:
++
++# IF TRANSCRIPT_MISSING:
++# - Open `scripts/ai_batch_generator.py`.
++# - Right after `response_text = call_gemini(...)` succeeds, save the transcript to `user_data/logs/ai_transcripts/gen_{current_generation}.json`.
++# - Include keys: 'generation', 'system_prompt', 'user_prompt', 'raw_response'.
++
++# IF EXPORT_MISSING:
++# - Open `scripts/evolution_engine.py`.
++# - Find the `freqtrade backtesting` subprocess call used for the MAIN evaluation (not the smoke test).
++# - Append `"--export", "trades", "--export-filename", str(PROJECT_ROOT / "user_data" / "logs" / "backtest_results" / f"{lineage_id}.json")` to the command list.
++
++# 3. GRAVEYARD FIX (OVERWRITE PROTECTION):
++# - In `scripts/evolution_engine.py`, find the `shutil.move` graveyard logic.
++# - Modify it to append a timestamp so files aren't overwritten. 
++# - Example: `dest_path = graveyard_dir / f"{file_path.stem}_{int(time.time())}.json"`
++
++# 4. STRICT RELIABILITY CHECK (DO NOT COMMIT UNTIL THIS PASSES):
++# - Run: `grep -q "export-filename" scripts/evolution_engine.py || exit 1`
++# - Run: `grep -q "ai_transcripts" scripts/ai_batch_generator.py || exit 1`
++# - ONLY IF both commands succeed, run: `git add . && git commit --amend --no-edit`
+
+# 2026-03-07 16:23:28.084204
++/run git show --stat
+
+# 2026-03-07 16:23:28.084262
++/run git show --stat
+
+# 2026-03-07 16:23:32.170712
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py && echo "TRANSCRIPT_FOUND" || echo "TRANSCRIPT_MISSING"
+
+# 2026-03-07 16:23:32.170910
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py && echo "TRANSCRIPT_FOUND" || echo "TRANSCRIPT_MISSING"
+
+# 2026-03-07 16:23:34.178469
++/run grep -q "export-filename" scripts/evolution_engine.py && echo "EXPORT_FOUND" || echo "EXPORT_MISSING"
+
+# 2026-03-07 16:23:34.178659
++/run grep -q "export-filename" scripts/evolution_engine.py && echo "EXPORT_FOUND" || echo "EXPORT_MISSING"
+
+# 2026-03-07 16:23:35.820229
++/run git show --stat
+
+# 2026-03-07 16:23:35.820468
++/run git show --stat
+
+# 2026-03-07 16:23:36.000684
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py && echo "TRANSCRIPT_FOUND" || echo "TRANSCRIPT_MISSING"
+
+# 2026-03-07 16:23:36.000907
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py && echo "TRANSCRIPT_FOUND" || echo "TRANSCRIPT_MISSING"
+
+# 2026-03-07 16:23:36.199121
++/run grep -q "export-filename" scripts/evolution_engine.py && echo "EXPORT_FOUND" || echo "EXPORT_MISSING"
+
+# 2026-03-07 16:23:36.199360
++/run grep -q "export-filename" scripts/evolution_engine.py && echo "EXPORT_FOUND" || echo "EXPORT_MISSING"
+
+# 2026-03-07 16:23:36.416688
++/run grep -q "export-filename" scripts/evolution_engine.py || exit 1
+
+# 2026-03-07 16:23:36.416870
++/run grep -q "export-filename" scripts/evolution_engine.py || exit 1
+
+# 2026-03-07 16:23:36.617746
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py || exit 1
+
+# 2026-03-07 16:23:36.617958
++/run grep -q "ai_transcripts" scripts/ai_batch_generator.py || exit 1
+
+# 2026-03-07 16:23:36.784488
++/run git add .
+
+# 2026-03-07 16:23:36.784702
++/run git add .
+
+# 2026-03-07 16:23:37.010044
++/run git commit --amend --no-edit
+
+# 2026-03-07 16:23:37.010255
++/run git commit --amend --no-edit
+
+# 2026-03-07 16:23:39.588394
++/run if grep -q "ai_transcripts" scripts/ai_batch_generator.py && grep -q "export-filename" scripts/evolution_engine.py; then
+
+# 2026-03-07 16:23:39.588555
++/run if grep -q "ai_transcripts" scripts/ai_batch_generator.py && grep -q "export-filename" scripts/evolution_engine.py; then
+
+# 2026-03-07 16:23:39.794494
++/run echo "All checks passed. Amending commit..."
+
+# 2026-03-07 16:23:39.794670
++/run echo "All checks passed. Amending commit..."
+
+# 2026-03-07 16:23:39.992002
++/run git add .
+
+# 2026-03-07 16:23:39.992176
++/run git add .
