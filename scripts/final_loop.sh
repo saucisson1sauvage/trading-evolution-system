@@ -18,14 +18,10 @@ while true; do
     echo "--- [EVOLUTION PHASE] ---"
     python3 -c "import sys; sys.path.append('scripts'); from evolution_engine import run_loop; run_loop(gens=$GENS_PER_RUN)"
     
-    # 2. Run AI Fixer (Fixes zero-trade genomes using LLM)
-    echo "--- [AI FIX PHASE] ---"
-    python3 "$PROJECT_ROOT/scripts/ai_fixer.py"
-    
-    # 3. Final Commit and Push
+    # 2. Final Commit and Push
     echo "--- [SYNC PHASE] ---"
     git add .
-    git commit -m "Auto-Update: Gen Complete + AI Fix Applied"
+    git commit -m "Auto-Update: Gen Complete + Genetic Memory Sync"
     git push origin main
     
     echo "✅ Cycle Complete. Starting next generation immediately..."

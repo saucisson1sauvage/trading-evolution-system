@@ -99,3 +99,33 @@
 [2026-03-07 02:18:49] Slot 4 (outsider) evaluated with fitness 0.0000
 [2026-03-07 02:19:16] Slot 5 (outsider) evaluated with fitness 0.0000
 [2026-03-07 02:19:37] Slot 6 (outsider) evaluated with fitness 0.0000
+[2026-03-07 03:08:39] --- STARTING GENERATION 348 ---
+[2026-03-07 03:08:39] Vault loaded with 3 lineages
+[2026-03-07 03:08:39] Slot 1: Mutated King from lineage f5da609d, Age incremented to 1
+[2026-03-07 03:08:40] AI context generated successfully
+[2026-03-07 03:09:21] AI batch generated successfully
+[2026-03-07 03:09:21] Loaded AI batch with 5 strategies
+[2026-03-07 03:09:21] Slot 2: AI mutated_rank_1 using lineage f5da609d
+[2026-03-07 03:09:21] Slot 3: AI mutated_rank_2 using lineage 1bab7ca3
+[2026-03-07 03:09:21] Slot 4: AI guided_outsider with new lineage 8b476f53
+[2026-03-07 03:09:21] Slot 5: AI alien_outsider_A with new lineage d7b7503a
+[2026-03-07 03:09:21] Slot 6: AI alien_outsider_B with new lineage acff740c
+[2026-03-07 03:09:47] Slot 1 (king) evaluated with fitness 0.0000
+[2026-03-07 03:10:14] Slot 2 (candidate) evaluated with fitness 0.0000
+[2026-03-07 03:10:40] Slot 3 (candidate) evaluated with fitness 0.0000
+[2026-03-07 03:11:01] Slot 4 (outsider) evaluated with fitness 0.0000
+[2026-03-07 03:11:27] Slot 5 (outsider) evaluated with fitness 0.0000
+[2026-03-07 03:11:53] Slot 6 (outsider) evaluated with fitness 0.0000
+[2026-03-07 03:17:03] --- STARTING GENERATION 349 ---
+[2026-03-07 03:17:03] Vault loaded with 3 lineages
+[2026-03-07 03:17:03] Slot 1: Mutated King from lineage f5da609d, Age incremented to 1
+[2026-03-07 03:17:03] AI context generated successfully
+[2026-03-07 03:17:08] AI batch generated successfully
+[2026-03-07 03:17:08] Loaded AI batch with 5 strategies
+[2026-03-07 03:17:08] Slot 2: AI mutated_rank_1 using lineage f5da609d
+[2026-03-07 03:17:08] Slot 3: AI mutated_rank_2 using lineage 1bab7ca3
+[2026-03-07 03:17:08] Slot 4: AI guided_outsider with new lineage e5b5c38d
+[2026-03-07 03:17:08] Slot 5: AI alien_outsider_A with new lineage 6692c1cb
+[2026-03-07 03:17:08] Slot 6: AI alien_outsider_B with new lineage 569fffae
+[2026-03-07 03:17:38] Slot 1 (king) evaluated with fitness 0.0000
+[2026-03-07 03:18:08] Slot 2 (candidate) evaluated with fitness 0.0000

@@ -59,7 +59,7 @@
                   "constant": 36.23
                 },
                 "right": {
-                  "constant": 73.97
+                  "constant": 79.78
                 }
               },
               {
@@ -71,7 +71,7 @@
                       "constant": 26.46
                     },
                     "right": {
-                      "constant": 68.28
+                      "constant": 72.02
                     }
                   },
                   {
@@ -97,14 +97,14 @@
         "left": {
           "primitive": "SMA",
           "parameters": {
-            "window": 46
+            "window": 48
           }
         },
         "right": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 15,
-            "std": 1.96
+            "window": 14,
+            "std": 1.8
           }
         }
       },
@@ -112,8 +112,8 @@
       "validation_tier": -1,
       "debuffed_fitness": 0.0,
       "role": "king",
-      "generation_age": 2,
-      "lineage_id": "9ad4e234-6c57-4744-9155-278703d16b73",
+      "generation_age": 1,
+      "lineage_id": "f5da609d-db20-44e0-8f14-c7db9706993c",
       "status": "king",
       "debuff_active_gens": 0
     },
@@ -152,7 +152,7 @@
                     "right": {
                       "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 12,
+                        "window": 9,
                         "std": 2.3
                       }
                     }
@@ -162,7 +162,7 @@
               {
                 "primitive": "TRENDING_UP",
                 "parameters": {
-                  "window": 50
+                  "window": 40
                 }
               }
             ]
@@ -196,7 +196,7 @@
                     "left": {
                       "primitive": "EMA",
                       "parameters": {
-                        "window": 12
+                        "window": 10
                       }
                     },
                     "right": {
@@ -212,9 +212,9 @@
       "exit_tree": {
         "primitive": "CROSS_DOWN",
         "left": {
-          "primitive": "SMA",
+          "primitive": "EMA",
           "parameters": {
-            "window": 50
+            "window": 46
           }
         },
         "right": {
@@ -229,23 +229,38 @@
       "generation_age": 0,
       "debuff_active_gens": 1,
       "status": "candidate",
-      "lineage_id": "62120a62-175e-4fd8-a73b-cd1527b258d8",
+      "lineage_id": "f5da609d-db20-44e0-8f14-c7db9706993c",
       "debuffed_fitness": 0.0
     },
     {
       "entry_tree": {
-        "operator": "NOT",
+        "operator": "AND",
         "children": [
           {
-            "primitive": "GREATER_THAN",
-            "left": {
-              "primitive": "EMA",
-              "parameters": {
-                "window": 40
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "GREATER_THAN",
+                "left": {
+                  "primitive": "EMA",
+                  "parameters": {
+                    "window": 37
+                  }
+                },
+                "right": {
+                  "primitive": "CLOSE",
+                  "parameters": {
+                    "window": 35
+                  }
+                }
               }
-            },
-            "right": {
-              "primitive": "CLOSE"
+            ]
+          },
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 14,
+              "threshold": 1.5
             }
           }
         ]
@@ -254,7 +269,7 @@
         "primitive": "VOLATILE",
         "parameters": {
           "window": 25,
-          "threshold": 1.5
+          "threshold": 1.6
         }
       },
       "fitness": 0.0,
@@ -271,96 +286,97 @@
           {
             "primitive": "TRENDING_UP",
             "parameters": {
-              "window": 30
+              "window": 60
             }
           },
           {
-            "primitive": "VOLATILE",
-            "parameters": {
-              "window": 14,
-              "threshold": 2.0
-            }
-          },
+            "operator": "AND",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 20,
+                  "threshold": 2.0
+                }
+              },
+              {
+                "primitive": "CROSS_UP",
+                "left": {
+                  "primitive": "CLOSE"
+                },
+                "right": {
+                  "primitive": "BB_UPPER",
+                  "parameters": {
+                    "window": 20,
+                    "std": 2.0
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "exit_tree": {
+        "operator": "OR",
+        "children": [
           {
-            "primitive": "CROSS_UP",
+            "primitive": "CROSS_DOWN",
             "left": {
               "primitive": "CLOSE"
             },
             "right": {
-              "primitive": "BB_UPPER",
+              "primitive": "EMA",
               "parameters": {
-                "window": 20,
-                "std": 2.0
+                "window": 20
               }
+            }
+          },
+          {
+            "primitive": "TRENDING_DOWN",
+            "parameters": {
+              "window": 15
             }
           }
         ]
-      },
-      "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "CLOSE"
-        },
-        "right": {
-          "primitive": "EMA",
-          "parameters": {
-            "window": 20
-          }
-        }
       },
       "fitness": 0.0,
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "bcb57749-2f25-4453-8d40-539a066ded61",
+      "lineage_id": "8b476f53-459e-4d4e-9f67-05a10d4507de",
       "debuffed_fitness": 0.0
     },
     {
       "entry_tree": {
-        "operator": "AND",
-        "children": [
-          {
-            "primitive": "VOLUME_SPIKE",
-            "parameters": {
-              "window": 5,
-              "threshold": 2.0
-            }
-          },
-          {
-            "primitive": "LESS_THAN",
-            "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 14
-              }
-            },
-            "right": {
-              "primitive": "BB_MIDDLE",
-              "parameters": {
-                "window": 20,
-                "std": 2.0
-              }
-            }
-          }
-        ]
-      },
-      "exit_tree": {
         "primitive": "GREATER_THAN",
         "left": {
+          "primitive": "VOLUME"
+        },
+        "right": {
           "primitive": "RSI",
           "parameters": {
             "window": 14
           }
+        }
+      },
+      "exit_tree": {
+        "primitive": "LESS_THAN",
+        "left": {
+          "primitive": "BB_MIDDLE",
+          "parameters": {
+            "window": 20,
+            "std": 2.0
+          }
         },
         "right": {
-          "constant": 85.0
+          "constant": 30.0
         }
       },
       "fitness": 0.0,
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "d7cfaf66-7e04-466e-a0b1-c48c13b13877",
+      "lineage_id": "d7b7503a-9ae0-47f2-9b9b-f64014cd4bae",
       "debuffed_fitness": 0.0
     },
     {
@@ -370,44 +386,58 @@
           {
             "primitive": "CROSS_UP",
             "left": {
-              "primitive": "RSI",
-              "parameters": {
-                "window": 9
-              }
+              "primitive": "VOLUME"
             },
             "right": {
-              "primitive": "SMA",
+              "primitive": "RSI",
               "parameters": {
-                "window": 20
+                "window": 14
               }
             }
           },
           {
-            "primitive": "VOLATILE",
-            "parameters": {
-              "window": 5,
-              "threshold": 3.0
-            }
+            "operator": "NOT",
+            "children": [
+              {
+                "primitive": "VOLATILE",
+                "parameters": {
+                  "window": 20,
+                  "threshold": 2.0
+                }
+              }
+            ]
           }
         ]
       },
       "exit_tree": {
-        "primitive": "CROSS_DOWN",
-        "left": {
-          "primitive": "CLOSE"
-        },
-        "right": {
-          "primitive": "SMA",
-          "parameters": {
-            "window": 10
+        "operator": "AND",
+        "children": [
+          {
+            "primitive": "VOLUME_SPIKE",
+            "parameters": {
+              "window": 10,
+              "threshold": 1.5
+            }
+          },
+          {
+            "primitive": "GREATER_THAN",
+            "left": {
+              "primitive": "RSI",
+              "parameters": {
+                "window": 7
+              }
+            },
+            "right": {
+              "constant": 80.0
+            }
           }
-        }
+        ]
       },
       "fitness": 0.0,
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "62c735f9-e0b9-40f6-a4f7-70af4f4c0651",
+      "lineage_id": "acff740c-cd88-4172-8421-f59fde801a3f",
       "debuffed_fitness": 0.0
     }
   ]

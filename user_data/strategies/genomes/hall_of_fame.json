@@ -111,7 +111,9 @@
     "validation_tier": -1,
     "debuffed_fitness": 8.099,
     "role": "king",
-    "generation_age": 0
+    "generation_age": 0,
+    "lineage_id": "f5da609d-db20-44e0-8f14-c7db9706993c",
+    "status": "king"
   },
   {
     "lineage_id": "1bab7ca3-8f71-41f2-b2aa-9da82a9e32a0",
@@ -163,6 +165,8 @@
     "role": "king",
     "generation_age": 0,
     "fitness": 6.254432448897558,
-    "debuffed_fitness": 6.254432448897558
+    "debuffed_fitness": 6.254432448897558,
+    "lineage_id": "33cefffd-ae1c-4208-a572-e7cf79acb182",
+    "status": "king"
   }
 ]

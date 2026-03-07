@@ -2224,3 +2224,214 @@
 
 # 2026-03-07 00:56:16.269817
 +/run git add scripts/generate_ai_context.py && git commit -m "Engine V2 Fix: Removed DNA truncation and inflated Cache Anchor"
+
+# 2026-03-07 01:19:15.491674
++/clear
+
+# 2026-03-07 01:19:21.795899
++/drop user_data/strategies/genomes/hall_of_fame.json
+
+# 2026-03-07 01:35:53.919763
++### [ROLE: LEAD AI SYSTEMS INTEGRATOR] ###
++# GOAL: Phase 4 - Implement `scripts/ai_batch_generator.py` with secure key loading, a 30-minute strike system, and delimiter extraction.
++
++/create scripts/ai_batch_generator.py
++
++# 1. IMPORTS & SECURE SETUP:
++# - Import `json`, `sys`, `os`, `time`, `requests`, `re`.
++# - Import `BLOCK_REGISTRY` from `user_data.strategies.gp_blocks`.
++# - SECURE KEY LOADING: Read `user_data/api_keys.json`. If it doesn't exist, `sys.exit("Error: user_data/api_keys.json missing.")`. 
++#   Extract the list of keys from the `"api_keys"` field.
++
++# 2. THE DIVERSITY & KEY ROUTER:
++# - Load `user_data/logs/ai_payload_cache.json`.
++# - Extract `static_anchor`, `dynamic_tail`, and `current_generation`.
++# - MODEL ROUTER: `model = "gemini-3-flash-preview" if current_generation % 3 == 0 else "gemini-3.1-flash-lite-preview"`
++# - KEY ROUTER: Select a key using modulo: `api_key = api_keys[current_generation % len(api_keys)]`
++# - CUSTOM DELIMITER INJECTION: Append this EXACT string to the `dynamic_tail`:
++#   "\n\nCRITICAL INSTRUCTION: You MUST wrap your entire JSON array between the exact text @@@JSON_START@@@ and @@@JSON_END@@@. Do not output anything outside of these tags."
++
++# 3. THE TIME-BASED STRIKE SYSTEM (`check_strikes()` and `add_strike()`):
++# - Create a function that reads a list of timestamps from `user_data/logs/strikes.json` (create if missing).
++# - Filter out timestamps older than 1800 seconds (30 minutes).
++# - If `len(recent_strikes) >= 10`: `sys.exit("🚨 FATAL: 10 AI HALLUCINATION STRIKES IN 30 MINS. HALTING ENGINE. 🚨")`.
++# - If validation fails, append `time.time()` to the list and save back to `strikes.json`.
++
++# 4. THE API CALLER & EXTRACTOR:
++# - Create `call_gemini(api_key, model, system_prompt, user_prompt)`.
++# - Construct the REST POST to `https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}`.
++# - Payload format:
++#   `{"system_instruction": {"parts": [{"text": system_prompt}]}, "contents": [{"parts": [{"text": user_prompt}]}], "generationConfig": {"temperature": 0.7}}`
++# - Extract the text from the response. 
++# - Use `text.split("@@@JSON_START@@@")[1].split("@@@JSON_END@@@")[0].strip()` to safely extract the JSON.
++
++# 5. THE MAIN VALIDATION LOOP:
++# - Create a loop that attempts the API call up to 3 times per execution.
++# - Start of loop: call `check_strikes()`.
++# - Try to `json.loads()` the extracted text.
++# - VALIDATION 1: Must be a list of 5 objects containing 'type', 'entry_tree', 'exit_tree'.
++# - VALIDATION 2 (TUNGSTEN GUARD): Recursively scan trees; every `primitive` MUST exist in `BLOCK_REGISTRY`.
++# - IF PASS: Save the array to `user_data/strategies/latest_ai_batch.json` and `sys.exit(0)`.
++# - IF FAIL: Call `add_strike()`, print the exact validation error, `time.sleep(5)`, and loop again.
++
++# 6. RELIABILITY:
++# - Do not commit `user_data/api_keys.json` under any circumstances.
++# - Run `python3 scripts/ai_batch_generator.py` to test the connection.
++# - ON SUCCESS: `git add scripts/ai_batch_generator.py && git commit -m "Engine V2: Implemented Secure AI Batch Generator"`.
+
+# 2026-03-07 01:40:00.925740
++ 
+
+# 2026-03-07 01:40:13.909646
++y
+
+# 2026-03-07 01:42:15.294234
++/run echo "user_data/api_keys.json" >> .gitignore
+
+# 2026-03-07 01:42:15.294459
++/run echo "user_data/api_keys.json" >> .gitignore
+
+# 2026-03-07 01:42:15.460320
++/run echo "user_data/logs/strikes.json" >> .gitignore
+
+# 2026-03-07 01:42:15.460500
++/run echo "user_data/logs/strikes.json" >> .gitignore
+
+# 2026-03-07 01:42:15.656611
++/run python3 scripts/create_api_keys_template.py
+
+# 2026-03-07 01:42:15.656779
++/run python3 scripts/create_api_keys_template.py
+
+# 2026-03-07 01:42:15.865755
++/run python3 scripts/test_ai_batch_generator.py
+
+# 2026-03-07 01:42:15.865925
++/run python3 scripts/test_ai_batch_generator.py
+
+# 2026-03-07 01:42:19.670679
++/run python3 scripts/ai_batch_generator.py
+
+# 2026-03-07 01:42:19.670872
++/run python3 scripts/ai_batch_generator.py
+
+# 2026-03-07 01:42:45.099025
++/run git add scripts/ai_batch_generator.py scripts/test_ai_batch_generator.py .gitignore
+
+# 2026-03-07 01:42:45.099085
++/run git add scripts/ai_batch_generator.py scripts/test_ai_batch_generator.py .gitignore
+
+# 2026-03-07 01:42:45.264119
++/run git commit -m "Engine V2: Implemented Secure AI Batch Generator with tests"
+
+# 2026-03-07 01:42:45.264330
++/run git commit -m "Engine V2: Implemented Secure AI Batch Generator with tests"
+
+# 2026-03-07 01:54:24.283139
++/tokens
+
+# 2026-03-07 01:54:51.435235
++/drop scripts/generate_ai_context.py   
+
+# 2026-03-07 01:55:04.939390
++/drop user_data/logs/ai_payload_cache.json 
+
+# 2026-03-07 01:55:26.395303
++### [ROLE: LEAD QUANT EVOLUTION ENGINEER] ###
++# GOAL: Phase 5 - Final Integration. Connect the Gemini AI Batch Generator to the main loop.
++
++/edit scripts/evolution_engine.py
++
++# 1. THE MISSION:
++# Replace the placeholder random generation with our high-fidelity Gemini AI batch. 
++# We must carefully inject the AI strategies into the 6-slot roster while protecting 
++# the `lineage_id` tracking for the Highlander Leaderboard.
++
++# 2. HOW (MAIN LOOP RE-WIRING):
++# Inside `run_loop()`, at the beginning of each generation:
++# - STEP A: Execute `subprocess.run([sys.executable, "scripts/generate_ai_context.py"])`. 
++#   This ensures the AI briefing has the latest performance stats from the Vault.
++# - STEP B (THE STRICT RETRY LOOP): 
++#   Execute `subprocess.run([sys.executable, "scripts/ai_batch_generator.py"])`. 
++#   If the subprocess returns a non-zero exit code, DO NOT FALL BACK TO RANDOM. 
++#   Print "⚠️ Gemini API Failed - Waiting 60 seconds before retrying..." and loop 
++#   until it succeeds. We must protect the DNA integrity.
++# - STEP C: Load `user_data/strategies/latest_ai_batch.json`.
++# - STEP D (SLOT INJECTION):
++#   - SLOT 1: Keep current logic (Mutated version of the King from the Vault).
++#   - SLOTS 2-6: Pull the 5 objects from the AI batch. 
++#     - IMPORTANT: You MUST assign each AI strategy a NEW `lineage_id` and status='outsider' 
++#       if it is an 'outsider' or 'guided' type.
++#     - IMPORTANT: If it is a 'mutated_rank_1' or 'mutated_rank_2' type, you MUST 
++#       find the original `lineage_id` from the Vault and PRESERVE it so the 
++#       Highlander logic works. Set their status to 'candidate'.
++
++# 3. EXECUTION & TUNGSTEN GUARD:
++# - After editing, ensure you haven't broken the test suite. 
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v`.
++# - If anything fails, ROLLBACK and retry.
++# - ON SUCCESS: `git add scripts/evolution_engine.py && git commit -m "Engine V2: FULL INTEGRATION COMPLETE. AI-Powered Evolution Active."`.
+
+# 2026-03-07 01:58:47.070322
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-07 01:58:47.070443
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-07 01:59:03.919544
++/run git add scripts/evolution_engine.py && git commit -m "Engine V2: FULL INTEGRATION COMPLETE. AI-Powered Evolution Active."
+
+# 2026-03-07 01:59:03.919609
++/run git add scripts/evolution_engine.py && git commit -m "Engine V2: FULL INTEGRATION COMPLETE. AI-Powered Evolution Active."
+
+# 2026-03-07 02:41:32.144825
++### [ROLE: LEAD QUANT SYSTEMS ARCHITECT] ###
++# GOAL: Phase 5.5 - Decommission Fixer and implement Ruthless DNA Pruning.
++
++# 1. DECOMMISSION FIXER:
++# - Locate and remove any calls to `ai_fixer.py` or `scripts/ai_fixer.py` within `evolution_engine.py`.
++# - The engine must no longer attempt to repair broken strategies; simply let them return 0.0 fitness and be discarded.
++
++# 2. RUTHLESS DNA PRUNING (Winner Stays):
++# - Update `save_to_vault()` in `evolution_engine.py` (or the equivalent logic):
++#   a) For the incoming `lineage_id`, check if a version already exists in the Leaderboard.
++#   b) If the NEW fitness is higher: Overwrite the existing file/entry.
++#   c) If the NEW fitness is lower: DELETE the new genome file immediately.
++#   d) SCRUBBING: Periodically scan `user_data/strategies/genomes/` and delete any file that is NOT the current King or an active Candidate.
++
++# 3. LEADERBOARD CAP:
++# - Enforce a hard cap of 30 entries in `hall_of_fame.json`. 
++#   If adding a new King pushes the count above 30, remove the entry with the lowest TRUE fitness.
++
++# 4. RETIREMENT LOGIC:
++# - Ensure that when `check_retirement()` is called, the genome is marked `is_retired: true`. 
++# - Retired genomes remain in the Leaderboard (if they were top-tier) but their local `.json` file in the active pool is purged to save space.
++
++# 5. RELIABILITY PROTOCOL:
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v`.
++# - Ensure the deletion logic doesn't cause "FileNotFoundError" in the backtester.
++# - ON SUCCESS: `git add . && git commit -m "Engine V2.5: Removed Fixer and implemented Ruthless Pruning"`.
+
+# 2026-03-07 02:48:42.041878
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-07 02:48:42.042161
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v
+
+# 2026-03-07 02:49:03.613838
++n
+
+# 2026-03-07 02:49:07.283962
++/run git add .
+
+# 2026-03-07 02:49:07.284016
++/run git add .
+
+# 2026-03-07 02:49:22.879300
++/run git commit -m "Engine V2.5: Removed Fixer and implemented Ruthless Pruning"
+
+# 2026-03-07 02:49:22.879595
++/run git commit -m "Engine V2.5: Removed Fixer and implemented Ruthless Pruning"
+
+# 2026-03-07 02:49:38.604015
++n

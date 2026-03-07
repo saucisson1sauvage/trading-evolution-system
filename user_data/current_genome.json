@@ -1,50 +1,31 @@
 {
-  "lineage_id": "4167121d-1df5-412c-8e6e-09bdb116d226",
   "entry_tree": {
-    "primitive": "CROSS_DOWN",
-    "left": {
-      "primitive": "EMA",
-      "parameters": {
-        "window": 12
-      }
-    },
-    "right": {
-      "primitive": "BB_MIDDLE",
-      "parameters": {
-        "window": 41,
-        "std": 2.5
-      }
-    }
-  },
-  "exit_tree": {
     "operator": "NOT",
     "children": [
       {
-        "operator": "NOT",
-        "children": [
-          {
-            "operator": "OR",
-            "children": [
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 28
-                }
-              },
-              {
-                "primitive": "TRENDING_DOWN",
-                "parameters": {
-                  "window": 34
-                }
-              }
-            ]
+        "primitive": "GREATER_THAN",
+        "left": {
+          "primitive": "EMA",
+          "parameters": {
+            "window": 40
           }
-        ]
+        },
+        "right": {
+          "primitive": "CLOSE"
+        }
       }
     ]
   },
+  "exit_tree": {
+    "primitive": "VOLATILE",
+    "parameters": {
+      "window": 25,
+      "threshold": 1.5
+    }
+  },
   "fitness": -1.0,
   "generation_age": 0,
-  "debuff_active_gens": 0,
-  "status": "outsider"
+  "debuff_active_gens": 1,
+  "status": "candidate",
+  "lineage_id": "1bab7ca3-8f71-41f2-b2aa-9da82a9e32a0"
 }

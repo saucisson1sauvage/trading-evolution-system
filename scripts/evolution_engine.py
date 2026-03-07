@@ -19,7 +19,7 @@ STRATEGY_DIR = PROJECT_ROOT / "user_data/strategies"
 GENOME_DIR = STRATEGY_DIR / "genomes"
 POPULATION_FILE = STRATEGY_DIR / "population.json"
 STATE_FILE = STRATEGY_DIR / "state.json"
-CURRENT_GENOME_FILE = PROJECT_ROOT / "user_data/current_genome.json"
+CURRENT_GENOME_FILE = PROJECT_ROOT / "user_data" / "current_genome.json"
 LOG_FILE = PROJECT_ROOT / "user_data/logs/evolution.log"
 VAULT_FILE = GENOME_DIR / "hall_of_fame.json"
 AIDER_LOG_FILE = PROJECT_ROOT / "user_data/logs/aider_debug.log"
@@ -162,6 +162,7 @@ def get_similarity_hash(genome: dict) -> str:
     return re.sub(r'(\d+\.\d+)', lambda m: str(round(float(m.group(1)))), raw_str)
 
 def save_to_vault(king: dict):
+    """Save king to vault with ruthless pruning logic."""
     vault = []
     if VAULT_FILE.exists():
         try:
@@ -169,30 +170,46 @@ def save_to_vault(king: dict):
                 vault = json.load(f)
         except Exception:
             pass
-            
-    # Highlander: Only one per lineage
-    lineage_found = False
+    
+    # Find existing entry with same lineage_id
+    existing_index = -1
     for i, v in enumerate(vault):
         if v.get("lineage_id") == king.get("lineage_id"):
-            lineage_found = True
-            if king.get("fitness", 0.0) > v.get("fitness", 0.0):
-                vault[i] = copy.deepcopy(king)
-                vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
-                with open(VAULT_FILE, 'w') as f:
-                    json.dump(vault, f, indent=2)
-                logging.info(f"  > VAULT UPDATED (Lineage improved). Top fitness: {vault[0].get('fitness', 0.0):.4f}")
-            return
-            
-    if not lineage_found:
-        vault.append(copy.deepcopy(king))
-        
-    vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
-    vault = vault[:3]
+            existing_index = i
+            break
     
+    # Ruthless DNA Pruning: Winner Stays logic
+    if existing_index >= 0:
+        existing_fitness = vault[existing_index].get("fitness", 0.0)
+        new_fitness = king.get("fitness", 0.0)
+        
+        if new_fitness > existing_fitness:
+            # Overwrite existing entry
+            vault[existing_index] = copy.deepcopy(king)
+            logging.info(f"  > VAULT UPDATED (Lineage improved: {new_fitness:.4f} > {existing_fitness:.4f})")
+        else:
+            # Already in vault with better fitness
+            return
+    else:
+        # New lineage: add to vault
+        vault.append(copy.deepcopy(king))
+    
+    # Sort by fitness in descending order
+    vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
+    
+    # Enforce hard cap of 30 entries
+    if len(vault) > 30:
+        vault = vault[:30]
+    
+    # Save vault
     VAULT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(VAULT_FILE, 'w') as f:
         json.dump(vault, f, indent=2)
-    logging.info(f"  > VAULT UPDATED. Top strategy fitness: {vault[0].get('fitness', 0.0):.4f}")
+    
+    # Perform periodic scrubbing of genomes directory
+    scrub_genomes_directory(vault)
+    
+    logging.info(f"  > VAULT UPDATED. Top fitness: {vault[0].get('fitness', 0.0):.4f} | Total entries: {len(vault)}/30")
 
 def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
     CURRENT_GENOME_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -231,13 +248,13 @@ def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
         return {"trades": 0, "profit": 0.0, "sharpe": -5.0, "drawdown": 100.0}
 
 def run_evolution_round(genome: dict) -> float:
-    # Use 5 Fixed Regimes (No internet/download required)
+    # Use 5 Fixed Regimes (Expanded Coverage)
     periods = [
-        "20250101-20250201", # Recent-ish
-        "20241105-20241205", # Bull
-        "20250110-20250125", # Bear
-        "20240804-20240808", # Crash
-        "20241215-20250105"  # Sideways
+        "20260201-20260301", # Recent Market (1 month)
+        "20241001-20241231", # Bull Market (3 months - High Priority)
+        "20250101-20250301", # Bear Market (2 months - High Priority)
+        "20240715-20240815", # Crash Market (1 month)
+        "20240815-20241001"  # Sideways/Consolidation (1.5 months)
     ]
     
     total_profit = 0.0
@@ -295,19 +312,13 @@ def check_retirement(genome: dict, outsiders_max_fitness: float):
     if genome.get("status") in ["candidate", "mutant"]:
         if genome.get("debuffed_fitness", 0.0) < outsiders_max_fitness:
             genome["status"] = "retired"
+            genome["is_retired"] = True
             logging.info(f"  > Lineage {genome.get('lineage_id', 'unknown')[:8]} RETIRED due to low debuffed fitness.")
 
 def generate_ai_outsider(type: str) -> Dict[str, Any]:
     """Generate a fresh random genome for AI outsiders."""
-    if type == "guided":
-        # For now, same as alien, but can be enhanced later
-        pass
     # Generate fresh individual
     individual = create_fresh_individual("outsider")
-    individual["lineage_id"] = str(uuid.uuid4())
-    individual["status"] = "outsider"
-    individual["debuff_active_gens"] = 0
-    individual["fitness"] = -1.0
     log_aider(f"Generated {type} outsider with lineage {individual['lineage_id'][:8]}")
     return individual
 
@@ -318,11 +329,77 @@ def load_vault() -> List[Dict[str, Any]]:
         try:
             with open(VAULT_FILE, 'r') as f:
                 vault = json.load(f)
+            
+            # Upgrade legacy vault entries
+            upgraded = False
+            for entry in vault:
+                if "lineage_id" not in entry:
+                    entry["lineage_id"] = str(uuid.uuid4())
+                    entry["generation_age"] = 0
+                    entry["status"] = "king"
+                    upgraded = True
+            
+            if upgraded:
+                with open(VAULT_FILE, 'w') as f:
+                    json.dump(vault, f, indent=2)
+                logging.info("Upgraded legacy vault entries with lineage IDs.")
+
             # Sort by fitness in descending order
             vault.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
         except Exception as e:
             logging.error(f"Failed to load Vault: {e}")
     return vault
+
+def scrub_genomes_directory(active_vault: List[Dict[str, Any]]):
+    """Delete genome files that are not associated with active lineages."""
+    if not GENOME_DIR.exists():
+        return
+    
+    # Collect lineage_id prefixes (first 8 chars) from active vault
+    active_prefixes = set()
+    for entry in active_vault:
+        lineage_id = entry.get("lineage_id")
+        if lineage_id and len(lineage_id) >= 8:
+            active_prefixes.add(lineage_id[:8])
+    
+    # Also check current population
+    if POPULATION_FILE.exists():
+        try:
+            with open(POPULATION_FILE, 'r') as f:
+                population_data = json.load(f)
+                individuals = population_data.get("individuals", [])
+                for ind in individuals:
+                    lineage_id = ind.get("lineage_id")
+                    if lineage_id and len(lineage_id) >= 8:
+                        active_prefixes.add(lineage_id[:8])
+        except Exception as e:
+            logging.warning(f"Failed to load population for scrubbing: {e}")
+    
+    # Scrub all gen_*.json files
+    for genome_file in GENOME_DIR.glob("gen_*.json"):
+        if genome_file.name == "hall_of_fame.json":
+            continue
+        
+        stem = genome_file.stem  # e.g., "gen_62c735f9" or "gen_343_king"
+        
+        # Determine if it's a lineage file or a legacy generation file
+        # Format is gen_XXXXXXXX.json or gen_N_king.json
+        match = re.match(r"^gen_([0-9a-f]{8})$", stem)
+        if match:
+            prefix = match.group(1)
+            if prefix not in active_prefixes:
+                try:
+                    genome_file.unlink()
+                    logging.info(f"  > RUTHLESS SCRUBBING: Deleted orphaned genome {genome_file.name}")
+                except Exception as e:
+                    logging.warning(f"Failed to delete {genome_file}: {e}")
+        else:
+            # It's a legacy gen_XXX_king.json or gen_XXX_best.json
+            try:
+                genome_file.unlink()
+                logging.info(f"  > RUTHLESS SCRUBBING: Deleted legacy file {genome_file.name}")
+            except Exception as e:
+                logging.warning(f"Failed to delete legacy file {genome_file}: {e}")
 
 def run_loop(gens=50):
     logging.info(f"STARTING 6-SLOT ASSEMBLY LINE GP LOOP")
@@ -350,9 +427,6 @@ def run_loop(gens=50):
         # SLOT 1: Mutated King (from Vault rank 1)
         if len(vault) > 0:
             king_source = copy.deepcopy(vault[0])
-            # Ensure it has required fields
-            if "lineage_id" not in king_source:
-                king_source["lineage_id"] = str(uuid.uuid4())
             king = copy.deepcopy(king_source)
             # Apply micro-mutation
             apply_point_mutation(king["entry_tree"])
@@ -394,7 +468,6 @@ def run_loop(gens=50):
                     break
                 else:
                     logging.warning(f"AI batch generator failed with exit code {result.returncode}")
-                    logging.warning(f"Stderr: {result.stderr[:200]}")
             except Exception as e:
                 logging.warning(f"AI batch generator exception: {e}")
             
@@ -413,120 +486,88 @@ def run_loop(gens=50):
             sys.exit(1)
         
         # STEP D: Slot injection for slots 2-6
-        # We need exactly 5 AI strategies for slots 2-6
-        if len(ai_batch) != 5:
-            logging.error(f"AI batch must contain exactly 5 strategies, got {len(ai_batch)}")
-            sys.exit(1)
-        
         for i, ai_strategy in enumerate(ai_batch):
             slot_num = i + 2  # Slots 2-6
-            
-            # Create a new individual based on AI strategy
             individual = {
                 "entry_tree": ai_strategy.get("entry_tree"),
                 "exit_tree": ai_strategy.get("exit_tree"),
                 "fitness": -1.0,
                 "generation_age": 0,
                 "debuff_active_gens": 0,
-                "status": None,  # Will be set based on type
-                "lineage_id": None  # Will be set based on type
+                "status": None,
+                "lineage_id": None
             }
             
             strategy_type = ai_strategy.get("type", "")
-            
-            # Handle different strategy types
             if strategy_type in ["mutated_rank_1", "mutated_rank_2"]:
-                # These should preserve lineage from Vault
                 rank_num = 1 if strategy_type == "mutated_rank_1" else 2
-                rank_index = rank_num - 1  # Convert to 0-based index
-                
+                rank_index = rank_num - 1
                 if len(vault) > rank_index:
-                    # Use lineage from the corresponding vault entry
                     vault_entry = vault[rank_index]
                     individual["lineage_id"] = vault_entry.get("lineage_id", str(uuid.uuid4()))
                     individual["status"] = "candidate"
                     individual["debuff_active_gens"] = vault_entry.get("debuff_active_gens", 0) + 1
-                    log_aider(f"Slot {slot_num}: AI {strategy_type} using lineage {individual['lineage_id'][:8]} from Vault rank {rank_num}")
+                    log_aider(f"Slot {slot_num}: AI {strategy_type} using lineage {individual['lineage_id'][:8]}")
                 else:
-                    # Fallback: generate new lineage
                     individual["lineage_id"] = str(uuid.uuid4())
                     individual["status"] = "candidate"
-                    log_aider(f"Slot {slot_num}: AI {strategy_type} with new lineage (Vault insufficient)")
-            
+                    log_aider(f"Slot {slot_num}: AI {strategy_type} with new lineage")
             elif strategy_type in ["guided_outsider", "alien_outsider_A", "alien_outsider_B"]:
-                # These are outsiders - generate new lineage
                 individual["lineage_id"] = str(uuid.uuid4())
                 individual["status"] = "outsider"
                 log_aider(f"Slot {slot_num}: AI {strategy_type} with new lineage {individual['lineage_id'][:8]}")
-            
             else:
-                # Unknown type - default to outsider
                 individual["lineage_id"] = str(uuid.uuid4())
                 individual["status"] = "outsider"
-                log_aider(f"Slot {slot_num}: Unknown AI type '{strategy_type}', defaulting to outsider")
-            
+                log_aider(f"Slot {slot_num}: Unknown AI type defaulting to outsider")
             next_population.append(individual)
         
-        # Ensure we have exactly 6 individuals
-        if len(next_population) != 6:
-            logging.error(f"Population size mismatch: {len(next_population)} != 6")
-            # Adjust by adding or removing as needed
-            while len(next_population) < 6:
-                next_population.append(generate_ai_outsider("alien"))
-            next_population = next_population[:6]
-        
-        # Evaluate all individuals
+        # Evaluate
         for i, ind in enumerate(next_population):
             if ind.get("fitness", -1.0) < 0:
                 logging.info(f"Evaluating Individual {i+1}/6 ({ind.get('status', 'unknown')})...")
                 fit = run_evolution_round(ind)
                 ind["fitness"] = fit
+                
+                # Save only if it's potentially active DNA
+                if fit > 0:
+                    lineage_id = ind.get("lineage_id")
+                    prefix = lineage_id[:8]
+                    genome_file = GENOME_DIR / f"gen_{prefix}.json"
+                    with open(genome_file, 'w') as f:
+                        json.dump(ind, f, indent=2)
                 log_aider(f"Slot {i+1} ({ind['status']}) evaluated with fitness {fit:.4f}")
-            else:
-                logging.info(f"Skipping Individual {i+1}/6 ({ind.get('status', 'unknown')}) - already evaluated with fitness {ind['fitness']:.4f}")
         
-        # Find the King (highest fitness) from evaluated population
+        # Update King
         next_population.sort(key=lambda x: x.get("fitness", 0.0), reverse=True)
         best_individual = copy.deepcopy(next_population[0])
-        
-        # Update king status if necessary
-        for ind in next_population:
-            if ind.get("lineage_id") == best_individual.get("lineage_id"):
-                ind["status"] = "king"
-                ind["generation_age"] = ind.get("generation_age", 0) + 1
-                ind["debuff_active_gens"] = 0
-                best_individual = copy.deepcopy(ind)
-                break
-        
-        # Get king's age for debuff calculations
         king_age = best_individual.get("generation_age", 0)
         
-        # Calculate debuffed fitness for all individuals
+        # Calculate debuffs & Check retirement
         for ind in next_population:
             ind["debuffed_fitness"] = calculate_debuffed_fitness(ind, king_age)
         
-        # Find maximum fitness among outsiders
         outsiders = [ind for ind in next_population if ind.get("status") == "outsider"]
         outsiders_max_fitness = max([ind.get("fitness", 0.0) for ind in outsiders]) if outsiders else 0.0
         
-        # Check retirement for candidates and mutants
         for ind in next_population:
             check_retirement(ind, outsiders_max_fitness)
         
-        # Save best individual to Vault
-        save_to_vault(best_individual)
-        logging.info(f"KING FITNESS: {best_individual['fitness']:.4f} | Lineage: {best_individual['lineage_id'][:8]} | Age: {king_age}")
+        # VAULT PERSISTENCE
+        if best_individual["fitness"] > 0:
+            save_to_vault(best_individual)
         
-        # Save population for next generation
+        # Always scrub orphaned/legacy genomes
+        scrub_genomes_directory(load_vault())
+        
+        # Save population
         with open(POPULATION_FILE, 'w') as f:
             json.dump({"individuals": next_population}, f, indent=2)
         
-        # Save generation state
         current_gen += 1
         with open(STATE_FILE, 'w') as f:
             json.dump({"current_generation": current_gen}, f, indent=2)
         
-        # Sync with git
         try:
             subprocess.run(["bash", str(PROJECT_ROOT / "scripts" / "auto_sync.sh")], cwd=PROJECT_ROOT)
         except Exception as e:
