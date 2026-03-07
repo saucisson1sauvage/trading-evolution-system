@@ -7,3 +7,6 @@ user_data/logs/backtest_debug.log
 
 # But allow a lightweight debug log for context
 !user_data/logs/aider_debug.log
+
+# Ignore local virtual environment
+.venv/
