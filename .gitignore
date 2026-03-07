@@ -4,3 +4,5 @@ user_data/backtest_results/*
 .aider*
 .env
 .venv/user_data/api_keys.json
+user_data/api_keys.json
+user_data/logs/strikes.json
