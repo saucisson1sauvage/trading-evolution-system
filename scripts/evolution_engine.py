@@ -362,7 +362,7 @@ def load_vault() -> List[Dict[str, Any]]:
     return vault
 
 def scrub_genomes_directory(active_vault: List[Dict[str, Any]]):
-    """Delete genome files that are not associated with active lineages."""
+    """Move genome files that are not associated with active lineages to graveyard."""
     if not GENOME_DIR.exists():
         return
     
@@ -386,6 +386,10 @@ def scrub_genomes_directory(active_vault: List[Dict[str, Any]]):
         except Exception as e:
             logging.warning(f"Failed to load population for scrubbing: {e}")
     
+    # Ensure graveyard directory exists
+    graveyard_dir = PROJECT_ROOT / "user_data" / "strategies" / "graveyard"
+    graveyard_dir.mkdir(parents=True, exist_ok=True)
+    
     # Scrub all gen_*.json files
     for genome_file in GENOME_DIR.glob("gen_*.json"):
         if genome_file.name == "hall_of_fame.json":
@@ -400,17 +404,23 @@ def scrub_genomes_directory(active_vault: List[Dict[str, Any]]):
             prefix = match.group(1)
             if prefix not in active_prefixes:
                 try:
-                    genome_file.unlink()
-                    logging.info(f"  > RUTHLESS SCRUBBING: Deleted orphaned genome {genome_file.name}")
+                    # Add timestamp to prevent overwriting
+                    timestamp = int(time.time())
+                    dest_path = graveyard_dir / f"{genome_file.stem}_{timestamp}.json"
+                    shutil.move(str(genome_file), str(dest_path))
+                    logging.info(f"  > GRAVEYARD: Moved orphaned genome {genome_file.name} to {dest_path.name}")
                 except Exception as e:
-                    logging.warning(f"Failed to delete {genome_file}: {e}")
+                    logging.warning(f"Failed to move {genome_file} to graveyard: {e}")
         else:
             # It's a legacy gen_XXX_king.json or gen_XXX_best.json
             try:
-                genome_file.unlink()
-                logging.info(f"  > RUTHLESS SCRUBBING: Deleted legacy file {genome_file.name}")
+                # Add timestamp to prevent overwriting
+                timestamp = int(time.time())
+                dest_path = graveyard_dir / f"{genome_file.stem}_{timestamp}.json"
+                shutil.move(str(genome_file), str(dest_path))
+                logging.info(f"  > GRAVEYARD: Moved legacy file {genome_file.name} to {dest_path.name}")
             except Exception as e:
-                logging.warning(f"Failed to delete legacy file {genome_file}: {e}")
+                logging.warning(f"Failed to move legacy file {genome_file} to graveyard: {e}")
 
 def ensure_directories():
     """Ensure required directories exist."""
