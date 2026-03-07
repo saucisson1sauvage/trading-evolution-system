@@ -1,2 +1,3 @@
 EXIT ERROR: list index out of range
 EXIT ERROR: '>' not supported between instances of 'float' and 'str'
+ENTRY ERROR: unsupported operand type(s) for &: 'float' and 'float'

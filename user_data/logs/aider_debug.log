@@ -129,3 +129,25 @@
 [2026-03-07 03:17:08] Slot 6: AI alien_outsider_B with new lineage 569fffae
 [2026-03-07 03:17:38] Slot 1 (king) evaluated with fitness 0.0000
 [2026-03-07 03:18:08] Slot 2 (candidate) evaluated with fitness 0.0000
+[2026-03-07 04:49:13] --- STARTING GENERATION 349 ---
+[2026-03-07 04:49:13] Vault loaded with 3 lineages
+[2026-03-07 04:49:13] Slot 1: Mutated King from lineage f5da609d, Age incremented to 1
+[2026-03-07 04:49:14] AI context generated successfully
+[2026-03-07 04:49:18] AI batch generated successfully
+[2026-03-07 04:49:18] Loaded AI batch with 5 strategies
+[2026-03-07 04:49:18] Slot 2: AI mutated_rank_1 using lineage f5da609d
+[2026-03-07 04:49:18] Slot 3: AI mutated_rank_2 using lineage 1bab7ca3
+[2026-03-07 04:49:18] Slot 4: AI guided_outsider with new lineage 8e8186aa
+[2026-03-07 04:49:18] Slot 5: AI alien_outsider_A with new lineage 332f337f
+[2026-03-07 04:49:18] Slot 6: AI alien_outsider_B with new lineage a7dcf666
+[2026-03-07 04:49:22] Slot 1 passed smoke test
+[2026-03-07 04:49:48] Slot 1 (king) evaluated with fitness 0.0000
+[2026-03-07 04:49:53] Slot 2 passed smoke test
+[2026-03-07 04:50:22] Slot 2 (candidate) evaluated with fitness 0.0000
+[2026-03-07 04:50:27] Slot 3 passed smoke test
+[2026-03-07 04:50:56] Slot 3 (candidate) evaluated with fitness 0.0000
+[2026-03-07 04:51:00] Slot 4 failed smoke test
+[2026-03-07 04:51:05] Slot 5 passed smoke test
+[2026-03-07 04:51:34] Slot 5 (outsider) evaluated with fitness 0.0000
+[2026-03-07 04:51:38] Slot 6 passed smoke test
+[2026-03-07 04:52:08] Slot 6 (outsider) evaluated with fitness 0.0000
