@@ -16,7 +16,8 @@ from scripts.ai_batch_generator import (
     validate_tree_structure, 
     validate_batch,
     check_strikes,
-    add_strike
+    add_strike,
+    KeyManager
 )
 
 def test_validation():
@@ -72,6 +73,49 @@ def test_validation():
     
     print("\nAll validation tests passed!")
 
+def test_key_manager():
+    """Test the KeyManager class"""
+    print("\nTesting KeyManager...")
+    
+    # Test initialization
+    keys = ["key1", "key2"]
+    manager = KeyManager(keys)
+    
+    # Test key selection based on generation parity
+    assert manager.get_available_key(0) == "key1", "Even generation should use key1"
+    assert manager.get_available_key(1) == "key2", "Odd generation should use key2"
+    print("  ✓ Key selection based on parity works")
+    
+    # Test cooldown marking
+    manager.mark_cooldown("key1")
+    assert "key1" in manager.cooldowns, "key1 should be in cooldowns"
+    print("  ✓ Cooldown marking works")
+    
+    # Test alternate key selection when primary is in cooldown
+    # We need to mock time to test this properly
+    import time
+    original_time = time.time
+    try:
+        # Mock time to be within cooldown period
+        test_time = 1000.0
+        time.time = lambda: test_time
+        
+        # key1 is in cooldown, so even generation should use key2
+        selected = manager.get_available_key(0)
+        assert selected == "key2", "Should use alternate key when primary is in cooldown"
+        print("  ✓ Alternate key selection works during cooldown")
+        
+        # Test cooldown expiration
+        time.time = lambda: test_time + manager.cooldown_duration + 1
+        manager.clear_expired_cooldowns()
+        assert "key1" not in manager.cooldowns, "Expired cooldown should be cleared"
+        print("  ✓ Cooldown expiration works")
+        
+    finally:
+        time.time = original_time
+    
+    print("  KeyManager tests passed!")
+
 def test_strike_system():
     """Test the strike system"""
     print("\nTesting strike system...")
@@ -126,6 +170,7 @@ def main():
     
     try:
         test_validation()
+        test_key_manager()
         test_strike_system()
         print("\n" + "=" * 50)
         print("All tests passed successfully!")

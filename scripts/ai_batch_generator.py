@@ -28,7 +28,60 @@ except Exception as e:
     print(f"Error: Could not import BLOCK_REGISTRY: {e}")
     sys.exit(1)
 
-# 1. SECURE KEY LOADING
+# 1. SMART KEY MANAGER
+class KeyManager:
+    """Manages API keys with rotation and cooldown for rate limiting"""
+    def __init__(self, api_keys: List[str]):
+        if len(api_keys) != 2:
+            sys.exit("Error: Exactly 2 API keys are required for smart rotation")
+        self.keys = api_keys
+        self.cooldowns = {}  # key -> timestamp when cooldown ends
+        self.cooldown_duration = 60  # seconds
+        
+    def get_available_key(self, current_gen: int) -> str:
+        """Select a key based on generation parity, respecting cooldowns"""
+        # Primary selection based on generation parity
+        primary_index = current_gen % 2
+        primary_key = self.keys[primary_index]
+        
+        # Check if primary key is in cooldown
+        current_time = time.time()
+        if primary_key in self.cooldowns:
+            cooldown_end = self.cooldowns[primary_key]
+            if current_time < cooldown_end:
+                print(f"  Key {primary_index} is in cooldown (until {cooldown_end:.1f}s). Switching to alternate key.")
+                # Use alternate key
+                alternate_index = 1 - primary_index
+                alternate_key = self.keys[alternate_index]
+                
+                # Check if alternate key is also in cooldown
+                if alternate_key in self.cooldowns and current_time < self.cooldowns[alternate_key]:
+                    print(f"  Both keys are in cooldown! Waiting for primary key...")
+                    # Wait for primary key cooldown to end
+                    wait_time = cooldown_end - current_time + 1
+                    print(f"  Waiting {wait_time:.1f} seconds...")
+                    time.sleep(wait_time)
+                    return primary_key
+                return alternate_key
+        
+        print(f"  Using key {primary_index} (generation {current_gen} is {'even' if current_gen % 2 == 0 else 'odd'})")
+        return primary_key
+    
+    def mark_cooldown(self, key: str):
+        """Mark a key as being in cooldown due to rate limiting"""
+        self.cooldowns[key] = time.time() + self.cooldown_duration
+        key_index = self.keys.index(key)
+        print(f"  Key {key_index} marked for cooldown for {self.cooldown_duration} seconds")
+    
+    def clear_expired_cooldowns(self):
+        """Remove expired cooldown entries"""
+        current_time = time.time()
+        expired_keys = [k for k, end_time in self.cooldowns.items() if current_time >= end_time]
+        for key in expired_keys:
+            del self.cooldowns[key]
+            key_index = self.keys.index(key)
+            print(f"  Key {key_index} cooldown expired and cleared")
+
 def load_api_keys() -> List[str]:
     """Load API keys from user_data/api_keys.json"""
     api_keys_path = project_root / "user_data" / "api_keys.json"
@@ -221,8 +274,8 @@ def validate_batch(batch: List[Dict[str, Any]]) -> bool:
     return True
 
 # 4. API CALLER & EXTRACTOR
-def call_gemini(api_key: str, model: str, system_prompt: str, user_prompt: str) -> str:
-    """Call Gemini API and return the response text"""
+def call_gemini(api_key: str, model: str, system_prompt: str, user_prompt: str, key_manager: KeyManager = None) -> str:
+    """Call Gemini API and return the response text with rate limit handling"""
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     
     payload = {
@@ -259,11 +312,22 @@ def call_gemini(api_key: str, model: str, system_prompt: str, user_prompt: str) 
         # If we couldn't extract text, raise an error
         raise ValueError("Could not extract text from API response")
         
+    except requests.exceptions.HTTPError as e:
+        if e.response is not None:
+            status_code = e.response.status_code
+            if status_code == 429:  # Rate limit exceeded
+                print(f"  Rate limit (429) hit for current API key")
+                if key_manager is not None:
+                    key_manager.mark_cooldown(api_key)
+                raise
+            else:
+                print(f"API request failed with status {status_code}: {e}")
+                print(f"Response body: {e.response.text[:200]}")
+        else:
+            print(f"API request failed: {e}")
+        raise
     except requests.exceptions.RequestException as e:
         print(f"API request failed: {e}")
-        if hasattr(e, 'response') and e.response is not None:
-            print(f"Response status: {e.response.status_code}")
-            print(f"Response body: {e.response.text[:200]}")
         raise
     except (KeyError, ValueError) as e:
         print(f"Failed to parse API response: {e}")
@@ -360,16 +424,18 @@ def main() -> None:
     
     print(f"   Generation: {current_generation}")
     
-    # Model router
-    if current_generation % 3 == 0:
-        model = "gemini-3-flash-preview"
-    else:
-        model = "gemini-3.1-flash-lite-preview"
-    print(f"   Selected model: {model}")
+    # Initialize KeyManager
+    key_manager = KeyManager(api_keys)
     
-    # Key router
-    api_key = api_keys[current_generation % len(api_keys)]
-    print(f"   Selected API key index: {current_generation % len(api_keys)}")
+    # Clear any expired cooldowns before starting
+    key_manager.clear_expired_cooldowns()
+    
+    # Model selection - Force use of gemini-3.1-flash-lite-preview only
+    model = "gemini-3.1-flash-lite-preview"
+    print(f"   Selected model: {model} (forced)")
+    
+    # Get key using smart rotation
+    api_key = key_manager.get_available_key(current_generation)
     
     # Add custom delimiter instruction
     dynamic_tail += "\n\nCRITICAL INSTRUCTION: You MUST wrap your entire JSON array between the exact text @@@JSON_START@@@ and @@@JSON_END@@@. Do not output anything outside of these tags."
@@ -389,7 +455,7 @@ def main() -> None:
         try:
             # Call API
             print("3. Calling Gemini API...")
-            response_text = call_gemini(api_key, model, system_prompt, user_prompt)
+            response_text = call_gemini(api_key, model, system_prompt, user_prompt, key_manager)
             
             # Log AI transcript
             try:
