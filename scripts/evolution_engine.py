@@ -235,13 +235,32 @@ def run_single_backtest(genome: dict, timerange: str) -> Dict[str, float]:
     export_filename = export_dir / f"{lineage_id}.json"
     
     command.extend([
-        "--export", "trades",
-        "--export-filename", str(export_filename)
+        "--export", "trades"
     ])
     try:
         res = subprocess.run(command, capture_output=True, text=True, timeout=60)
         output = res.stdout
         
+        # Extract the detailed JSON from the Freqtrade zip export
+        try:
+            last_result_path = PROJECT_ROOT / "user_data" / "backtest_results" / ".last_result.json"
+            if last_result_path.exists():
+                with open(last_result_path, 'r') as f:
+                    last_result = json.load(f)
+                zip_filename = last_result.get("latest_backtest")
+                if zip_filename and zip_filename.endswith(".zip"):
+                    zip_path = PROJECT_ROOT / "user_data" / "backtest_results" / zip_filename
+                    if zip_path.exists():
+                        import zipfile
+                        with zipfile.ZipFile(zip_path, 'r') as z:
+                            json_files = [f for f in z.namelist() if f.endswith('.json') and not f.endswith('_config.json') and not f.endswith('.meta.json')]
+                            if json_files:
+                                target_json = json_files[0]
+                                with z.open(target_json) as source, open(export_filename, 'wb') as target:
+                                    shutil.copyfileobj(source, target)
+        except Exception as e:
+            logging.warning(f"Failed to extract backtest JSON: {e}")
+
         sum_match = re.search(r"GPTreeStrategy\s+[|│]\s+(\d+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)\s+[|│]\s+([\d\.-]+)", output)
         sharpe_match = re.search(r"Sharpe\s+[|│]\s+([\d\.-]+)", output)
         dd_match = re.search(r"Absolute drawdown\s+[|│]\s+[\d\.-]+\s+USDT\s+\(([\d\.-]+)%\)", output)
