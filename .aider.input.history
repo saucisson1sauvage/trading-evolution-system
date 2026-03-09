@@ -3121,3 +3121,53 @@
 
 # 2026-03-09 14:17:44.754680
 +/run git add . && git commit -m "Engine V2.8: Implemented Master Generation Ledger"
+
+# 2026-03-09 14:20:09.236863
++/clear
+
+# 2026-03-09 14:20:12.325121
++### [ROLE: LEAD FULL-STACK QUANT DEVELOPER] ###
++# GOAL: Phase 3 - Patch tests and build the Streamlit Data Dashboard (`scripts/dashboard.py`).
++
++# 1. PATCH THE TEST SUITE (`tests/test_omniscience.py`):
++# - Find the `WHITELIST` array at the top of the file.
++# - Add `"brain"` to the `WHITELIST` so the test suite ignores the WIP autonomous agents.
++
++# 2. CREATE THE DASHBOARD (`scripts/dashboard.py`):
++# - Build a Streamlit app using `import streamlit as st`, `import pandas as pd`, `import json`, `from pathlib import Path`.
++# - Ensure `st.set_page_config(layout="wide", page_title="AI Quant Observatory")` is at the top.
++
++# 3. DASHBOARD ARCHITECTURE (Read `user_data/logs/generation_history.json`):
++# - Create a Sidebar for navigation: "Macro Overview", "Generation Explorer", "The Graveyard".
++# 
++# - TIER 1: MACRO OVERVIEW:
++#   - Load `generation_history.json`.
++#   - Extract the highest fitness from each generation's slots.
++#   - Use `st.line_chart` to plot the "King's Fitness" over time.
++#   - Display high-level metrics using `st.metric`: Total Generations, Total Execution Time.
++#
++# - TIER 2: GENERATION EXPLORER:
++#   - Provide a dropdown to select a specific `gen_number`.
++#   - Display a dataframe (`st.dataframe`) of that generation's 6 slots (Slot, Lineage ID, Status, Fitness, Smoke Test).
++#   - If an "ai_transcript" exists for that gen, use `st.expander` to load and display the JSON transcript (the AI's raw prompt and response).
++#
++# - TIER 3: THE GRAVEYARD:
++#   - Scan `user_data/strategies/graveyard/` for `.json` files.
++#   - Count how many files exist and display it.
++#   - Show a random sample of 5 graveyard files and display their `entry_tree` to see what logic failed.
++
++# 4. EXECUTION AND RELIABILITY:
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1`
++# - ON SUCCESS: `git add . && git commit -m "Engine V3: Implemented Streamlit Quant Dashboard"`
+
+# 2026-03-09 14:23:41.889216
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 14:23:41.889265
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 14:23:49.889226
++/run git add .
+
+# 2026-03-09 14:23:49.889278
++/run git add .
