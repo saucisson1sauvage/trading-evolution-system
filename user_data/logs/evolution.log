@@ -1615,3 +1615,26 @@
 2026-03-09 20:17:58,325 | INFO | Evaluating Individual 6/6 (outsider)...
 2026-03-09 20:18:02,879 | INFO |   ✅ Slot 6 passed smoke test
 2026-03-09 20:18:32,612 | INFO |   > FAIL: Aggregated Trades: 1215, Profit: -28.71% -> Fitness: 0.0000
+2026-03-09 20:18:35,856 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-09 20:18:35,856 | INFO | --- Generation 352 ---
+2026-03-09 20:18:47,213 | INFO | Evaluating Individual 1/6 (king)...
+2026-03-09 20:18:51,744 | INFO |   ✅ Slot 1 passed smoke test
+2026-03-09 22:54:05,088 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-09 22:54:05,088 | INFO | --- Generation 352 ---
+2026-03-09 22:54:14,466 | INFO | Evaluating Individual 1/6 (king)...
+2026-03-09 22:54:19,034 | INFO |   ✅ Slot 1 passed smoke test
+2026-03-09 22:54:52,741 | INFO |   > FAIL: Aggregated Trades: 210, Profit: -5.880000000000001% -> Fitness: 0.0000
+2026-03-09 22:54:52,742 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-09 22:54:57,531 | INFO |   ✅ Slot 2 passed smoke test
+2026-03-09 22:55:28,411 | INFO |   > FAIL: Aggregated Trades: 195, Profit: -6.59% -> Fitness: 0.0000
+2026-03-09 22:55:28,411 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-09 22:55:33,065 | INFO |   ✅ Slot 3 passed smoke test
+2026-03-09 22:56:09,506 | INFO |   > FAIL: Aggregated Trades: 47, Profit: -3.7600000000000002% -> Fitness: 0.0000
+2026-03-09 22:56:09,506 | INFO | Evaluating Individual 4/6 (outsider)...
+2026-03-09 22:56:13,719 | INFO |   ❌ Slot 4 failed smoke test. Discarding.
+2026-03-09 22:56:13,719 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-09 22:56:18,124 | INFO |   ✅ Slot 5 passed smoke test
+2026-03-09 22:56:46,048 | INFO |   > FAIL: Aggregated Trades: 229, Profit: -7.52% -> Fitness: 0.0000
+2026-03-09 22:56:46,048 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-09 22:56:50,583 | INFO |   ✅ Slot 6 passed smoke test
+2026-03-09 22:57:19,303 | INFO |   > FAIL: Aggregated Trades: 1327, Profit: -29.57% -> Fitness: 0.0000

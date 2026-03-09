@@ -68,7 +68,7 @@
                   {
                     "primitive": "CROSS_UP",
                     "left": {
-                      "constant": 25.06
+                      "constant": 26.46
                     },
                     "right": {
                       "constant": 68.28
@@ -83,7 +83,7 @@
                       }
                     },
                     "right": {
-                      "constant": 34.14
+                      "constant": 31.85
                     }
                   }
                 ]
@@ -103,8 +103,8 @@
         "right": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 13,
-            "std": 1.95
+            "window": 15,
+            "std": 1.71
           }
         }
       },
@@ -145,7 +145,7 @@
                     "left": {
                       "primitive": "BB_LOWER",
                       "parameters": {
-                        "window": 21,
+                        "window": 22,
                         "std": 1.7
                       }
                     },
@@ -214,13 +214,13 @@
         "left": {
           "primitive": "SMA",
           "parameters": {
-            "window": 50
+            "window": 48
           }
         },
         "right": {
           "primitive": "BB_MIDDLE",
           "parameters": {
-            "window": 14,
+            "window": 15,
             "std": 1.8
           }
         }
@@ -311,7 +311,7 @@
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "a539cd82-2d3d-44ba-914c-6e6a1535da13",
+      "lineage_id": "189d660e-ce62-4a72-a8e8-495d982e5078",
       "debuffed_fitness": 0.0
     },
     {
@@ -348,7 +348,7 @@
         "left": {
           "primitive": "RSI",
           "parameters": {
-            "window": 14
+            "window": 7
           }
         },
         "right": {
@@ -359,7 +359,7 @@
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "fea42969-cfb2-4ab8-b944-a33a6b4676ab",
+      "lineage_id": "2e9b154d-7cf8-4651-be40-5eaca894ca56",
       "debuffed_fitness": 0.0
     },
     {
@@ -367,23 +367,27 @@
         "operator": "OR",
         "children": [
           {
-            "primitive": "TRENDING_DOWN",
-            "parameters": {
-              "window": 10
-            }
-          },
-          {
-            "primitive": "GREATER_THAN",
+            "primitive": "CROSS_UP",
             "left": {
-              "primitive": "VOLUME",
-              "parameters": {
-                "window": 5
-              }
+              "primitive": "VOLUME"
             },
             "right": {
               "primitive": "SMA",
               "parameters": {
                 "window": 50
+              }
+            }
+          },
+          {
+            "primitive": "LESS_THAN",
+            "left": {
+              "primitive": "CLOSE"
+            },
+            "right": {
+              "primitive": "BB_LOWER",
+              "parameters": {
+                "window": 10,
+                "std": 1.0
               }
             }
           }
@@ -406,7 +410,7 @@
       "generation_age": 0,
       "debuff_active_gens": 0,
       "status": "outsider",
-      "lineage_id": "3423ac9e-45ab-4a70-bf55-a23de0724670",
+      "lineage_id": "26305526-b450-43af-999d-cdf5f822a720",
       "debuffed_fitness": 0.0
     }
   ]
