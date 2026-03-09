@@ -3,7 +3,7 @@
     "operator": "OR",
     "children": [
       {
-        "primitive": "CROSS_UP",
+        "primitive": "GREATER_THAN",
         "left": {
           "primitive": "VOLUME"
         },
@@ -15,32 +15,28 @@
         }
       },
       {
-        "primitive": "GREATER_THAN",
+        "primitive": "LESS_THAN",
         "left": {
-          "primitive": "CLOSE"
+          "primitive": "RSI",
+          "parameters": {
+            "window": 7
+          }
         },
         "right": {
-          "constant": 95.0
+          "constant": 20.0
         }
       }
     ]
   },
   "exit_tree": {
-    "primitive": "LESS_THAN",
-    "left": {
-      "primitive": "CLOSE"
-    },
-    "right": {
-      "primitive": "BB_LOWER",
-      "parameters": {
-        "window": 20,
-        "std": 2.0
-      }
+    "primitive": "TRENDING_DOWN",
+    "parameters": {
+      "window": 20
     }
   },
   "fitness": -1.0,
   "generation_age": 0,
   "debuff_active_gens": 0,
   "status": "outsider",
-  "lineage_id": "ce1ae1dd-527e-4824-b729-5a0c22c73fc6"
+  "lineage_id": "2836f6c1-a1c1-45b0-804b-cc9884f39cc8"
 }
