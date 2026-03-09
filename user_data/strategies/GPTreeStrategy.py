@@ -1,6 +1,7 @@
 import json
 import logging
 import sys
+import os
 from pathlib import Path
 from typing import Dict, Any, Union
 import pandas as pd
@@ -98,6 +99,13 @@ class GPTreeStrategy(IStrategy):
             with open(log_path, "a") as f:
                 f.write(f"ENTRY ERROR: {e}\n")
             dataframe['enter_long'] = 0
+
+        # Smoke Test Injection: Forced buy on first candle if flag is set
+        if os.environ.get('FREQTRADE_SMOKE_TEST') == '1':
+            if len(dataframe) > 0:
+                dataframe.loc[dataframe.index[0], 'enter_long'] = 1
+                dataframe.loc[dataframe.index[0], 'enter_tag'] = 'smoke_test_injection'
+
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
