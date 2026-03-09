@@ -38,9 +38,12 @@ def build_static_anchor() -> str:
         for category, blocks in BLOCK_REGISTRY.items():
             arsenal_lines.append(f"\n## {category.upper()} BLOCKS:\n")
             for block_name, func in blocks.items():
-                doc = func.__doc__ or "No description available."
-                doc = doc.strip().split('\n')[0]
-                arsenal_lines.append(f"- {block_name}: {doc}")
+                # Get description from function attribute, fallback to docstring
+                description = getattr(func, 'description', None)
+                if description is None:
+                    description = func.__doc__ or "No description available."
+                description = description.strip().split('\n')[0]
+                arsenal_lines.append(f"- {block_name}: {description}")
     else:
         arsenal_lines.append("Failed to load blocks.")
     
