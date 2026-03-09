@@ -2955,3 +2955,169 @@
 
 # 2026-03-07 16:23:39.992176
 +/run git add .
+
+# 2026-03-07 16:23:40.218200
++/run git commit --amend --no-edit
+
+# 2026-03-07 16:23:40.218433
++/run git commit --amend --no-edit
+
+# 2026-03-07 16:23:40.437929
++/run echo "Commit amended successfully."
+
+# 2026-03-07 16:23:40.438106
++/run echo "Commit amended successfully."
+
+# 2026-03-07 16:23:40.633142
++/run else
+
+# 2026-03-07 16:23:40.633346
++/run else
+
+# 2026-03-07 16:23:40.828450
++/run echo "Some checks failed. Please apply the missing changes manually."
+
+# 2026-03-07 16:23:40.828627
++/run echo "Some checks failed. Please apply the missing changes manually."
+
+# 2026-03-07 16:23:40.990631
++/run fi
+
+# 2026-03-07 16:23:40.990887
++/run fi
+
+# 2026-03-07 16:23:46.896575
++/run python -m flake8 --select=E9,F821,F823,F831,F406,F407,F701,F702,F704,F706 --show-source --isolated scripts/evolution_engine.py
+
+# 2026-03-07 16:23:46.896633
++/run python -m flake8 --select=E9,F821,F823,F831,F406,F407,F701,F702,F704,F706 --show-source --isolated scripts/evolution_engine.py
+
+# 2026-03-07 19:39:47.512412
++r u working?
+
+# 2026-03-07 19:39:56.744335
++/clear
+
+# 2026-03-07 19:39:58.288153
++/drop
+
+# 2026-03-09 13:36:54.599550
++### [ROLE: LEAD QUANT DATA ARCHITECT] ###
++# GOAL: Phase 2.1 - Implement the Generation Ledger (generation_history.json).
++
++# 1. SETUP THE LEDGER:
++# - Create a function `update_ledger(gen_data: dict)` in `scripts/evolution_engine.py`.
++# - This function must load `user_data/logs/generation_history.json` (initialize as an empty list if missing).
++# - Append the `gen_data` object and save it back to the file.
++# - IMPORTANT: Ensure this file is added to `.gitignore` and `.aiderignore` to prevent bloating Git.
++
++# 2. CAPTURE DATA PER GENERATION:
++# Inside `run_loop()`, at the end of each generation (after all 6 slots are evaluated):
++# Create a `gen_summary` dictionary containing:
++# - "gen_number": current_gen
++# - "timestamp": datetime.now().isoformat()
++# - "ai_transcript": f"user_data/logs/ai_transcripts/gen_{current_gen}.json"
++# - "execution_time": (calculate from start/end of generation)
++# - "slots": A list of 6 objects, each containing:
++#     - "slot": slot_index (1-6)
++#     - "lineage_id": ind['lineage_id']
++#     - "status": ind['status']
++#     - "fitness": ind['fitness']
++#     - "smoke_test": "passed" or "failed"
++#     - "backtest_report": f"user_data/logs/backtest_results/{ind['lineage_id']}.json" (if passed)
++
++# 3. ROBUSTNESS & CLEANUP:
++# - Ensure that if a slot fails the Smoke Test, the "backtest_report" field is set to null.
++# - Call `update_ledger(gen_summary)` once per generation cycle completes.
++
++# 4. VERIFICATION PROTOCOL:
++# - Run a test generation loop.
++# - Run: `cat user_data/logs/generation_history.json` to verify it is recording structured slot data.
++# - ON SUCCESS: `git add scripts/evolution_engine.py && git commit -m "Engine V2.8: Implemented Master Generation Ledger"`
+
+# 2026-03-09 13:52:29.968591
++/run cd /path/to/project
+
+# 2026-03-09 13:52:29.968647
++/run cd /path/to/project
+
+# 2026-03-09 13:52:30.138131
++/run python scripts/evolution_engine.py
+
+# 2026-03-09 13:52:30.138353
++/run python scripts/evolution_engine.py
+
+# 2026-03-09 13:52:43.071372
++/run cat user_data/logs/generation_history.json
+
+# 2026-03-09 13:52:43.071442
++/run cat user_data/logs/generation_history.json
+
+# 2026-03-09 13:52:45.736763
++/run git add scripts/evolution_engine.py && git commit -m "Engine V2.8: Implemented Master Generation Ledger"
+
+# 2026-03-09 13:52:45.736821
++/run git add scripts/evolution_engine.py && git commit -m "Engine V2.8: Implemented Master Generation Ledger"
+
+# 2026-03-09 13:52:52.595431
++/run ls -la user_data/logs/generation_history.json
+
+# 2026-03-09 13:52:52.595494
++/run ls -la user_data/logs/generation_history.json
+
+# 2026-03-09 14:03:30.265678
++/exit
+
+# 2026-03-09 14:05:15.689581
++/reasoning-effort
+
+# 2026-03-09 14:14:31.318506
++### [ROLE: LEAD QUANT DATA ARCHITECT] ###
++# GOAL: Phase 2.1 Retry - Implement the Generation Ledger (generation_history.json).
++
++# 1. SETUP THE LEDGER LOGIC (`scripts/evolution_engine.py`):
++# - Add `import time` to the top of the file if missing.
++# - Create a function `update_ledger(gen_data: dict) -> None` right after `ensure_directories()`.
++# - The function must load `PROJECT_ROOT / "user_data" / "logs" / "generation_history.json"`.
++# - If the file doesn't exist, initialize an empty list `[]`. Append `gen_data`, and save it back using `json.dump()`.
++
++# 2. CAPTURE DATA IN THE LOOP (`scripts/evolution_engine.py`):
++# - Inside `run_loop()`, at the very start of the `for _ in range(gens):` block, add: `generation_start_time = time.time()`
++# - Before the individual evaluation loop, define: `smoke_test_statuses = [None] * 6`
++# - Inside the evaluation loop, when the smoke test passes, set `smoke_test_statuses[i] = "passed"`. If it fails or times out, set it to `"failed"`.
++# - At the end of the generation loop (right before saving the population and state), calculate `execution_time = time.time() - generation_start_time`.
++# - Build a `gen_summary` dictionary capturing the gen_number, timestamp, execution_time, and a "slots" list detailing the lineage_id, fitness, and smoke_test status of all 6 slots.
++# - Call `update_ledger(gen_summary)`.
++
++# 3. IGNORE FILES:
++# - Add `user_data/logs/generation_history.json` to both `.gitignore` and `.aiderignore`.
++
++# 4. STRICT RELIABILITY CHECK (DO NOT COMMIT UNTIL THIS PASSES):
++# - Run: `grep -q "update_ledger" scripts/evolution_engine.py || exit 1`
++# - Run: `grep -q "generation_history.json" .gitignore || exit 1`
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1`
++# - ONLY IF all commands succeed, run: `git add . && git commit -m "Engine V2.8: Implemented Master Generation Ledger"`
+
+# 2026-03-09 14:17:31.286075
++/run grep -q "update_ledger" scripts/evolution_engine.py || exit 1
+
+# 2026-03-09 14:17:31.286238
++/run grep -q "update_ledger" scripts/evolution_engine.py || exit 1
+
+# 2026-03-09 14:17:33.270190
++/run grep -q "generation_history.json" .gitignore || exit 1
+
+# 2026-03-09 14:17:33.270388
++/run grep -q "generation_history.json" .gitignore || exit 1
+
+# 2026-03-09 14:17:34.230774
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 14:17:34.230925
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 14:17:44.754630
++/run git add . && git commit -m "Engine V2.8: Implemented Master Generation Ledger"
+
+# 2026-03-09 14:17:44.754680
++/run git add . && git commit -m "Engine V2.8: Implemented Master Generation Ledger"
