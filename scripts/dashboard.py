@@ -27,7 +27,7 @@ Track fitness progression, explore generation details, and analyze failed strate
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Select a view:",
-    ["Macro Overview", "Generation Explorer", "The Graveyard"]
+    ["Macro Overview", "Generation Explorer", "Backtest Deep-Dive", "The Graveyard"]
 )
 
 # Paths
@@ -283,6 +283,106 @@ elif page == "Generation Explorer":
                 st.info(f"No AI transcript found for Generation {selected_gen}.")
         else:
             st.warning(f"Could not find data for Generation {selected_gen}.")
+
+# BACKTEST DEEP-DIVE PAGE
+elif page == "Backtest Deep-Dive":
+    st.header("📊 Backtest Deep-Dive")
+    
+    # Path to backtest results
+    BACKTEST_RESULTS_PATH = PROJECT_ROOT / "user_data" / "logs" / "backtest_results"
+    
+    # Scan for JSON files
+    if BACKTEST_RESULTS_PATH.exists():
+        backtest_files = list(BACKTEST_RESULTS_PATH.glob("*.json"))
+    else:
+        backtest_files = []
+    
+    if not backtest_files:
+        st.info("No backtest results found. Run some backtests to see data here.")
+    else:
+        # Create a selector for backtest files
+        file_names = [f.name for f in backtest_files]
+        selected_file = st.selectbox(
+            "Select a backtest report:",
+            file_names,
+            format_func=lambda x: x
+        )
+        
+        # Find the selected file
+        selected_path = next((f for f in backtest_files if f.name == selected_file), None)
+        
+        if selected_path:
+            try:
+                with open(selected_path, 'r') as f:
+                    report = json.load(f)
+                
+                # Extract strategy data
+                # Freqtrade nests results under the strategy name
+                # The structure can vary, so we need to be flexible
+                strategy_data = None
+                
+                # Try to find the strategy data
+                if isinstance(report, dict):
+                    # Look for a key that contains strategy results
+                    # Usually it's the strategy name, but we can also check for nested structure
+                    for key, value in report.items():
+                        if isinstance(value, dict) and "results_per_pair" in value:
+                            strategy_data = value
+                            break
+                    
+                    # If not found, try to get the first value if it's a dict
+                    if strategy_data is None and len(report) == 1:
+                        first_value = list(report.values())[0]
+                        if isinstance(first_value, dict):
+                            strategy_data = first_value
+                
+                if strategy_data:
+                    # 1. Performance by Pair
+                    st.subheader("Performance by Pair")
+                    results_per_pair = strategy_data.get("results_per_pair", [])
+                    if results_per_pair:
+                        # Convert to DataFrame
+                        df_pairs = pd.DataFrame(results_per_pair)
+                        st.dataframe(df_pairs, use_container_width=True)
+                    else:
+                        st.info("No pair performance data available.")
+                    
+                    st.divider()
+                    
+                    # 2. Exit Reasons
+                    st.subheader("Exit Reasons")
+                    exit_reason_summary = strategy_data.get("exit_reason_summary", [])
+                    if exit_reason_summary:
+                        df_exit = pd.DataFrame(exit_reason_summary)
+                        st.dataframe(df_exit, use_container_width=True)
+                    else:
+                        st.info("No exit reason data available.")
+                    
+                    st.divider()
+                    
+                    # 3. Enter Tags
+                    st.subheader("Enter Tags")
+                    results_per_enter_tag = strategy_data.get("results_per_enter_tag", [])
+                    if results_per_enter_tag:
+                        df_enter_tags = pd.DataFrame(results_per_enter_tag)
+                        st.dataframe(df_enter_tags, use_container_width=True)
+                    else:
+                        st.info("No enter tag data available.")
+                    
+                    # Show additional metadata
+                    with st.expander("View Additional Backtest Metadata"):
+                        # Remove the main data sections to avoid duplication
+                        metadata = {k: v for k, v in strategy_data.items() 
+                                  if k not in ["results_per_pair", "exit_reason_summary", "results_per_enter_tag"]}
+                        st.json(metadata)
+                else:
+                    st.warning("Could not extract strategy data from the selected file.")
+                    with st.expander("View Raw JSON"):
+                        st.json(report)
+                        
+            except Exception as e:
+                st.error(f"Error loading backtest file: {e}")
+                st.info("The file may be in an unexpected format.")
 
 # THE GRAVEYARD PAGE
 elif page == "The Graveyard":
