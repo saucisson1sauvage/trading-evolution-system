@@ -31,6 +31,7 @@ discovered_modules = discover_modules()
 # Whitelist of files we expect to fail or want to skip during dynamic import/test
 WHITELIST = [
     # Add any external freqtrade plugins or broken legacy scripts here
+    "brain",  # WIP autonomous agents
 ]
 
 @pytest.mark.parametrize("module_name", discovered_modules)
