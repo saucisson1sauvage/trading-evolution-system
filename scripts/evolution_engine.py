@@ -434,6 +434,33 @@ def ensure_directories():
         directory.mkdir(parents=True, exist_ok=True)
         logging.debug(f"Ensured directory exists: {directory}")
 
+def update_ledger(gen_data: dict) -> None:
+    """Append generation summary to the master ledger."""
+    ledger_path = PROJECT_ROOT / "user_data" / "logs" / "generation_history.json"
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Load existing ledger or create new
+    if ledger_path.exists():
+        try:
+            with open(ledger_path, 'r') as f:
+                ledger = json.load(f)
+        except Exception as e:
+            logging.warning(f"Failed to load generation ledger: {e}")
+            ledger = []
+    else:
+        ledger = []
+    
+    # Append new generation data
+    ledger.append(gen_data)
+    
+    # Save back
+    try:
+        with open(ledger_path, 'w') as f:
+            json.dump(ledger, f, indent=2)
+        logging.debug(f"Updated generation ledger with generation {gen_data.get('gen_number')}")
+    except Exception as e:
+        logging.error(f"Failed to save generation ledger: {e}")
+
 def run_loop(gens=50):
     logging.info(f"STARTING 6-SLOT ASSEMBLY LINE GP LOOP")
     
@@ -450,6 +477,7 @@ def run_loop(gens=50):
             pass
 
     for _ in range(gens):
+        generation_start_time = time.time()
         logging.info(f"--- Generation {current_gen} ---")
         log_aider(f"--- STARTING GENERATION {current_gen} ---")
         
@@ -459,6 +487,7 @@ def run_loop(gens=50):
         
         # Prepare the 6 slots
         next_population = []
+        smoke_test_statuses = [None] * 6
         
         # SLOT 1: Mutated King (from Vault rank 1)
         if len(vault) > 0:
@@ -584,9 +613,11 @@ def run_loop(gens=50):
                         if result.returncode == 0:
                             logging.info(f"  ✅ Slot {i+1} passed smoke test")
                             log_aider(f"Slot {i+1} passed smoke test")
+                            smoke_test_statuses[i] = "passed"
                         else:
                             logging.info(f"  ❌ Slot {i+1} failed smoke test. Discarding.")
                             log_aider(f"Slot {i+1} failed smoke test")
+                            smoke_test_statuses[i] = "failed"
                             ind["fitness"] = 0.0
                             # Clean up temp file
                             if temp_genome_path.exists():
@@ -595,11 +626,13 @@ def run_loop(gens=50):
                     except subprocess.TimeoutExpired:
                         logging.warning(f"  ⚠️ Slot {i+1} smoke test timed out. Treating as failed.")
                         log_aider(f"Slot {i+1} smoke test timed out")
+                        smoke_test_statuses[i] = "failed"
                         ind["fitness"] = 0.0
                         continue
                     except Exception as e:
                         logging.error(f"  ⚠️ Smoke test error for slot {i+1}: {e}. Treating as failed.")
                         log_aider(f"Slot {i+1} smoke test error: {e}")
+                        smoke_test_statuses[i] = "failed"
                         ind["fitness"] = 0.0
                         continue
                     finally:
@@ -647,6 +680,29 @@ def run_loop(gens=50):
         
         # Always scrub orphaned/legacy genomes
         scrub_genomes_directory(load_vault())
+        
+        # Build generation summary for ledger
+        execution_time = time.time() - generation_start_time
+        slots_data = []
+        for i, ind in enumerate(next_population):
+            slot_info = {
+                "slot": i + 1,
+                "lineage_id": ind.get("lineage_id", "unknown"),
+                "status": ind.get("status", "unknown"),
+                "fitness": ind.get("fitness", -1.0),
+                "smoke_test": smoke_test_statuses[i] if i < len(smoke_test_statuses) else None
+            }
+            slots_data.append(slot_info)
+        
+        gen_summary = {
+            "gen_number": current_gen,
+            "timestamp": datetime.datetime.now().isoformat(),
+            "execution_time_seconds": round(execution_time, 2),
+            "slots": slots_data
+        }
+        
+        # Update the master ledger
+        update_ledger(gen_summary)
         
         # Save population
         with open(POPULATION_FILE, 'w') as f:

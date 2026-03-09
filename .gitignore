@@ -10,3 +10,4 @@ user_data/api_keys.json
 user_data/logs/strikes.json
 .venv/
 .venv/
+user_data/logs/generation_history.json
