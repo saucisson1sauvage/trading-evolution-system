@@ -28,7 +28,7 @@
                   "left": {
                     "primitive": "BB_LOWER",
                     "parameters": {
-                      "window": 22,
+                      "window": 21,
                       "std": 1.7
                     }
                   },
@@ -45,7 +45,7 @@
             {
               "primitive": "TRENDING_UP",
               "parameters": {
-                "window": 50
+                "window": 48
               }
             }
           ]
@@ -97,7 +97,7 @@
       "left": {
         "primitive": "SMA",
         "parameters": {
-          "window": 50
+          "window": 48
         }
       },
       "right": {
@@ -151,7 +151,7 @@
         {
           "primitive": "TRENDING_UP",
           "parameters": {
-            "window": 30
+            "window": 50
           }
         },
         {
@@ -197,23 +197,23 @@
         {
           "primitive": "LESS_THAN",
           "left": {
+            "primitive": "RSI",
+            "parameters": {
+              "window": 14
+            }
+          },
+          "right": {
             "primitive": "BB_MIDDLE",
             "parameters": {
               "window": 20,
               "std": 2.0
-            }
-          },
-          "right": {
-            "primitive": "RSI",
-            "parameters": {
-              "window": 14
             }
           }
         }
       ]
     },
     "exit_tree": {
-      "primitive": "CROSS_DOWN",
+      "primitive": "GREATER_THAN",
       "left": {
         "primitive": "RSI",
         "parameters": {
@@ -221,7 +221,7 @@
         }
       },
       "right": {
-        "constant": 50.0
+        "constant": 80.0
       }
     }
   },
@@ -231,19 +231,7 @@
       "operator": "OR",
       "children": [
         {
-          "primitive": "GREATER_THAN",
-          "left": {
-            "primitive": "VOLUME"
-          },
-          "right": {
-            "primitive": "SMA",
-            "parameters": {
-              "window": 50
-            }
-          }
-        },
-        {
-          "primitive": "LESS_THAN",
+          "primitive": "CROSS_UP",
           "left": {
             "primitive": "RSI",
             "parameters": {
@@ -251,15 +239,36 @@
             }
           },
           "right": {
-            "constant": 20.0
+            "constant": 30.0
+          }
+        },
+        {
+          "primitive": "GREATER_THAN",
+          "left": {
+            "primitive": "VOLUME",
+            "parameters": {
+              "window": 5
+            }
+          },
+          "right": {
+            "primitive": "SMA",
+            "parameters": {
+              "window": 50
+            }
           }
         }
       ]
     },
     "exit_tree": {
-      "primitive": "TRENDING_DOWN",
-      "parameters": {
-        "window": 20
+      "primitive": "CROSS_DOWN",
+      "left": {
+        "primitive": "CLOSE"
+      },
+      "right": {
+        "primitive": "SMA",
+        "parameters": {
+          "window": 200
+        }
       }
     }
   }
