@@ -28,14 +28,14 @@
                   "left": {
                     "primitive": "BB_LOWER",
                     "parameters": {
-                      "window": 22,
+                      "window": 21,
                       "std": 1.7
                     }
                   },
                   "right": {
                     "primitive": "BB_LOWER",
                     "parameters": {
-                      "window": 10,
+                      "window": 9,
                       "std": 2.3
                     }
                   }
@@ -97,7 +97,7 @@
       "left": {
         "primitive": "SMA",
         "parameters": {
-          "window": 50
+          "window": 46
         }
       },
       "right": {
@@ -142,16 +142,16 @@
       "operator": "AND",
       "children": [
         {
-          "primitive": "TRENDING_UP",
+          "primitive": "VOLATILE",
           "parameters": {
-            "window": 30
+            "window": 15,
+            "threshold": 2.0
           }
         },
         {
-          "primitive": "VOLATILE",
+          "primitive": "TRENDING_UP",
           "parameters": {
-            "window": 14,
-            "threshold": 2.0
+            "window": 30
           }
         },
         {
@@ -190,8 +190,8 @@
         {
           "primitive": "VOLUME_SPIKE",
           "parameters": {
-            "window": 5,
-            "threshold": 2.0
+            "window": 10,
+            "threshold": 2.5
           }
         },
         {
@@ -213,15 +213,15 @@
       ]
     },
     "exit_tree": {
-      "primitive": "CROSS_UP",
+      "primitive": "GREATER_THAN",
       "left": {
         "primitive": "RSI",
         "parameters": {
-          "window": 14
+          "window": 7
         }
       },
       "right": {
-        "constant": 80.0
+        "constant": 85.0
       }
     }
   },
@@ -231,37 +231,39 @@
       "operator": "OR",
       "children": [
         {
-          "primitive": "GREATER_THAN",
+          "primitive": "CROSS_UP",
           "left": {
-            "primitive": "VOLUME",
-            "parameters": {
-              "window": 10
-            }
+            "primitive": "VOLUME"
           },
           "right": {
-            "constant": 90.0
+            "primitive": "SMA",
+            "parameters": {
+              "window": 50
+            }
           }
         },
         {
-          "primitive": "CROSS_DOWN",
+          "primitive": "GREATER_THAN",
           "left": {
-            "primitive": "BB_LOWER",
-            "parameters": {
-              "window": 20,
-              "std": 2.0
-            }
+            "primitive": "CLOSE"
           },
           "right": {
-            "primitive": "CLOSE"
+            "constant": 95.0
           }
         }
       ]
     },
     "exit_tree": {
-      "primitive": "VOLATILE",
-      "parameters": {
-        "window": 5,
-        "threshold": 3.0
+      "primitive": "LESS_THAN",
+      "left": {
+        "primitive": "CLOSE"
+      },
+      "right": {
+        "primitive": "BB_LOWER",
+        "parameters": {
+          "window": 20,
+          "std": 2.0
+        }
       }
     }
   }
