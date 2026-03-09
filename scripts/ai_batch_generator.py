@@ -276,63 +276,91 @@ def validate_batch(batch: List[Dict[str, Any]]) -> bool:
 # 4. API CALLER & EXTRACTOR
 def call_gemini(api_key: str, model: str, system_prompt: str, user_prompt: str, key_manager: KeyManager = None) -> str:
     """Call Gemini API and return the response text with rate limit handling"""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    # Compress prompts to save tokens
+    system_prompt = re.sub(r'\s+', ' ', system_prompt).strip()
+    user_prompt = re.sub(r'\s+', ' ', user_prompt).strip()
     
-    payload = {
-        "system_instruction": {
-            "parts": [{"text": system_prompt}]
-        },
-        "contents": [
-            {
-                "parts": [{"text": user_prompt}]
+    # Try up to 2 attempts (primary key + alternate key)
+    for attempt in range(2):
+        current_api_key = api_key
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={current_api_key}"
+        
+        payload = {
+            "system_instruction": {
+                "parts": [{"text": system_prompt}]
+            },
+            "contents": [
+                {
+                    "parts": [{"text": user_prompt}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.7
             }
-        ],
-        "generationConfig": {
-            "temperature": 0.7
         }
-    }
-    
-    headers = {
-        "Content-Type": "application/json"
-    }
-    
-    try:
-        response = requests.post(url, json=payload, headers=headers, timeout=60)
-        response.raise_for_status()
-        data = response.json()
         
-        # Extract text from response
-        if 'candidates' in data and len(data['candidates']) > 0:
-            candidate = data['candidates'][0]
-            if 'content' in candidate and 'parts' in candidate['content']:
-                parts = candidate['content']['parts']
-                if len(parts) > 0 and 'text' in parts[0]:
-                    return parts[0]['text']
+        headers = {
+            "Content-Type": "application/json"
+        }
         
-        # If we couldn't extract text, raise an error
-        raise ValueError("Could not extract text from API response")
+        # Add pacing to prevent bursting the RPM limit
+        time.sleep(4)
         
-    except requests.exceptions.HTTPError as e:
-        if e.response is not None:
-            status_code = e.response.status_code
-            if status_code == 429:  # Rate limit exceeded
-                print(f"  Rate limit (429) hit for current API key")
-                if key_manager is not None:
-                    key_manager.mark_cooldown(api_key)
-                raise
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+            response.raise_for_status()
+            data = response.json()
+            
+            # Extract text from response
+            if 'candidates' in data and len(data['candidates']) > 0:
+                candidate = data['candidates'][0]
+                if 'content' in candidate and 'parts' in candidate['content']:
+                    parts = candidate['content']['parts']
+                    if len(parts) > 0 and 'text' in parts[0]:
+                        return parts[0]['text']
+            
+            # If we couldn't extract text, raise an error
+            raise ValueError("Could not extract text from API response")
+            
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None:
+                status_code = e.response.status_code
+                if status_code == 429:  # Rate limit exceeded
+                    print(f"  Rate limit (429) hit for current API key (attempt {attempt + 1}/2)")
+                    if key_manager is not None:
+                        key_manager.mark_cooldown(current_api_key)
+                        # Get alternate key for next attempt
+                        if attempt == 0:
+                            # Use current generation number or timestamp to get alternate key
+                            # Since we don't have current_generation here, use timestamp
+                            import time
+                            api_key = key_manager.get_available_key(int(time.time()))
+                            print(f"  Switching to alternate key for retry")
+                            continue
+                    # If we're on the last attempt or no key_manager, raise
+                    if attempt == 1:
+                        print(f"  Both keys failed with 429 errors")
+                        raise
+                    else:
+                        # This shouldn't happen if key_manager is provided
+                        raise
+                else:
+                    print(f"API request failed with status {status_code}: {e}")
+                    print(f"Response body: {e.response.text[:200]}")
+                    raise
             else:
-                print(f"API request failed with status {status_code}: {e}")
-                print(f"Response body: {e.response.text[:200]}")
-        else:
+                print(f"API request failed: {e}")
+                raise
+        except requests.exceptions.RequestException as e:
             print(f"API request failed: {e}")
-        raise
-    except requests.exceptions.RequestException as e:
-        print(f"API request failed: {e}")
-        raise
-    except (KeyError, ValueError) as e:
-        print(f"Failed to parse API response: {e}")
-        print(f"Response was: {data if 'data' in locals() else 'No data'}")
-        raise
+            raise
+        except (KeyError, ValueError) as e:
+            print(f"Failed to parse API response: {e}")
+            print(f"Response was: {data if 'data' in locals() else 'No data'}")
+            raise
+    
+    # This should never be reached, but just in case
+    raise RuntimeError("Unexpected error in call_gemini")
 
 def extract_json(text: str) -> str:
     """Extract JSON between delimiters"""

@@ -86,11 +86,6 @@ def test_key_manager():
     assert manager.get_available_key(1) == "key2", "Odd generation should use key2"
     print("  ✓ Key selection based on parity works")
     
-    # Test cooldown marking
-    manager.mark_cooldown("key1")
-    assert "key1" in manager.cooldowns, "key1 should be in cooldowns"
-    print("  ✓ Cooldown marking works")
-    
     # Test alternate key selection when primary is in cooldown
     # We need to mock time to test this properly
     import time
@@ -99,6 +94,11 @@ def test_key_manager():
         # Mock time to be within cooldown period
         test_time = 1000.0
         time.time = lambda: test_time
+        
+        # Mark cooldown with mocked time
+        manager.mark_cooldown("key1")
+        assert "key1" in manager.cooldowns, "key1 should be in cooldowns"
+        print("  ✓ Cooldown marking works")
         
         # key1 is in cooldown, so even generation should use key2
         selected = manager.get_available_key(0)
