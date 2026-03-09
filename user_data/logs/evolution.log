@@ -1590,3 +1590,28 @@
 2026-03-07 05:00:02,165 | INFO |   ❌ Slot 5 failed smoke test. Discarding.
 2026-03-07 05:00:02,166 | INFO | Evaluating Individual 6/6 (outsider)...
 2026-03-07 05:00:06,457 | INFO |   ❌ Slot 6 failed smoke test. Discarding.
+2026-03-09 14:54:00,010 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-09 14:54:00,010 | INFO | --- Generation 351 ---
+2026-03-09 14:54:44,033 | WARNING | AI batch generator failed with exit code 1
+2026-03-09 20:06:01,023 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-09 20:06:01,027 | INFO | --- Generation 351 ---
+2026-03-09 20:06:12,156 | WARNING | AI batch generator failed with exit code 1
+2026-03-09 20:15:23,518 | INFO | STARTING 6-SLOT ASSEMBLY LINE GP LOOP
+2026-03-09 20:15:23,522 | INFO | --- Generation 351 ---
+2026-03-09 20:15:37,388 | INFO | Evaluating Individual 1/6 (king)...
+2026-03-09 20:15:42,741 | INFO |   ✅ Slot 1 passed smoke test
+2026-03-09 20:16:15,353 | INFO |   > FAIL: Aggregated Trades: 209, Profit: -6.74% -> Fitness: 0.0000
+2026-03-09 20:16:15,353 | INFO | Evaluating Individual 2/6 (candidate)...
+2026-03-09 20:16:19,751 | INFO |   ✅ Slot 2 passed smoke test
+2026-03-09 20:16:47,752 | INFO |   > FAIL: Aggregated Trades: 196, Profit: -7.9% -> Fitness: 0.0000
+2026-03-09 20:16:47,752 | INFO | Evaluating Individual 3/6 (candidate)...
+2026-03-09 20:16:52,195 | INFO |   ✅ Slot 3 passed smoke test
+2026-03-09 20:17:19,953 | INFO |   > FAIL: Aggregated Trades: 47, Profit: -3.7600000000000002% -> Fitness: 0.0000
+2026-03-09 20:17:19,954 | INFO | Evaluating Individual 4/6 (outsider)...
+2026-03-09 20:17:24,421 | INFO |   ❌ Slot 4 failed smoke test. Discarding.
+2026-03-09 20:17:24,424 | INFO | Evaluating Individual 5/6 (outsider)...
+2026-03-09 20:17:28,864 | INFO |   ✅ Slot 5 passed smoke test
+2026-03-09 20:17:58,325 | INFO |   > FAIL: Aggregated Trades: 33, Profit: -3.92% -> Fitness: 0.0000
+2026-03-09 20:17:58,325 | INFO | Evaluating Individual 6/6 (outsider)...
+2026-03-09 20:18:02,879 | INFO |   ✅ Slot 6 passed smoke test
+2026-03-09 20:18:32,612 | INFO |   > FAIL: Aggregated Trades: 1215, Profit: -28.71% -> Fitness: 0.0000
