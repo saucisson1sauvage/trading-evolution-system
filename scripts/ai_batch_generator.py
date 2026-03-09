@@ -161,6 +161,10 @@ def validate_tree_structure(node: Dict[str, Any]) -> bool:
         # Check if primitive exists in any category of BLOCK_REGISTRY
         found = False
         for category in BLOCK_REGISTRY.values():
+            # category is a dict where keys are block names
+            # In the new structure, values are dicts with 'function' and 'description'
+            # In the old structure, values are callables
+            # Either way, we just need to check if the key exists
             if primitive_name in category:
                 found = True
                 break
