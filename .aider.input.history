@@ -3171,3 +3171,152 @@
 
 # 2026-03-09 14:23:49.889278
 +/run git add .
+
+# 2026-03-09 14:23:51.737398
++/run git commit -m "Engine V3: Implemented Streamlit Quant Dashboard"
+
+# 2026-03-09 14:23:51.737450
++/run git commit -m "Engine V3: Implemented Streamlit Quant Dashboard"
+
+# 2026-03-09 14:23:54.628252
++/run ./.venv/bin/pip install streamlit pandas
+
+# 2026-03-09 14:23:54.628421
++/run ./.venv/bin/pip install streamlit pandas
+
+# 2026-03-09 14:24:04.505232
++/run ./.venv/bin/streamlit run scripts/dashboard.py
+
+# 2026-03-09 14:24:04.505292
++/run ./.venv/bin/streamlit run scripts/dashboard.py
+
+# 2026-03-09 14:32:07.850265
++/tokens
+
+# 2026-03-09 14:32:31.441918
++/clear
+
+# 2026-03-09 14:32:33.658185
++/tokens
+
+# 2026-03-09 14:32:41.114007
++### [ROLE: LEAD FULL-STACK QUANT DEVELOPER] ###
++# GOAL: Phase 3.5 - Inject the missing "Backtest Deep-Dive" tab into the Streamlit Dashboard.
++
++/edit scripts/dashboard.py
++
++# 1. UPDATE NAVIGATION:
++# Find the `st.sidebar.radio` for "Select a view:".
++# Update the list to include "Backtest Deep-Dive" right after "Generation Explorer".
++
++# 2. ADD THE BACKTEST PAGE LOGIC:
++# Below the "Generation Explorer" block, add the new section:
++# `elif page == "Backtest Deep-Dive":`
++# - Render a header: `st.header("📊 Backtest Deep-Dive")`
++# - Scan `user_data/logs/backtest_results/` for `.json` files.
++# - If files exist, use `st.selectbox` to let the user select a specific report by filename.
++# - Load the selected JSON file.
++# - Extract the strategy data: Freqtrade nests the results under the strategy name (e.g., `data = report.get("strategy")` or `data = list(report.values())[0]`).
++# - Render three sections using `st.subheader` and `st.dataframe`:
++#   1. "Performance by Pair": Load `data.get("results_per_pair", [])` into a Pandas DataFrame.
++#   2. "Exit Reasons": Load `data.get("exit_reason_summary", [])` into a Pandas DataFrame.
++#   3. "Enter Tags": Load `data.get("results_per_enter_tag", [])` into a Pandas DataFrame.
++
++# 3. EXECUTION AND RELIABILITY:
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1`
++# - ON SUCCESS: `git add scripts/dashboard.py && git commit -m "Engine V3.5: Added Backtest Deep-Dive to Dashboard"`
+
+# 2026-03-09 17:31:02.315087
++/clear
+
+# 2026-03-09 17:31:05.074651
++/drop
+
+# 2026-03-09 19:42:57.654627
++### [ROLE: LEAD AI SYSTEMS ARCHITECT] ###
++# GOAL: Phase 4 - Implement Smart Key Rotation and Model Optimization.
++
++# 1. CONTEXT:
++# Our current API quotas are tighter than expected (15 RPM on Flash models). 
++# We need to maximize our two API keys by alternating them and handling "429 Rate Limit" 
++# errors without stopping the evolutionary loop.
++
++# 2. THE MISSION (WHAT TO DO):
++# - Update `scripts/ai_batch_generator.py`.
++# - Refactor the `KeyManager` (or key selection logic):
++#   - Keep exactly 2 API keys.
++#   - DEFAULT BEHAVIOR: Alternate keys based on the generation count (Even gen -> Key 1, Odd gen -> Key 2).
++#   - FAILOVER BEHAVIOR: If Key 1 is "unavailable" (hits a 429 error), automatically switch to Key 2 for the remainder of that generation.
++# - MODEL CLEANUP: Remove all references to `gemini-1.5-flash` or `gemini-3-flash-preview`. 
++#   FORCE the engine to use ONLY `gemini-3.1-flash-lite-preview`.
++
++# 3. IMPLEMENTATION (HOW TO DO IT):
++# - Open `scripts/ai_batch_generator.py`.
++# - Modify the `get_available_key` method:
++#   ```python
++#   # Use generation parity as the primary selector
++#   key_index = current_gen % 2
++#   selected_key = self.keys[key_index]
++#   
++#   # Add logic to check if that specific key is currently in a 'cool-down' period 
++#   # due to a previous 429 error. If it is, return the other key.
++#   ```
++# - Inside the `call_gemini` try/except block:
++#   - If a `429` (Resource Exhausted) error is caught, mark that key as "on cool-down" for 60 seconds 
++#     before retrying with the alternate key.
++
++# 4. BEST PRACTICES & THINGS TO AVOID:
++# - GOOD PRACTICE: Log which key is being used for every request so we can verify the rotation.
++# - AVOID: Do not hardcode the keys; continue reading them from `user_data/api_keys.json`.
++# - AVOID: Do not use complex threading; keep the rotation logic linear and simple.
++
++# 5. VERIFICATION:
++# - Run: `./.venv/bin/python3 scripts/test_ai_batch_generator.py`.
++# - Run: `./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1`
++# - ON SUCCESS: `git add . && git commit -m "Engine V4: Implemented Even/Odd Key Rotation with 429 Failover"`
+
+# 2026-03-09 19:45:35.602788
++/run ./.venv/bin/python3 scripts/test_ai_batch_generator.py
+
+# 2026-03-09 19:45:35.602853
++/run ./.venv/bin/python3 scripts/test_ai_batch_generator.py
+
+# 2026-03-09 19:45:49.027931
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 19:45:49.028056
++/run ./.venv/bin/python3 -m pytest tests/test_omniscience.py -v || exit 1
+
+# 2026-03-09 19:50:06.264091
++### [ROLE: LEAD PYTHON DEBUGGER] ###
++# GOAL: Fix critical architectural flaws in `scripts/ai_batch_generator.py` and its tests.
++
++# 1. FIX THE "AMNESIA" 429 LOOP (`scripts/ai_batch_generator.py`):
++# - Locate the `call_gemini` function.
++# - Wrap the `try/except` block (where `requests.post` happens) in a `for attempt in range(2):` loop.
++# - If a `429` error is caught:
++#     a) Call `key_manager.mark_cooldown(api_key)`.
++#     b) Re-assign `api_key = key_manager.get_available_key(int(time.time()))` to grab the alternate key.
++#     c) Modify the `url` variable to use the new `api_key`.
++#     d) Use `continue` to try the request again. Do NOT `raise` unless `attempt == 1` (both keys failed).
++
++# 2. ADD THE MISSING PACING & COMPRESSION (`scripts/ai_batch_generator.py`):
++# - Inside `call_gemini`, right before `requests.post(...)`, add `time.sleep(4)` to prevent bursting the RPM limit.
++# - Inside `call_gemini`, right before building the payload, compress the prompts to save tokens:
++#   `system_prompt = re.sub(r'\s+', ' ', system_prompt).strip()`
++#   `user_prompt = re.sub(r'\s+', ' ', user_prompt).strip()`
++
++# 3. FIX THE BROKEN TEST (`scripts/test_ai_batch_generator.py`):
++# - Find `test_key_manager()`.
++# - Fix the `time.time()` mocking issue. Move `manager.mark_cooldown("key1")` INSIDE the `try:` block AFTER `time.time = lambda: test_time` so the cooldown is calculated using the mock time, not real time.
++
++# 4. VERIFICATION:
++# - Run: `./.venv/bin/python3 scripts/test_ai_batch_generator.py`
++# - Ensure it outputs "KeyManager tests passed!" with no failures.
++# - ON SUCCESS: `git add . && git commit -m "Engine V4.1: Fixed Amnesia 429 Loop, added pacing, and fixed tests"`
+
+# 2026-03-09 19:53:41.924735
++/run ./.venv/bin/python3 scripts/test_ai_batch_generator.py
+
+# 2026-03-09 19:53:41.924902
++/run ./.venv/bin/python3 scripts/test_ai_batch_generator.py
