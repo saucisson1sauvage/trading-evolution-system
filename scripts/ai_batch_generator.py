@@ -333,7 +333,6 @@ def call_gemini(api_key: str, model: str, system_prompt: str, user_prompt: str, 
                         if attempt == 0:
                             # Use current generation number or timestamp to get alternate key
                             # Since we don't have current_generation here, use timestamp
-                            import time
                             api_key = key_manager.get_available_key(int(time.time()))
                             print(f"  Switching to alternate key for retry")
                             continue
