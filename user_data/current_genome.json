@@ -3,44 +3,42 @@
     "operator": "OR",
     "children": [
       {
-        "primitive": "TRENDING_DOWN",
-        "parameters": {
-          "window": 10
-        }
-      },
-      {
         "primitive": "GREATER_THAN",
         "left": {
           "primitive": "VOLUME",
           "parameters": {
-            "window": 5
+            "window": 10
           }
         },
         "right": {
-          "primitive": "SMA",
+          "constant": 90.0
+        }
+      },
+      {
+        "primitive": "CROSS_DOWN",
+        "left": {
+          "primitive": "BB_LOWER",
           "parameters": {
-            "window": 50
+            "window": 20,
+            "std": 2.0
           }
+        },
+        "right": {
+          "primitive": "CLOSE"
         }
       }
     ]
   },
   "exit_tree": {
-    "primitive": "CROSS_UP",
-    "left": {
-      "primitive": "CLOSE"
-    },
-    "right": {
-      "primitive": "BB_UPPER",
-      "parameters": {
-        "window": 20,
-        "std": 2.0
-      }
+    "primitive": "VOLATILE",
+    "parameters": {
+      "window": 5,
+      "threshold": 3.0
     }
   },
   "fitness": -1.0,
   "generation_age": 0,
   "debuff_active_gens": 0,
   "status": "outsider",
-  "lineage_id": "3423ac9e-45ab-4a70-bf55-a23de0724670"
+  "lineage_id": "6812b172-4d05-4cb0-967b-3fb88ae6471c"
 }

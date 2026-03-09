@@ -37,7 +37,6 @@ GRAVEYARD_PATH = PROJECT_ROOT / "user_data" / "strategies" / "graveyard"
 AI_TRANSCRIPTS_PATH = PROJECT_ROOT / "user_data" / "logs" / "ai_transcripts"
 
 # Helper function to load generation history
-@st.cache_data
 def load_generation_history():
     """Load and parse generation history JSON file."""
     if GENERATION_HISTORY_PATH.exists():
@@ -64,7 +63,6 @@ def get_ai_transcript(gen_number):
     return None
 
 # Helper function to scan graveyard
-@st.cache_data
 def scan_graveyard():
     """Scan the graveyard directory for JSON files."""
     if not GRAVEYARD_PATH.exists():
